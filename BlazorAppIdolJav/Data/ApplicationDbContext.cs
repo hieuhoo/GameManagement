@@ -1,4 +1,4 @@
-﻿using BlazorAppIdolJav.Share.Model.ClassModel;
+﻿using BlazorAppIdolJav.Share.ClassDB;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlazorAppIdolJav.Data

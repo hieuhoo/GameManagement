@@ -1,5 +1,9 @@
 ﻿using BlazorAppIdolJav.Components;
 using BlazorAppIdolJav.Data;
+using BlazorAppIdolJav.Repository;
+using BlazorAppIdolJav.Repository.IRepository;
+using BlazorAppIdolJav.Service;
+using BlazorAppIdolJav.Service.IService;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +18,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddAntDesign();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+builder.Services.AddScoped<IActressService, ActressService>();
+builder.Services.AddScoped<IActressRepository, ActressRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,0 +1,21 @@
+﻿@page "/dien-vien"
+<AntDesign.Col Span="24">
+    <AntDesign.Text>Danh sách diễn viên</AntDesign.Text>
+</AntDesign.Col>
+@if (Character == null)
+{
+    <p>Đang tải dữ liệu...</p>
+}
+else if (!Character.Any())
+{
+    <p>Không có dữ liệu.</p>
+}
+else
+{
+    <ul>
+        @foreach (var actress in Character)
+        {
+            <li>@actress.Name (@actress.Age tuổi)</li>
+        }
+    </ul>
+}

@@ -1,34 +1,13 @@
-﻿@inherits LayoutComponentBase
+﻿@page "/dang-nhap"
+@layout LoginLayout
 @using AntDesign
-@using BlazorAppIdolJav.Components.Pages
+@using BlazorAppIdolJav.Components.Layout
 @using BlazorAppIdolJav.SpecialComponent
-<HeadContent>
-    <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
-</HeadContent>
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-    <main>
-        <div class="top-row px-4">
-            @if (!isLoggedIn)
-            {
-                <a href="#" @onclick="ShowLoginModal">Đăng nhập</a>
-            }
-            else
-            {
-                <button @onclick="Logout">Đăng xuất</button>
-            }
-        </div>
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
-<script src="_content/AntDesign/js/ant-design-blazor.js"></script> 
-
-<Modal Visible="loginVisible" Title="Đăng nhập liền" Footer="@null" MaskClosable=true>
+<Modal Visible="true" Title="Đăng nhập liền" Footer="@null" MaskClosable=true>
     <EditForm Model="@EditModel" OnValidSubmit="@HandleLoginAsync">
         <Row>
             <LabelFor For="() => EditModel.UserName"></LabelFor>
@@ -55,3 +34,4 @@
         </Row>
     </EditForm>
 </Modal>
+

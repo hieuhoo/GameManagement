@@ -1,0 +1,51 @@
+﻿@{
+    var labelText = Title ?? Display;
+    var content = (RenderFragment)(builder =>
+    {
+        var seq = 0;
+        builder.OpenElement(seq++, "label");
+        builder.AddAttribute(seq++, "for", Name);
+        if (IsEllipsis && !IsEnableTooltip)
+        {
+            builder.OpenElement(seq++, "span");
+            builder.AddAttribute(seq++, "class", "text-ellipsis");
+            builder.AddContent(seq++, labelText);
+            builder.CloseElement();
+        }
+        else
+        {
+            builder.AddContent(seq++, labelText);
+        }
+        if (Required || HasRequired)
+        {
+            builder.OpenElement(seq++, "font");
+            builder.AddAttribute(seq++, "color", "red");
+            builder.AddContent(seq++, "(*)");
+            builder.CloseElement();
+        }
+        builder.CloseElement();
+    });
+}
+
+@if (IsEnableTooltip)
+{
+    @if (IsEllipsis)
+    {
+        <div class="text-ellipsis">
+            <Tooltip Placement="@TooltipPlacement" Title="@labelText">
+                @content
+            </Tooltip>
+        </div>
+    }
+    else
+    {
+        <Tooltip Placement="@TooltipPlacement" Title="@labelText">
+            @content
+        </Tooltip>
+    }
+}
+else
+{
+    @content
+}
+

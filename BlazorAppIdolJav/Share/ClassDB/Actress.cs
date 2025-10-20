@@ -15,5 +15,8 @@
         public string CompanyId { get; set; }
         public string NickName { get; set; }
 
+        public string? ImageName { get; set; }
+        public string? ImagePath { get; set; }
+
     }
 }

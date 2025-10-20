@@ -78,5 +78,17 @@ namespace BlazorAppIdolJav.Share.ClassData
             get;
             set;
         }
+        [DataMember(Order = 13)]
+        public virtual string ImageName
+        {
+            get;
+            set;
+        }
+        [DataMember(Order = 14)]
+        public virtual string ImagePath
+        {
+            get;
+            set;
+        }
     }
 }

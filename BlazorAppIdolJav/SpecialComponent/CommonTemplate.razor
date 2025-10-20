@@ -1,0 +1,35 @@
+﻿@using AntDesign
+@using BlazorAppIdolJav.CoreConfig.Extensions
+@using static BlazorAppIdolJav.Share.Extension.EnumExtension;
+<h3>CommonTemplate</h3>
+@code {
+    public static RenderFragment RenderGenderText(string gender) =>@<div>
+@if (gender == CharacterGender.Male.ToString())
+    {
+    <AntDesign.Text Copyable="false">@CharacterGender.Male.GetDescription()</AntDesign.Text>
+    }
+    else if (gender == CharacterGender.Female.ToString())
+    {
+    <AntDesign.Text Copyable="false">@CharacterGender.Female.GetDescription()</AntDesign.Text>
+    }
+</div>;
+
+    public static RenderFragment RenderNationalityText(string national) =>@<div>
+@if (national == National.Japan.ToString())
+    {
+    <AntDesign.Text Copyable="false">@National.Japan.GetDescription()</AntDesign.Text>
+    }
+    else if (national == National.America.ToString())
+    {
+    <AntDesign.Text Copyable="false">@National.America.GetDescription()</AntDesign.Text>
+    }
+    else if (national == National.VietNam.ToString())
+    {
+    <AntDesign.Text Copyable="false">@National.VietNam.GetDescription()</AntDesign.Text>
+    }
+    else if (national == National.Taiwan.ToString())
+    {
+    <AntDesign.Text Copyable="false">@National.Taiwan.GetDescription()</AntDesign.Text>
+    }
+</div>;
+}

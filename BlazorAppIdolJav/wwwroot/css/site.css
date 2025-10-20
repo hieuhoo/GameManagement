@@ -1,0 +1,75 @@
+﻿
+.site-layout-content {
+    background: #fff;
+    padding: 24px;
+    min-height: 890px;
+    background-image: url('/image/idol.png');
+    background-repeat: no-repeat;
+    background-size: cover; 
+    background-position: center center;
+}
+
+.action-column-center {
+    text-align: center;
+}
+
+    .action-column-center .ant-row {
+        margin: 0px;
+    }
+
+.table-striped .ant-table-tbody .ant-table-row:nth-child(odd) .ant-table-cell-fix-left, .ant-table-tbody .ant-table-row:nth-child(odd) .ant-table-cell-fix-right {
+    background: #f2f2f2;
+}
+
+.btn-icon-edit {
+    border: 2px solid #1890ff;
+    background-color: #1890ff;
+    color: #fff;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.btn-icon-delete-answer {
+    border: 2px solid #ff4d4f;
+    background-color: #ff4d4f;
+    color: #fff;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.wrap_content {
+    width: calc(100% - 20px);
+    display: block;
+    background: #f7f7f77d;
+    border: 1px solid #1890ff;
+    padding: 10px;
+    margin: 4px;
+}
+    .wrap_content h3 {
+        font-size: 18px;
+        margin-left: 0;
+        font-weight: bold;
+        position: relative;
+        padding-bottom: 15px;
+        margin-bottom: 0px;
+    }
+
+        .wrap_content h3::before {
+            content: "";
+            width: 48px;
+            height: 2px;
+            background: #1890ff;
+            display: inline-block;
+            position: absolute;
+            bottom: 6px;
+            left: 0;
+        }
+
+    .wrap_content .ant-row:last-child {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+.image-character {
+    left: -30px;
+}

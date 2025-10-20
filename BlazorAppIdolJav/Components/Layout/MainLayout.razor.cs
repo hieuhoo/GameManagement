@@ -29,9 +29,10 @@ namespace BlazorAppIdolJav.Components.Layout
             loginVisible = true;
         }
 
-        void Logout()
+        void LogoutAccount()
         {
-
+            isLoggedIn = false;
+            StateHasChanged();
         }
     }
 }

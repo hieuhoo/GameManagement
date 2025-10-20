@@ -14,11 +14,14 @@
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Trang chủ
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="dien-vien">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Diễn viên
-            </NavLink>
-        </div>
+        @if (HaveLogged)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="dien-vien">
+                    <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Diễn viên
+                </NavLink>
+            </div>
+        }
     </nav>
 </div>
 

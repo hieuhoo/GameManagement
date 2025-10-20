@@ -2,12 +2,13 @@
 @using AntDesign
 @using BlazorAppIdolJav.Components.Pages
 @using BlazorAppIdolJav.SpecialComponent
+
 <HeadContent>
     <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
 </HeadContent>
 <div class="page">
     <div class="sidebar">
-        <NavMenu />
+        <NavMenu HaveLogged="isLoggedIn"></NavMenu>
     </div>
     <main>
         <div class="top-row px-4">
@@ -17,10 +18,9 @@
             }
             else
             {
-                <button @onclick="Logout">Đăng xuất</button>
+                <a href="#" @onclick="LogoutAccount">Đăng xuất</a>
             }
         </div>
-
         <article class="content px-4">
             @Body
         </article>
@@ -28,7 +28,7 @@
 </div>
 <script src="_content/AntDesign/js/ant-design-blazor.js"></script> 
 
-<Modal Visible="loginVisible" Title="Đăng nhập liền" Footer="@null" MaskClosable=true>
+<Modal Visible="loginVisible" Title="ĐĂNG NHẬP LIỀN" Footer="@null" MaskClosable=true>
     <EditForm Model="@EditModel" OnValidSubmit="@HandleLoginAsync">
         <Row>
             <LabelFor For="() => EditModel.UserName"></LabelFor>

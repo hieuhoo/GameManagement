@@ -18,8 +18,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddAntDesign();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+//cấu hình service vào đây
 builder.Services.AddScoped<IActressService, ActressService>();
+builder.Services.AddScoped<IUserService, UserService>();
+//cấu hình repo vào đây
 builder.Services.AddScoped<IActressRepository, ActressRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

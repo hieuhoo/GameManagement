@@ -5,7 +5,7 @@
     min-height: 890px;
     background-image: url('/image/idol.png');
     background-repeat: no-repeat;
-    background-size: cover; 
+    background-size: cover;
     background-position: center center;
 }
 
@@ -45,6 +45,7 @@
     padding: 10px;
     margin: 4px;
 }
+
     .wrap_content h3 {
         font-size: 18px;
         margin-left: 0;
@@ -72,4 +73,8 @@
 
 .image-character {
     left: -30px;
+}
+
+.error-message {
+    color:red;
 }

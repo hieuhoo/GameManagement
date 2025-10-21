@@ -52,5 +52,11 @@ namespace BlazorAppIdolJav.Share.ClassData
             get;
             set;
         }
+        [DataMember(Order = 9)]
+        public virtual String Role
+        {
+            get;
+            set;
+        }
     }
 }

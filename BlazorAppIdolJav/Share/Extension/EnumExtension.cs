@@ -39,5 +39,13 @@ namespace BlazorAppIdolJav.Share.Extension
             [Display(Name = "Bố chồng nàng dâu")]
             FatherAndBride_In_Law = 4,
         }
+
+        public enum UserRole
+        {
+            [Display(Name = "Quản trị viên")]
+            Admin = 0,
+            [Display(Name = "Người dùng")]
+            Normal = 1,
+        }
     }
 }

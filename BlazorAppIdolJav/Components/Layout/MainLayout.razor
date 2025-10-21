@@ -2,6 +2,7 @@
 @using AntDesign
 @using BlazorAppIdolJav.Components.Pages
 @using BlazorAppIdolJav.SpecialComponent
+@using BlazorAppIdolJav.SpecialComponent.ExtensionClass;
 
 <HeadContent>
     <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
@@ -26,9 +27,12 @@
         </article>
     </main>
 </div>
-<script src="_content/AntDesign/js/ant-design-blazor.js"></script> 
+<script src="_content/AntDesign/js/ant-design-blazor.js"></script>
 
-<Modal Visible="loginVisible" Title="ĐĂNG NHẬP LIỀN" Footer="@null" MaskClosable=true>
+<Modal Visible="loginVisible"
+       Title="ĐĂNG NHẬP LIỀN"
+       Footer="@null" MaskClosable=true
+       OnCancel="() => loginVisible = false">
     <EditForm Model="@EditModel" OnValidSubmit="@HandleLoginAsync">
         <Row>
             <LabelFor For="() => EditModel.UserName"></LabelFor>
@@ -42,9 +46,13 @@
         </Row>
         <Row>
             Bạn chưa có tài khoản?
-            <NavLink href="/register">
-                Click here
-            </NavLink>
+            <a href="#" @onclick="RegisterAccount">Click here</a>
+        </Row>
+        <Row>
+            @if (error)
+            {
+                <AntDesign.Text Style="color:red;">Vui lòng nhập tên đăng nhập hoặc mật khẩu</AntDesign.Text>
+            }
         </Row>
         <Row Gutter="8" Justify="@RowJustify.End">
             <Space>
@@ -55,3 +63,50 @@
         </Row>
     </EditForm>
 </Modal>
+
+<Modal Visible="registerVisible"
+       Title="ĐĂNG KÍ TÀI KHOẢN"
+       Footer="@null" MaskClosable=true
+       OnCancel="CloseRegisterForm">
+    <EditForm Model="@EditModel" OnValidSubmit="@HandleRegisterAsync">
+         <DataAnnotationsValidator />
+          <InputWatcher @ref="inputWatcher"></InputWatcher>
+        <Row>
+            <LabelFor For="() => EditModel.UserName"></LabelFor>
+            <Input Type="@InputType.Text" @bind-Value="@EditModel.UserName" />
+            <ValidationMessage For="() => EditModel.UserName"></ValidationMessage>
+        </Row>
+        <Row>
+            <LabelFor For="() => EditModel.PassWord"></LabelFor>
+            <AntDesign.InputPassword @bind-Value="@EditModel.PassWord" />
+            <ValidationMessage For="() => EditModel.PassWord"></ValidationMessage>
+        </Row>
+        <Row>
+            <LabelFor For="() => EditModel.Name"></LabelFor>
+            <Input Type="@InputType.Text" @bind-Value="@EditModel.Name" />
+            <ValidationMessage For="() => EditModel.Name"></ValidationMessage>
+        </Row>
+        <Row>
+            <LabelFor For="() => EditModel.Email"></LabelFor>
+            <Input Type="@InputType.Text" @bind-Value="@EditModel.Email" />
+            <ValidationMessage For="() => EditModel.Email"></ValidationMessage>
+        </Row>
+        <Row>
+            <LabelFor FieldIdentifier="context.Field(nameof(EditModel.PhoneNumber))"></LabelFor>
+            <Input Type="@InputType.Number" @bind-Value="@EditModel.PhoneNumber" />
+            <ValidationMessage For="() => EditModel.PhoneNumber"></ValidationMessage>
+        </Row>
+        <Row Gutter="8" Justify="@RowJustify.Center">
+            <Space>
+                <SpaceItem>
+                    <Button Style="margin-top:20px;" HtmlType="submit" Type="@ButtonType.Primary">Đăng kí</Button>
+                </SpaceItem>
+            </Space>
+        </Row>
+        <Row Gutter="8" Justify="@RowJustify.Center">
+            <a href="#" @onclick="BackToLogin">Quay lại đăng nhập</a>
+        </Row>
+    </EditForm>
+</Modal>
+
+<AntContainer /> @* // them cái này ms có thông báo ở góc *@

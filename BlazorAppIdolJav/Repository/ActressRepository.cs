@@ -1,4 +1,5 @@
-﻿using BlazorAppIdolJav.Data;
+﻿using BlazorAppIdolJav.CoreConfig.Repository;
+using BlazorAppIdolJav.Data;
 using BlazorAppIdolJav.Repository.IRepository;
 using BlazorAppIdolJav.Service.IService;
 using BlazorAppIdolJav.Share.ClassDB;
@@ -6,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlazorAppIdolJav.Repository
 {
-    public class ActressRepository : IActressRepository
+    public class ActressRepository : Repository<Actress> , IActressRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public ActressRepository(ApplicationDbContext context)
+        public ActressRepository(ApplicationDbContext context) : base(context) 
         {
             _context = context;
         }

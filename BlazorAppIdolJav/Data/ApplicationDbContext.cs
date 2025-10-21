@@ -11,6 +11,7 @@ namespace BlazorAppIdolJav.Data
         }
 
         public DbSet<Actress> Actress { get; set; }
+        public DbSet<User> User { get; set; }
     }
 }
 

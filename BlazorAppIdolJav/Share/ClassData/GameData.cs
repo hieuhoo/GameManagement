@@ -1,10 +1,10 @@
 ﻿using System.Runtime.Serialization;
 
-namespace BlazorAppIdolJav.Share.ClassData
+namespace GameManagement.Share.ClassData
 {
     [DataContract(Name = "ActressData", Namespace = "")]
 
-    public class ActressData
+    public class GameData
     {
         [DataMember(Order = 1)]
         public virtual String Id
@@ -25,7 +25,7 @@ namespace BlazorAppIdolJav.Share.ClassData
             set;
         }
         [DataMember(Order = 4)]
-        public virtual int Age
+        public virtual string? ImageName
         {
             get;
             set;
@@ -37,55 +37,55 @@ namespace BlazorAppIdolJav.Share.ClassData
             set;
         }
         [DataMember(Order = 6)]
-        public virtual DateTime? DateDebut
+        public virtual DateTime ReleaseDate
         {
             get;
             set;
         }
         [DataMember(Order = 7)]
-        public virtual string Gender
+        public virtual string Status
         {
             get;
             set;
         }
         [DataMember(Order = 8)]
-        public virtual string CompanyId
+        public virtual string SoldStatus
         {
             get;
             set;
         }
         [DataMember(Order = 9)]
-        public virtual int ButtSize
+        public virtual int Price
         {
             get;
             set;
         }
         [DataMember(Order = 10)]
-        public virtual int WaistSize
+        public virtual string Unit
         {
             get;
             set;
         }
         [DataMember(Order = 11)]
-        public virtual int ChestSize
+        public virtual string Description
         {
             get;
             set;
         }
         [DataMember(Order = 12)]
-        public virtual string NickName
+        public virtual string SystemSupport
         {
             get;
             set;
         }
         [DataMember(Order = 13)]
-        public virtual string ImageName
+        public virtual string GameCompanyId
         {
             get;
             set;
         }
         [DataMember(Order = 14)]
-        public virtual string ImagePath
+        public virtual string? ImagePath
         {
             get;
             set;

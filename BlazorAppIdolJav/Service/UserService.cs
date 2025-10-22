@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using BlazorAppIdolJav.Repository.IRepository;
-using BlazorAppIdolJav.Service.IService;
-using BlazorAppIdolJav.Share.ClassData;
-using BlazorAppIdolJav.Share.ClassDB;
+using GameManagement.Repository.IRepository;
+using GameManagement.Service.IService;
+using GameManagement.Share.ClassData;
+using GameManagement.Share.ClassDB;
 
-namespace BlazorAppIdolJav.Service
+namespace GameManagement.Service
 {
     public class UserService : IUserService
     {

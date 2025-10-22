@@ -17,7 +17,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace BlazorAppIdolJav.CoreConfig.Extensions
+namespace GameManagement.CoreConfig.Extensions
 
 {
     public static class ObjectExtentions

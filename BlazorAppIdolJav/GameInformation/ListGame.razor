@@ -1,0 +1,33 @@
+﻿@page "/danh-sach-game"
+@using AntDesign
+@using GameManagement.CoreConfig.Extensions;
+@using GameManagement.Share.Model.ViewModel;
+@using GameManagement.SpecialComponent;
+@using Microsoft.AspNetCore.Components.Routing
+@using static GameManagement.Share.Extension.MessageEnumExtension
+
+
+<AntDesign.Row Gutter="8">
+    <AntDesign.Col Span="24">
+        <AntDesign.Title Level="3">Danh sách game</AntDesign.Title>
+    </AntDesign.Col>
+    <AntDesign.Col Span="24">
+        <Row Gutter="8">
+            <Space>
+                <SpaceItem>
+                    <Button Icon="plus" OnClick="@OpenCreateAsync" Type="@ButtonType.Primary" Color="Color.Green7">Thêm mới</Button>
+                </SpaceItem>
+            </Space>
+        </Row>
+    </AntDesign.Col>
+    
+</AntDesign.Row>
+
+<Drawer Width="@width.ToString()" ZIndex="1000"
+        Height="@height.ToString()"
+        Visible="createVisible"
+        Title="@title"
+        OnClose="() => createVisible = false"
+        MaskClosable="false">
+    <GameDetail @ref="gameDetailRef" ReSize="ReSize"></GameDetail>
+</Drawer>

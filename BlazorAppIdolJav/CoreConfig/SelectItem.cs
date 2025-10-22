@@ -1,4 +1,4 @@
-﻿namespace BlazorAppIdolJav.CoreConfig
+﻿namespace GameManagement.CoreConfig
 {
     public class SelectItem : ISelectItem
     {

@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Components;
 
-namespace BlazorAppIdolJav.Pages
+namespace GameManagement.Pages
 {
     public partial class Home : ComponentBase
     {

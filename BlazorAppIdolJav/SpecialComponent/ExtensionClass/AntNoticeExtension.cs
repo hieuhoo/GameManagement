@@ -1,8 +1,8 @@
 ﻿using AntDesign;
-using BlazorAppIdolJav.Share.Extension;
-using static BlazorAppIdolJav.Share.Extension.MessageEnumExtension;
+using GameManagement.Share.Extension;
+using static GameManagement.Share.Extension.MessageEnumExtension;
 
-namespace BlazorAppIdolJav.SpecialComponent.ExtensionClass
+namespace GameManagement.SpecialComponent.ExtensionClass
 {
     public static class AntNoticeExtension
     {

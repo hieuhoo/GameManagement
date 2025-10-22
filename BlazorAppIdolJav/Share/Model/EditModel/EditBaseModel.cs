@@ -1,6 +1,6 @@
 ﻿using AutoMapper.Internal;
-using BlazorAppIdolJav.CoreConfig;
-using BlazorAppIdolJav.CoreConfig.Extensions;
+using GameManagement.CoreConfig;
+using GameManagement.CoreConfig.Extensions;
 using Microsoft.Extensions.Localization;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
@@ -9,7 +9,7 @@ using System.Text.Json;
 using System;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace BlazorAppIdolJav.Share.Model.EditModel
+namespace GameManagement.Share.Model.EditModel
 {
     public abstract class EditBaseModel
     {

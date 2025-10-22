@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BlazorAppIdolJav.Share.Model.ViewModel
+namespace GameManagement.Share.Model.ViewModel
 {
-    public class ActressViewModel
+    public class GameViewModel
     {
         public virtual string Id { get; set; }
         public virtual string CompanyId { get; set; }

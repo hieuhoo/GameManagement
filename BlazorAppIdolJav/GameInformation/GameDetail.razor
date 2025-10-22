@@ -1,0 +1,135 @@
+﻿@using AntDesign
+@using GameManagement.CoreConfig
+@using GameManagement.CoreConfig.Extensions
+@using GameManagement.SpecialComponent
+@using GameManagement.SpecialComponent.ExtensionClass
+@using Microsoft.AspNetCore.Components.Forms
+<AntDesign.Row>
+    <AntDesign.Col Span="@(Size)">
+        @if (EditModel.ImagePath.IsNotNullOrEmpty())
+        {
+            <div class="pdf-file pernament-cv" style="flex: 1; text-align: center; margin:4px">
+                <iframe id="pdf-candidate-preview" src="@EditModel.ImagePathView"
+                        width="100%"
+                        style="height: 850px;"
+                        loading="lazy"
+                        title="PDF-file"></iframe>
+            </div>
+        }
+    </AntDesign.Col>
+    <AntDesign.Col Span="@(24 - Size)">
+        <EditForm Model="EditModel" Context="context">
+            <DataAnnotationsValidator />
+            <InputWatcher @ref="inputWatcher"></InputWatcher>
+            <Row Gutter="8">
+                <div class="wrap_content">
+                    <h3>Đính kèm</h3>
+                    <AntDesign.Col Span="11" Offset="1" Class="image-character">
+                        <LabelFor FieldIdentifier="context.Field(EditModel.Property.NameProperty(c => c.ImageName))"></LabelFor>
+                        <br />
+                        <input id="uploadIdentityImage" disabled class="f-input" style="margin: 0 !important; padding-right: 30px !important " value="@EditModel.ImageName" />
+                        <div class="fileUpload btn btn--browse" style="margin: 0 !important; padding: 0 !important;">
+                            <label for="@idCardUpload" class="ant-btn ant-btn-primary" style="width: 100%"> <Icon Type="plus" Theme="@IconThemeType.Outline" />Đính kèm</label>
+                            <InputFile id="@idCardUpload" hidden OnChange="ReadImageAsync" accept="application/pdf,image/*" />
+                        </div>
+                    </AntDesign.Col>
+                </div>
+                <div class="wrap_content">
+                    <h3>Thông tin chi tiết</h3>
+                    <AntDesign.Row Gutter="16">
+                        <AntDesign.Col Span="12">
+                            <LabelFor For="() => EditModel.Name"></LabelFor>
+                            <Input Type="@InputType.Text" @bind-Value="@EditModel.Name" Disabled="@EditModel.ReadOnly">
+                            <ValidationMessage For="() => EditModel.Name"></ValidationMessage>
+                        </AntDesign.Col>
+                        <AntDesign.Col Span="12">
+                            <LabelFor For="() => EditModel.Country"></LabelFor>
+                            <Select TItemValue="string" TItem="SelectItem" EnableSearch
+                                    DataSource="NationalOptions"
+                                    LabelName="@nameof(SelectItem.Text)"
+                                    ValueName="@nameof(SelectItem.Value)"
+                                    @bind-Value="EditModel.Country" Disabled="EditModel.ReadOnly">
+                            </Select>
+                        </AntDesign.Col>
+                      @*   <AntDesign.Col Span="12">
+                            <LabelFor For="() => EditModel.Country"></LabelFor>
+                            <Select TItemValue="string" TItem="SelectItem" EnableSearch
+                                    DataSource="NationalOptions"
+                                    LabelName="@nameof(SelectItem.Text)"
+                                    ValueName="@nameof(SelectItem.Value)"
+                                    @bind-Value="EditModel.Country" Disabled="EditModel.ReadOnly">
+                            </Select>
+                        </AntDesign.Col> loại game nhé *@
+                        <AntDesign.Col Span="12">
+                            <LabelFor FieldIdentifier="context.Field(nameof(EditModel.ReleaseDate))"></LabelFor>
+                            <br>
+                            <DatePicker @bind-Value="@EditModel.ReleaseDate"
+                                        Disabled="@EditModel.ReadOnly"
+                                        Style="display:block"
+                                        ChangeOnClose>
+                            </DatePicker>
+                            <ValidationMessage For="() => EditModel.ReleaseDate"></ValidationMessage>
+                        </AntDesign.Col>
+                        <AntDesign.Col Span="12">
+                            <LabelFor For="() => EditModel.Status"></LabelFor>
+                            <Select TItemValue="string" TItem="SelectItem" EnableSearch
+                                    DataSource="StatusGameOptions"
+                                    LabelName="@nameof(SelectItem.Text)"
+                                    ValueName="@nameof(SelectItem.Value)"
+                                    @bind-Value="EditModel.Status" Disabled="EditModel.ReadOnly">
+                            </Select>
+                        </AntDesign.Col>
+                        <AntDesign.Col Span="12">
+                            <LabelFor For="() => EditModel.SoldStatus"></LabelFor>
+                            <Select TItemValue="string" TItem="SelectItem" EnableSearch
+                                    DataSource="GameSoldStatusOptions"
+                                    LabelName="@nameof(SelectItem.Text)"
+                                    ValueName="@nameof(SelectItem.Value)"
+                                    @bind-Value="EditModel.SoldStatus" Disabled="EditModel.ReadOnly">
+                            </Select>
+                        </AntDesign.Col>
+                        <AntDesign.Col Span="12">
+                            <Row Gutter="4">
+                                <AntDesign.Col Span="19">
+                                    <LabelFor FieldIdentifier="context.Field(nameof(EditModel.Price))"></LabelFor>
+                                    <Input Type="@InputType.Number" @bind-Value="@EditModel.Price" Disabled="@EditModel.ReadOnly" Placeholder="">
+                                    <ValidationMessage For="() => EditModel.Price"></ValidationMessage>
+                                </AntDesign.Col>
+                                <AntDesign.Col Span="5">
+                                    <SimpleSelect @bind-Value=@EditModel.Unit Disabled="EditModel.ReadOnly">
+                                        <SelectOptions>
+                                            @foreach (var item in EditModel.DataSource[nameof(EditModel.Unit)])
+                                            {
+                                                <SimpleSelectOption Value="@item.Key.ToString()" Label="@item.Value?.GetDisplay()" />
+                                            }
+                                        </SelectOptions>
+                                    </SimpleSelect>
+                                </AntDesign.Col>
+                            </Row>
+                            <ValidationMessage For="() => EditModel.Unit"></ValidationMessage>
+                        </AntDesign.Col>
+                        <AntDesign.Col Span="12">
+                            <LabelFor For="() => EditModel.SystemSupport"></LabelFor>
+                            <Select TItemValue="string" TItem="SelectItem" EnableSearch
+                                    DataSource="PlatformOptions"
+                                    LabelName="@nameof(SelectItem.Text)"
+                                    ValueName="@nameof(SelectItem.Value)"
+                                    @bind-Value="EditModel.SystemSupport" Disabled="EditModel.ReadOnly">
+                            </Select>
+                        </AntDesign.Col>
+                       @*  <AntDesign.Col Span="12">
+                            <LabelFor For="() => EditModel.SystemSupport"></LabelFor>
+                            <Select TItemValue="string" TItem="SelectItem" EnableSearch
+                                    DataSource="PlatformOptions"
+                                    LabelName="@nameof(SelectItem.Text)"
+                                    ValueName="@nameof(SelectItem.Value)"
+                                    @bind-Value="EditModel.SystemSupport" Disabled="EditModel.ReadOnly">
+                            </Select>
+                        </AntDesign.Col>  hãng game (lưu bảng)*@
+                    </AntDesign.Row>
+                </div>
+            </Row>
+        </EditForm>
+    </AntDesign.Col>
+</AntDesign.Row>
+

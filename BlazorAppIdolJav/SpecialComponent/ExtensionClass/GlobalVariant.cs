@@ -1,4 +1,4 @@
-﻿namespace BlazorAppIdolJav.SpecialComponent.ExtensionClass
+﻿namespace GameManagement.SpecialComponent.ExtensionClass
 {
     public class GlobalVariant
     {

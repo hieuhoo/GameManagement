@@ -3,7 +3,7 @@
     background: #fff;
     padding: 24px;
     min-height: 890px;
-    background-image: url('/image/idol.png');
+    background-image: url('/image/allgame.png');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
@@ -77,4 +77,13 @@
 
 .error-message {
     color:red;
+}
+
+.navmenu-config {
+    height: 100vh;
+    width: 256px;
+    background-color : antiquewhite !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    background-position: center center !important;
 }

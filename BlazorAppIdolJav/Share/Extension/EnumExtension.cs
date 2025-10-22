@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BlazorAppIdolJav.Share.Extension
+namespace GameManagement.Share.Extension
 {
     public class EnumExtension
     {
@@ -14,6 +14,8 @@ namespace BlazorAppIdolJav.Share.Extension
             Taiwan,
             [Display(Name = "Việt Nam")]
             VietNam,
+            [Display(Name = "Trung Quốc")]
+            China,
         }
 
         public enum CharacterGender
@@ -26,19 +28,6 @@ namespace BlazorAppIdolJav.Share.Extension
             Other = 2,
         }
 
-        public enum FilmDetailType
-        {
-            [Display(Name = "Luận loan")]
-            Incestuous = 0,
-            [Display(Name = "Hấp diêm")]
-            Ravishing = 1,
-            [Display(Name = "Mẹ vợ con rể")]
-            MotherAndSonInLaw = 2,
-            [Display(Name = "Học sinh")]
-            Student = 3,
-            [Display(Name = "Bố chồng nàng dâu")]
-            FatherAndBride_In_Law = 4,
-        }
 
         public enum UserRole
         {
@@ -46,6 +35,38 @@ namespace BlazorAppIdolJav.Share.Extension
             Admin = 0,
             [Display(Name = "Người dùng")]
             Normal = 1,
+        }
+
+        public enum GameStatus
+        {
+            [Display(Name = "Chưa ra mắt")]
+            UnReleased = 0,
+            [Display(Name = "Đã ra mắt")]
+            Released = 1,
+        }
+
+        public enum SoldStatus
+        {
+            [Display(Name = "Hết hàng")]
+            SoldOut = 0,
+            [Display(Name = "Còn hàng")]
+            InStock = 1,
+        }
+
+        public enum PlatformSystem
+        {
+            [Display(Name = "Window")]
+            Window = 0,
+            [Display(Name = "MacOS")]
+            MacOS = 1,
+        }
+
+        public enum UnitMoneyEnum
+        {
+            [Display(Name = "VNĐ")]
+            VNĐ = 0,
+            [Display(Name = "USD")]
+            USD = 1,
         }
     }
 }

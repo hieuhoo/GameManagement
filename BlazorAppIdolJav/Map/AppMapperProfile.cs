@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
-using BlazorAppIdolJav.Share.ClassData;
-using BlazorAppIdolJav.Share.Model.EditModel;
-using BlazorAppIdolJav.Share.Model.ViewModel;
+using GameManagement.Share.ClassData;
+using GameManagement.Share.Model.EditModel;
+using GameManagement.Share.Model.ViewModel;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace BlazorAppIdolJav.Map
+namespace GameManagement.Map
 {
     public class AppMapperProfile : Profile
     {

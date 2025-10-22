@@ -1,9 +1,9 @@
-﻿using BlazorAppIdolJav.CoreConfig.Extensions;
-using BlazorAppIdolJav.Share.ClassData;
-using BlazorAppIdolJav.Share.ClassDB;
+﻿using GameManagement.CoreConfig.Extensions;
+using GameManagement.Share.ClassData;
+using GameManagement.Share.ClassDB;
 using System.Runtime.Serialization;
 
-namespace BlazorAppIdolJav.Service.IService
+namespace GameManagement.Service.IService
 {
     public interface IUserService
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BlazorAppIdolJav.Share.Extension
+namespace GameManagement.Share.Extension
 {
     public class MessageEnumExtension
     {

@@ -1,9 +1,9 @@
-﻿using BlazorAppIdolJav.CoreConfig.Extensions;
+﻿using GameManagement.CoreConfig.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Reflection;
 
-namespace BlazorAppIdolJav.SpecialComponent.ExtensionClass
+namespace GameManagement.SpecialComponent.ExtensionClass
 {
     public class InputWatcher : ComponentBase
     {

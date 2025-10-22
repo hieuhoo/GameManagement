@@ -5,7 +5,7 @@ using Microsoft.Extensions.Localization;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 
-namespace BlazorAppIdolJav.SpecialComponent
+namespace GameManagement.SpecialComponent
 {
     public partial class LabelFor : ComponentBase
     {

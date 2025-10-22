@@ -1,32 +1,32 @@
 ﻿using AntDesign;
 using AutoMapper;
-using BlazorAppIdolJav.CoreConfig.Extensions;
-using BlazorAppIdolJav.Service.IService;
-using BlazorAppIdolJav.Share.ClassData;
-using BlazorAppIdolJav.Share.ClassDB;
-using BlazorAppIdolJav.Share.Extension;
-using BlazorAppIdolJav.Share.Model.EditModel;
-using BlazorAppIdolJav.Share.Model.ViewModel;
-using BlazorAppIdolJav.SpecialComponent;
+using GameManagement.CoreConfig.Extensions;
+using GameManagement.Service.IService;
+using GameManagement.Share.ClassData;
+using GameManagement.Share.ClassDB;
+using GameManagement.Share.Extension;
+using GameManagement.Share.Model.EditModel;
+using GameManagement.Share.Model.ViewModel;
+using GameManagement.SpecialComponent;
 using Microsoft.AspNetCore.Components;
-using static BlazorAppIdolJav.Share.Extension.EnumExtension;
-using static BlazorAppIdolJav.Share.Extension.MessageEnumExtension;
+using static GameManagement.Share.Extension.EnumExtension;
+using static GameManagement.Share.Extension.MessageEnumExtension;
 
-namespace BlazorAppIdolJav.Character
+namespace GameManagement.GameInformation
 {
-    public partial class ListCharacter : ComponentBase
+    public partial class ListGame : ComponentBase
     {
-        [Inject] IActressService ActressService { get; set; }
+        [Inject] IGameService GameService { get; set; }
         [Inject] IMapper Mapper { get; set; }
         [Inject] NotificationService Notice { get; set; }
 
-        List<ActressViewModel> ViewModels { get; set; }
-        List<ActressData> ActressDatas { get; set; }
+        List<GameViewModel> ViewModels { get; set; }
+        List<GameData> GameDatas { get; set; }
 
         int width;
         int height;
-        Table<ActressViewModel> Table;
-        CharacterDetail characterDetailRef;
+        Table<GameViewModel> Table;
+        GameDetail gameDetailRef;
 
         bool loading;
         bool createVisible;
@@ -38,7 +38,7 @@ namespace BlazorAppIdolJav.Character
             {
                 width = ConfigTemplate.Width;
                 height = ConfigTemplate.Height;
-                await GetActressDataAsync();
+                await GetGameDataAsync();
                 await LoadDataAsync();
             }
             catch (Exception ex)
@@ -47,15 +47,15 @@ namespace BlazorAppIdolJav.Character
             }
         }
 
-        async Task GetActressDataAsync()
+        async Task GetGameDataAsync()
         {
             try
             {
-                var result = await ActressService.GetAllWithFilterAsync(new ActressSearch
+                var result = await GameService.GetAllWithFilterAsync(new GameSearch
                 {
                     Country = National.Japan.ToString()
                 });
-                ActressDatas = result ?? new List<ActressData>();
+                GameDatas = result ?? new List<GameData>();
             }
             catch (Exception ex)
             {
@@ -67,7 +67,7 @@ namespace BlazorAppIdolJav.Character
         {
             try
             {
-                ViewModels = Mapper.Map<List<ActressViewModel>>(ActressDatas);
+                ViewModels = Mapper.Map<List<GameViewModel>>(GameDatas);
                 int stt = 1;
                 ViewModels.ForEach(c => c.Stt = stt++);
             }
@@ -77,12 +77,12 @@ namespace BlazorAppIdolJav.Character
             }
         }
 
-        async Task UpdateAsync(ActressViewModel model)
+        async Task UpdateAsync(GameViewModel model)
         {
             try
             {
                 createVisible = true;
-                title = "Thông tin diễn viên";
+                title = "Thông tin game";
             }
             catch (Exception ex)
             {
@@ -90,7 +90,7 @@ namespace BlazorAppIdolJav.Character
             }
         }
 
-        async Task DeleteAsync(ActressViewModel model)
+        async Task DeleteAsync(GameViewModel model)
         {
             try
             {
@@ -105,7 +105,7 @@ namespace BlazorAppIdolJav.Character
         async Task OpenCreateAsync()
         {
             createVisible = true;
-            title = "Thêm mới diễn viên";
+            title = "Thêm mới game";
         }
 
         public void ReSize(int size)

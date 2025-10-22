@@ -1,7 +1,7 @@
-﻿using BlazorAppIdolJav.Share.ClassDB;
+﻿using GameManagement.Share.ClassDB;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorAppIdolJav.Data
+namespace GameManagement.Data
 {
     public class ApplicationDbContext : DbContext
     {
@@ -10,7 +10,7 @@ namespace BlazorAppIdolJav.Data
         {
         }
 
-        public DbSet<Actress> Actress { get; set; }
+        public DbSet<Game> Game { get; set; }
         public DbSet<User> User { get; set; }
     }
 }

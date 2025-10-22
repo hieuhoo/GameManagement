@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
-namespace BlazorAppIdolJav.SpecialComponent.ExtensionClass
+namespace GameManagement.SpecialComponent.ExtensionClass
 {
     public class RequiredIfAttribute : ValidationAttribute
     {

@@ -1,45 +1,52 @@
 ﻿using AntDesign;
-using BlazorAppIdolJav.CoreConfig;
-using BlazorAppIdolJav.CoreConfig.Extensions;
-using BlazorAppIdolJav.Share.Model.EditModel;
-using BlazorAppIdolJav.SpecialComponent.ExtensionClass;
+using GameManagement.CoreConfig;
+using GameManagement.CoreConfig.Extensions;
+using GameManagement.Share.Model.EditModel;
+using GameManagement.SpecialComponent.ExtensionClass;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using System;
 using System.ComponentModel.Design;
 using static AntDesign.JSInteropConstants.ObserverConstants;
-using static BlazorAppIdolJav.Share.Extension.EnumExtension;
+using static GameManagement.Share.Extension.EnumExtension;
 
-namespace BlazorAppIdolJav.Character
+namespace GameManagement.GameInformation
 {
-    public partial class CharacterDetail : ComponentBase
+    public partial class GameDetail : ComponentBase
     {
         [Parameter] public EventCallback<int> ReSize { get; set; }
 
-        ActressEditModel EditModel { get; set; } = new();
+        GameEditModel EditModel { get; set; } = new();
         int Size => (EditModel.ImagePath.IsNotNullOrEmpty())
                           ? 12 : 0;
         List<SelectItem> NationalOptions { get; set; } = new();
-        List<SelectItem> GenderOptions { get; set; } = new();
+        List<SelectItem> StatusGameOptions { get; set; } = new();
+        List<SelectItem> GameSoldStatusOptions { get; set; } = new();
+        List<SelectItem> PlatformOptions { get; set; } = new();
+
 
         IList<IBrowserFile> TemplateBrowserFiles = new List<IBrowserFile>();
         List<UploadFileItem> IdentityTemplateFiles { get; set; } = new();
         InputWatcher inputWatcher;
         string idCardUpload = null;
         string tempIdentityPathFile;
-        string character => "Actress";
+        string character;
         protected override void OnInitialized()
         {
             try
             {
-                EditModel = new ActressEditModel();
+                EditModel = new GameEditModel();
                 EditModel.ReadOnly = false;
                 idCardUpload = ObjectExtentions.GenerateGuid();
                 NationalOptions = Enum.GetValues(typeof(National)).Cast<National>()
                      .Select(v => new SelectItem(v.ToString(), v.GetDescription())).ToList();
-                GenderOptions = Enum.GetValues(typeof(CharacterGender)).Cast<CharacterGender>()
+                StatusGameOptions = Enum.GetValues(typeof(GameStatus)).Cast<GameStatus>()
                     .Select(v => new SelectItem(v.ToString(), v.GetDescription())).ToList();
+                GameSoldStatusOptions = Enum.GetValues(typeof(SoldStatus)).Cast<SoldStatus>()
+                   .Select(v => new SelectItem(v.ToString(), v.GetDescription())).ToList();
+                PlatformOptions = Enum.GetValues(typeof(PlatformSystem)).Cast<PlatformSystem>()
+                   .Select(v => new SelectItem(v.ToString(), v.GetDescription())).ToList();
             }
             catch (Exception ex)
             {
@@ -83,7 +90,7 @@ namespace BlazorAppIdolJav.Character
 
         string AttachPath(string character, string baseFolder = null, string fileName = null)
         {
-            var path = Path.Combine(baseFolder, character, "Files", "Idol", "Image", "Attach");
+            var path = Path.Combine(baseFolder, character, "Files", "Game", "Image", "Attach");
             if (fileName.IsNotNullOrEmpty())
             {
                 path = Path.Combine(path, fileName);

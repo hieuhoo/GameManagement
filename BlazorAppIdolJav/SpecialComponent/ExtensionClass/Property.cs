@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
 
-namespace BlazorAppIdolJav.SpecialComponent.ExtensionClass
+namespace GameManagement.SpecialComponent.ExtensionClass
 {
     public sealed class Property<T>
     {

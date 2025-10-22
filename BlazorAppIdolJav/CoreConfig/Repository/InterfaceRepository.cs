@@ -1,4 +1,4 @@
-﻿namespace BlazorAppIdolJav.CoreConfig.Repository
+﻿namespace GameManagement.CoreConfig.Repository
 {
     public class InterfaceRepository
     {

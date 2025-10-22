@@ -1,11 +1,11 @@
-﻿using BlazorAppIdolJav.CoreConfig.Repository;
-using BlazorAppIdolJav.Data;
-using BlazorAppIdolJav.Repository.IRepository;
-using BlazorAppIdolJav.Service.IService;
-using BlazorAppIdolJav.Share.ClassDB;
+﻿using GameManagement.CoreConfig.Repository;
+using GameManagement.Data;
+using GameManagement.Repository.IRepository;
+using GameManagement.Service.IService;
+using GameManagement.Share.ClassDB;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorAppIdolJav.Repository
+namespace GameManagement.Repository
 {
     public class UserRepository : Repository<User>, IUserRepository
     {

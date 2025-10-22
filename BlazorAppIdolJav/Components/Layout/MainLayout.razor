@@ -1,8 +1,8 @@
 ﻿@inherits LayoutComponentBase
 @using AntDesign
-@using BlazorAppIdolJav.Components.Pages
-@using BlazorAppIdolJav.SpecialComponent
-@using BlazorAppIdolJav.SpecialComponent.ExtensionClass;
+@using GameManagement.Components.Pages
+@using GameManagement.SpecialComponent
+@using GameManagement.SpecialComponent.ExtensionClass;
 
 <HeadContent>
     <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
@@ -90,11 +90,6 @@
             <LabelFor For="() => EditModel.Email"></LabelFor>
             <Input Type="@InputType.Text" @bind-Value="@EditModel.Email" />
             <ValidationMessage For="() => EditModel.Email"></ValidationMessage>
-        </Row>
-        <Row>
-            <LabelFor FieldIdentifier="context.Field(nameof(EditModel.PhoneNumber))"></LabelFor>
-            <Input Type="@InputType.Number" @bind-Value="@EditModel.PhoneNumber" />
-            <ValidationMessage For="() => EditModel.PhoneNumber"></ValidationMessage>
         </Row>
         <Row Gutter="8" Justify="@RowJustify.Center">
             <Space>

@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using static BlazorAppIdolJav.CoreConfig.Repository.InterfaceRepository;
+using static GameManagement.CoreConfig.Repository.InterfaceRepository;
 
-namespace BlazorAppIdolJav.CoreConfig.Repository
+namespace GameManagement.CoreConfig.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {

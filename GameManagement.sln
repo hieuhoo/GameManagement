@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36518.9
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorAppIdolJav", "BlazorAppIdolJav\BlazorAppIdolJav.csproj", "{768A76DA-C13F-4D32-9E60-56A7DDBDB83D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameManagement", "BlazorAppIdolJav\GameManagement.csproj", "{768A76DA-C13F-4D32-9E60-56A7DDBDB83D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

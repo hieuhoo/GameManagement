@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace BlazorAppIdolJav.Components.Layout
+namespace GameManagement.Components.Layout
 {
     public partial class NavMenu : ComponentBase
     {

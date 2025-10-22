@@ -1,17 +1,17 @@
 ﻿using AntDesign;
 using AutoMapper;
-using BlazorAppIdolJav.CoreConfig.Extensions;
-using BlazorAppIdolJav.Service.IService;
-using BlazorAppIdolJav.Share.ClassData;
-using BlazorAppIdolJav.Share.Extension;
-using BlazorAppIdolJav.Share.Model.EditModel;
-using BlazorAppIdolJav.SpecialComponent.ExtensionClass;
+using GameManagement.CoreConfig.Extensions;
+using GameManagement.Service.IService;
+using GameManagement.Share.ClassData;
+using GameManagement.Share.Extension;
+using GameManagement.Share.Model.EditModel;
+using GameManagement.SpecialComponent.ExtensionClass;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
-using static BlazorAppIdolJav.Share.Extension.EnumExtension;
-using static BlazorAppIdolJav.Share.Extension.MessageEnumExtension;
+using static GameManagement.Share.Extension.EnumExtension;
+using static GameManagement.Share.Extension.MessageEnumExtension;
 
-namespace BlazorAppIdolJav.Components.Layout
+namespace GameManagement.Components.Layout
 {
     public partial class MainLayout
     {

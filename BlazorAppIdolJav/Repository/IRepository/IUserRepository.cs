@@ -1,7 +1,7 @@
-﻿using BlazorAppIdolJav.Service.IService;
-using BlazorAppIdolJav.Share.ClassDB;
+﻿using GameManagement.Service.IService;
+using GameManagement.Share.ClassDB;
 
-namespace BlazorAppIdolJav.Repository.IRepository
+namespace GameManagement.Repository.IRepository
 {
     public interface IUserRepository
     {

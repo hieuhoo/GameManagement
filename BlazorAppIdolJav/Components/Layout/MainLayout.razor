@@ -3,7 +3,8 @@
 @using GameManagement.Components.Pages
 @using GameManagement.SpecialComponent
 @using GameManagement.SpecialComponent.ExtensionClass;
-
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthToken
 <HeadContent>
     <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
 </HeadContent>
@@ -13,14 +14,15 @@
     </div>
     <main>
         <div class="top-row px-4">
-            @if (!isLoggedIn)
-            {
-                <a href="#" @onclick="ShowLoginModal">Đăng nhập</a>
-            }
-            else
-            {
-                <a href="#" @onclick="LogoutAccount">Đăng xuất</a>
-            }
+             <AuthorizeView>
+                <Authorized Context="auth">
+                    <AntDesign.Text>Xin chào, @currentUser</AntDesign.Text>
+                    <a href="#" class="ms-3" @onclick="LogoutAccount">Đăng xuất</a>
+                </Authorized>
+                <NotAuthorized>
+                    <a href="#" @onclick="ShowLoginModal">Đăng nhập</a>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
         <article class="content px-4">
             @Body

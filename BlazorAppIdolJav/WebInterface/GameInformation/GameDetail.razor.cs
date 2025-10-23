@@ -11,7 +11,7 @@ using System.ComponentModel.Design;
 using static AntDesign.JSInteropConstants.ObserverConstants;
 using static GameManagement.Share.Extension.EnumExtension;
 
-namespace GameManagement.GameInformation
+namespace GameManagement.WebInterface.GameInformation
 {
     public partial class GameDetail : ComponentBase
     {

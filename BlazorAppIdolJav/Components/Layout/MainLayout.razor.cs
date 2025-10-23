@@ -2,11 +2,13 @@
 using AutoMapper;
 using GameManagement.CoreConfig.Extensions;
 using GameManagement.Service.IService;
+using GameManagement.Services;
 using GameManagement.Share.ClassData;
 using GameManagement.Share.Extension;
 using GameManagement.Share.Model.EditModel;
 using GameManagement.SpecialComponent.ExtensionClass;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using static GameManagement.Share.Extension.EnumExtension;
 using static GameManagement.Share.Extension.MessageEnumExtension;
@@ -18,6 +20,8 @@ namespace GameManagement.Components.Layout
         [Inject] IMapper Mapper { get; set; }
         [Inject] IUserService UserService { get; set; }
         [Inject] NotificationService NoticeService { get; set; }
+        [Inject] AuthenticationStateProvider AuthProvider { get; set; }
+       
         UserEditModel EditModel { get; set; } = new UserEditModel();
         UserData Data { get; set; } = new UserData();
 
@@ -27,12 +31,17 @@ namespace GameManagement.Components.Layout
         bool registerVisible;
         bool isLoggedIn = false;
         bool error;
+        string currentUser;
 
         protected override async Task OnInitializedAsync()
         {
             try
             {
                 EditModel = new UserEditModel();
+                var authState = await AuthProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
+                isLoggedIn = user.Identity?.IsAuthenticated ?? false;
+                currentUser = user.Identity?.Name;
             }
             catch (Exception ex)
             {
@@ -49,6 +58,9 @@ namespace GameManagement.Components.Layout
                     error = true;
                     return;
                 }
+                await ((CustomAuthenticationStateProvider)AuthProvider)
+                        .MarkUserAsAuthenticated(EditModel.UserName);
+                currentUser = EditModel.UserName;
                 isLoggedIn = true;      
                 loginVisible = false;
                 StateHasChanged();
@@ -178,8 +190,9 @@ namespace GameManagement.Components.Layout
             loginVisible = true;
         }
 
-        void LogoutAccount()
+        async Task LogoutAccount()
         {
+            await ((CustomAuthenticationStateProvider)AuthProvider).MarkUserAsLoggedOut();
             isLoggedIn = false;
             EditModel = new UserEditModel();
             error = false;

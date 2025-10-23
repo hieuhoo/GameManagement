@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Components;
 using static GameManagement.Share.Extension.EnumExtension;
 using static GameManagement.Share.Extension.MessageEnumExtension;
 
-namespace GameManagement.GameInformation
+namespace GameManagement.WebInterface.GameInformation
 {
     public partial class ListGame : ComponentBase
     {

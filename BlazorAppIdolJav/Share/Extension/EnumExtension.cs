@@ -48,7 +48,7 @@ namespace GameManagement.Share.Extension
         public enum SoldStatus
         {
             [Display(Name = "Hết hàng")]
-            SoldOut = 0,
+            OutOfStock = 0,
             [Display(Name = "Còn hàng")]
             InStock = 1,
         }
@@ -67,6 +67,14 @@ namespace GameManagement.Share.Extension
             VNĐ = 0,
             [Display(Name = "USD")]
             USD = 1,
+        }
+
+        public enum StatusEnum
+        {
+            [Display(Name = "Hiệu lực")]
+            Active = 0,
+            [Display(Name = "Không hiệu lực")]
+            Disable = 1,
         }
     }
 }

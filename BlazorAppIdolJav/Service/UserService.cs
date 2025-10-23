@@ -62,5 +62,33 @@ namespace GameManagement.Service
             }
         }
 
+        public async Task<bool> CheckUserLoginAsync(UserData data)
+        {
+            try
+            {
+                var user = _mapper.Map<User>(data);
+                var result = await _repo.CheckUserLoginAsync(user);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+
+        public async Task<UserData> GetUserInfoAsync(UserSearch search)
+        {
+            try
+            {
+                var result = await _repo.GetUserInfoAsync(search);
+                var data = _mapper.Map<UserData>(result);
+                return data;
+            }
+            catch (Exception ex)
+            {
+                return new UserData();
+            }
+        }
     }
 }

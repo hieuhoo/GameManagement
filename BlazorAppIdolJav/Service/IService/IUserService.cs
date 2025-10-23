@@ -10,7 +10,8 @@ namespace GameManagement.Service.IService
         Task<List<UserData>> GetAllWithFilterAsync(UserSearch search);
         Task<bool> RegisterAccountAsync(UserData data);
         Task<bool> CheckExistUserInfoAsync(UserData data);
-
+        Task<bool> CheckUserLoginAsync(UserData data);
+        Task<UserData> GetUserInfoAsync(UserSearch search);
     }
 
     [DataContract]

@@ -9,20 +9,16 @@
     </MenuItem>
     @if (HaveLogged)
     {
+        <MenuItem Key="setup">
+            <NavLink href="/thiet-lap-chung">
+                <Icon Type="setting" /> Thiết lập
+            </NavLink>
+        </MenuItem>
         <MenuItem Key="game">
             <NavLink href="/danh-sach-game">
                 <Icon Type="appstore" /> Danh sách Game
             </NavLink>
         </MenuItem>
-        <SubMenu Key="config" Title="Thiết lập">
-            <MenuItem Key="game-list">
-            </MenuItem>
-            @* <MenuItem Key="genres">
-            <NavLink href="/loai-game">
-                <Icon Type="unordered-list" /> Loại Game
-            </NavLink>
-        </MenuItem> *@
-        </SubMenu>
     }
 </Menu>
 

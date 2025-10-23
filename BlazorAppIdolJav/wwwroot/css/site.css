@@ -87,3 +87,14 @@
     background-size: cover !important;
     background-position: center center !important;
 }
+
+.site-content {
+    min-height: calc(100vh - 150px);
+    margin-bottom: 20px;
+}
+
+.site-layout .site-layout-background, .site-content {
+    background: #fff;
+    padding: 0px 10px;
+    margin-top: 10px;
+}

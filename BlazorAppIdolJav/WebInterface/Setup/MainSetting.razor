@@ -1,0 +1,16 @@
+﻿@page "/thiet-lap-chung"
+@using AntDesign
+@using static GameManagement.Share.Extension.EnumExtension
+
+<PageHeader Class="site-page-header" Title="Thiết lập danh mục">
+</PageHeader>
+<div class="site-content">
+    <Tabs OnTabClick="TabChangeAsync">
+        <TabPane Tab="Hãng game" Key="@GeneralGameSetup.GameCompany.ToString()">
+            <GameCompany @ref="gameCompany"></GameCompany>
+        </TabPane>
+        <TabPane Tab="Thể loại game" Key="@GeneralGameSetup.GameType.ToString()">
+            <GameType @ref="gameType"></GameType>
+        </TabPane>
+    </Tabs>
+</div>

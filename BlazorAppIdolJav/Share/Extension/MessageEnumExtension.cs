@@ -20,6 +20,8 @@ namespace GameManagement.Share.Extension
             AddSuccessfully = 5,
             [Display(Name = "Thêm dữ liệu thất bại")]
             AddFailed = 6,
+            [Display(Name = "Bạn có chắc chắn muốn hủy ? Mọi thao tác sẽ không được lưu")]
+            AreYouSureCancel = 0,
         }
 
         public enum TypeAlert

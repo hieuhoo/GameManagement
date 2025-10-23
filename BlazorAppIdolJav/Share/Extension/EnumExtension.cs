@@ -76,5 +76,13 @@ namespace GameManagement.Share.Extension
             [Display(Name = "Không hiệu lực")]
             Disable = 1,
         }
+
+        public enum GeneralGameSetup
+        {
+            [Display(Name = "Hãng game")]
+            GameCompany = 0,
+            [Display(Name = "Thể loại game")]
+            GameType = 1,
+        }
     }
 }

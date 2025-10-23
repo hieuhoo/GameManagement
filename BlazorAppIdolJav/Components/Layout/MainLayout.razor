@@ -10,11 +10,13 @@
 </HeadContent>
 <div class="page">
     <div class="sidebar">
-        <NavMenu HaveLogged="isLoggedIn"></NavMenu>
+        <CascadingValue Value="Data">
+            <NavMenu HaveLogged="isLoggedIn"></NavMenu>
+        </CascadingValue>
     </div>
     <main>
         <div class="top-row px-4">
-             <AuthorizeView>
+            <AuthorizeView>
                 <Authorized Context="auth">
                     <AntDesign.Text>Xin chào, @currentUser</AntDesign.Text>
                     <a href="#" class="ms-3" @onclick="LogoutAccount">Đăng xuất</a>
@@ -24,7 +26,7 @@
                 </NotAuthorized>
             </AuthorizeView>
         </div>
-        <article class="content px-4">
+        <article class="content">
             @Body
         </article>
     </main>
@@ -71,8 +73,8 @@
        Footer="@null" MaskClosable=true
        OnCancel="CloseRegisterForm">
     <EditForm Model="@EditModel" OnValidSubmit="@HandleRegisterAsync">
-         <DataAnnotationsValidator />
-          <InputWatcher @ref="inputWatcher"></InputWatcher>
+        <DataAnnotationsValidator />
+        <InputWatcher @ref="inputWatcher"></InputWatcher>
         <Row>
             <LabelFor For="() => EditModel.UserName"></LabelFor>
             <Input Type="@InputType.Text" @bind-Value="@EditModel.UserName" />

@@ -17,6 +17,8 @@
 
         public string GameCompanyId { get; set; }
         public string? ImagePath { get; set; }
+        public string GameTypeId { get; set; }
+
 
     }
 }

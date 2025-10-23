@@ -21,7 +21,7 @@ namespace GameManagement.Components.Layout
         [Inject] IUserService UserService { get; set; }
         [Inject] NotificationService NoticeService { get; set; }
         [Inject] AuthenticationStateProvider AuthProvider { get; set; }
-       
+
         UserEditModel EditModel { get; set; } = new UserEditModel();
         UserData Data { get; set; } = new UserData();
 
@@ -58,14 +58,27 @@ namespace GameManagement.Components.Layout
                     error = true;
                     return;
                 }
-                await ((CustomAuthenticationStateProvider)AuthProvider)
-                        .MarkUserAsAuthenticated(EditModel.UserName);
-                currentUser = EditModel.UserName;
-                isLoggedIn = true;      
-                loginVisible = false;
-                StateHasChanged();
+                var data = Mapper.Map<UserData>(EditModel);
+                var isLoginSuccess = await UserService.CheckUserLoginAsync(data);
+                if (isLoginSuccess)
+                {
+                    await ((CustomAuthenticationStateProvider)AuthProvider)
+                            .MarkUserAsAuthenticated(EditModel.UserName);
+                    currentUser = EditModel.UserName;
+                    Data = await UserService.GetUserInfoAsync(new UserSearch
+                    {
+                        UserName = currentUser
+                    });
+                    isLoggedIn = true;
+                    loginVisible = false;
+                    StateHasChanged();
+                }
+                else
+                {
+                    NoticeService.NotiError("Sai tên đăng nhập hoặc mật khẩu");
+                }
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -96,13 +109,7 @@ namespace GameManagement.Components.Layout
                     {
                         inputWatcher.NotifyFieldChanged(errorMessageStore.First().Key, errorMessageStore);
                     }
-                    await NoticeService.Open(new NotificationConfig
-                    {
-                        Message = TypeAlert.ThongBao.GetDescription(),
-                        Description = TypeAlert.InvalidData.GetDescription(),
-                        NotificationType = NotificationType.Warning,
-                        Placement = NotificationPlacement.TopRight
-                    });
+                    NoticeService.NotiWarning(TypeAlert.InvalidData.GetDescription());
                     return;
                 }
                 var isExist = await UserService.CheckExistUserInfoAsync(new UserData
@@ -112,13 +119,7 @@ namespace GameManagement.Components.Layout
                 });
                 if (isExist)
                 {
-                    await NoticeService.Open(new NotificationConfig
-                    {
-                        Message = TypeAlert.ThongBao.GetDescription(),
-                        Description = AccountRegisterEnum.ExistEmailOrUserName.GetDescription(),
-                        NotificationType = NotificationType.Warning,
-                        Placement = NotificationPlacement.TopRight
-                    });
+                    NoticeService.NotiWarning(AccountRegisterEnum.ExistEmailOrUserName.GetDescription());
                     return;
                 }
                 EditModel.Id = ObjectExtentions.GenerateGuid();
@@ -129,23 +130,11 @@ namespace GameManagement.Components.Layout
                 var result = await UserService.RegisterAccountAsync(Data);
                 if (result)
                 {
-                    await NoticeService.Open(new NotificationConfig
-                    {
-                        Message = TypeAlert.ThongBao.GetDescription(),
-                        Description = AccountRegisterEnum.Success.GetDescription(),
-                        NotificationType = NotificationType.Success,
-                        Placement = NotificationPlacement.TopRight
-                    });
+                    NoticeService.NotiSuccess(AccountRegisterEnum.Success.GetDescription());
                 }
                 else
                 {
-                    await NoticeService.Open(new NotificationConfig
-                    {
-                        Message = TypeAlert.ThongBao.GetDescription(),
-                        Description = AccountRegisterEnum.Failed.GetDescription(),
-                        NotificationType = NotificationType.Warning,
-                        Placement = NotificationPlacement.TopRight
-                    });
+                    NoticeService.NotiWarning(AccountRegisterEnum.Failed.GetDescription());
                 }
             }
             catch (Exception ex)
@@ -155,6 +144,7 @@ namespace GameManagement.Components.Layout
             finally
             {
                 EditModel = new UserEditModel();
+                Data = new UserData();
                 registerVisible = false;
             }
         }
@@ -177,7 +167,7 @@ namespace GameManagement.Components.Layout
             try
             {
                 registerVisible = false;
-               loginVisible = true;
+                loginVisible = true;
             }
             catch (Exception ex)
             {

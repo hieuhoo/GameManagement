@@ -31,5 +31,20 @@
     {
     <AntDesign.Text Copyable="false">@National.Taiwan.GetDescription()</AntDesign.Text>
     }
+    else if (national == National.China.ToString())
+    {
+    <AntDesign.Text Copyable="false">@National.China.GetDescription()</AntDesign.Text>
+    }
+</div>;
+
+    public static RenderFragment RenderStatusText(string status) =>@<div>
+@if (status == StatusEnum.Active.ToString())
+    {
+    <AntDesign.Text Type="@TextElementType.Success" Copyable="false">@StatusEnum.Active.GetDescription()</AntDesign.Text>
+    }
+    else if (status == StatusEnum.Disable.ToString())
+    {
+    <AntDesign.Text Type="@TextElementType.Danger" Copyable="false">@StatusEnum.Disable.GetDescription()</AntDesign.Text>
+    }
 </div>;
 }

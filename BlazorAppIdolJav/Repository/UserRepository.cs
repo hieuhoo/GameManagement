@@ -62,5 +62,39 @@ namespace GameManagement.Repository
                 return false;
             }
         }
+
+        public async Task<bool> CheckUserLoginAsync(User data)
+        {
+            try
+            {
+                var allUser = await GetAllAsync();
+                foreach (var item in allUser)
+                {
+                    if (item.UserName == data.UserName && item.PassWord == data.PassWord)
+                    {
+                        return true; 
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<User> GetUserInfoAsync(UserSearch search)
+        {
+            try
+            {
+                var filter = search.CreateFilter(GetQueryable());
+                var data = await filter.FirstOrDefaultAsync();
+                return data ?? new User();
+            }
+            catch (Exception ex)
+            {
+                return new User();
+            }
+        }
     }
 }

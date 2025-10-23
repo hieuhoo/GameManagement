@@ -5,4 +5,9 @@
         public const int Width = 800;
         public const int Height = 1200;
     }
+
+    public class DefaultTableConfig
+    {
+        public static string ScrollBarWidth = "10px";
+    }
 }

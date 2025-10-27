@@ -27,9 +27,14 @@ builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStat
 builder.Services.AddScoped<ProtectedLocalStorage>();
 builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IGameCompanyService, GameCompanyService>();
+builder.Services.AddScoped<IGameTypeService, GameTypeService>();
+
 //cấu hình repo vào đây
 builder.Services.AddScoped<IGameRepository, GameRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IGameCompanyRepository, GameCompanyRepository>();
+builder.Services.AddScoped<IGameTypeRepository, GameTypeRepository>();
 
 var app = builder.Build();
 

@@ -32,7 +32,7 @@ namespace GameManagement.WebInterface.GameInformation
         string idCardUpload = null;
         string tempIdentityPathFile;
         string character;
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             try
             {

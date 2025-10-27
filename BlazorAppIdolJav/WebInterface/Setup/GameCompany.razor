@@ -6,6 +6,7 @@
 @using GameManagement.SpecialComponent.ExtensionClass
 @using static GameManagement.Share.Extension.MessageEnumExtension
 @using Microsoft.AspNetCore.Components.Forms
+@using GameManagement.CoreConfig.Extensions
 
 <Row Gutter="8">
     <AntDesign.Col Span="14">
@@ -16,12 +17,12 @@
                @ref="table">
             <Column @bind-Field="context.Stt" Width="60" Title="Stt"></Column>
             <Column @bind-Field="context.Name" Title="Tên hãng"></Column>
-            <Column @bind-Field="context.Country" Title="Quốc gia">
+            <Column @bind-Field="context.Country" Title="Quốc gia" Width="150">
                 <Template>
                     @CommonTemplate.RenderNationalityText(context.Country)
                 </Template>
             </Column>
-            <Column @bind-Field="context.Description" Title="Giới thiệu ngắn" Width="250"></Column>
+            <Column @bind-Field="context.Description" Title="Giới thiệu ngắn" Width="280" Ellipsis></Column>
             <Column @bind-Field="context.Status" Title="Trạng thái">
                 <Template>
                     @CommonTemplate.RenderStatusText(context.Status)
@@ -53,14 +54,14 @@
                                 <Button Icon="close" Type="@ButtonType.Primary" Danger>Hủy</Button>
                             </ChildContent>
                             <TitleTemplate>
-                                @OperationEnum.AreYouSureCancel
+                                @OperationEnum.AreYouSureCancel.GetDescription()
                             </TitleTemplate>
                         </Popconfirm>
                     </SpaceItem>
                 }
                 @if (EditModel.ReadOnly)
                 {
-                    @*  @if (SelectModel != null)
+                     @if (SelectModel != null)
                     {
                         <SpaceItem>
                             <Popconfirm Placement="@Placement.LeftBottom"
@@ -68,14 +69,14 @@
                                         OkText="Đồng ý"
                                         CancelText="Hủy">
                                 <ChildContent>
-                                    <Button Class="btn-delete" Icon="delete">Xóa</Button>
+                                    <Button Class="btn-delete" Type="@ButtonType.Primary" Danger Icon="delete">Xóa</Button>
                                 </ChildContent>
                                 <TitleTemplate>
-                                    @OperationEnum.AreYouSureToDelete
+                                    @OperationEnum.AreYouSureToDelete.GetDescription()
                                 </TitleTemplate>
                             </Popconfirm>
                         </SpaceItem>
-                    } *@
+                    }
                 }
             </Space>
         </Row>

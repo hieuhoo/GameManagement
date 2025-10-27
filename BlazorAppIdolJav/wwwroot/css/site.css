@@ -98,3 +98,16 @@
     padding: 0px 10px;
     margin-top: 10px;
 }
+
+.btn-delete {
+    background-color: #ff4d4f;
+    border-color: #ff4d4f;
+    color: #fff;
+    cursor: pointer;
+}
+
+    .btn-delete:hover, .btn-delete:focus {
+        color: #fff;
+        border-color: #fff;
+        background-color: #cb1214;
+    }

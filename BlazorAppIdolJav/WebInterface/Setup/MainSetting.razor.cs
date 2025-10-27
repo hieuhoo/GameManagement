@@ -7,7 +7,7 @@ namespace GameManagement.WebInterface.Setup
         GameCompany gameCompany;
         GameType gameType;
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             try
             {

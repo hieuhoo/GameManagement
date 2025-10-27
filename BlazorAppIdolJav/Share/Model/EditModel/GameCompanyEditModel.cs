@@ -21,7 +21,7 @@ namespace GameManagement.Share.Model.EditModel
         [Required]
         public string Status { get; set; }
 
-        public DateTime CreatDate { get; set; }
+        public DateTime CreateDate { get; set; }
 
         [Display(Name = "Mô tả ngắn")]
         [Required]

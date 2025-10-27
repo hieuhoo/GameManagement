@@ -18,7 +18,7 @@ namespace GameManagement.Share.ClassData
             set;
         }
         [DataMember(Order = 3)]
-        public virtual String Code
+        public virtual String EnglishName
         {
             get;
             set;

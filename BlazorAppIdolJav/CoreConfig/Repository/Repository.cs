@@ -16,7 +16,9 @@ namespace GameManagement.CoreConfig.Repository
         }
 
         public async Task<IEnumerable<T>> GetAllAsync() => await _dbSet.ToListAsync();
-        public async Task<T?> GetByIdAsync(int id) => await _dbSet.FindAsync(id);
+        public async Task<T?> GetByIdAsync(string id) => await _dbSet.FindAsync(id);
+        public async Task<T?> GetByIdNoTrackingAsync(string id)
+             => await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => EF.Property<string>(e, "Id") == id);
 
         public async Task AddAsync(T entity)
         {
@@ -50,7 +52,7 @@ namespace GameManagement.CoreConfig.Repository
             }
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(string id)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync();
             try

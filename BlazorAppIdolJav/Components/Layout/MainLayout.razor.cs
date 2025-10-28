@@ -69,7 +69,7 @@ namespace GameManagement.Components.Layout
                     var role = Data.Role.Trim();
                     if (string.Equals(role, UserRole.Admin.ToString(), StringComparison.OrdinalIgnoreCase))
                     {
-                        currentUser = "ADMIN";
+                        currentUser = UserRole.Admin.GetDescription();
                     }
                     else
                     {
@@ -211,9 +211,9 @@ namespace GameManagement.Components.Layout
             {
                 return String.Empty;
             }
-            if (string.Equals(userName, "ADMIN", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(userName, UserRole.Admin.GetDescription(), StringComparison.OrdinalIgnoreCase))
             {
-                return "AD";
+                return GlobalVariant.AdminShortName;
             }
             var parts = userName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             return string.Concat(parts.TakeLast(2).Select(p => p[0])).ToUpper();

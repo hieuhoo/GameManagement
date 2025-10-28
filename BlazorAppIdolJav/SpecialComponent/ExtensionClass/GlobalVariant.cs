@@ -13,7 +13,6 @@
         public static string TempFolder = "TempFolder";
         public static string TempFolderResource = "Temp";
         public static long MaxFileSize = 1024 * 1024 * 20;
-
-
+        public static string AdminShortName = "AD";
     }
 }

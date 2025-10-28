@@ -31,9 +31,9 @@ namespace GameManagement.Share.Extension
 
         public enum UserRole
         {
-            [Display(Name = "Quản trị viên")]
+            [Display(Name = "ADMIN")]
             Admin = 0,
-            [Display(Name = "Người dùng")]
+            [Display(Name = "Bình thường")]
             Normal = 1,
         }
 

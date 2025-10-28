@@ -15,7 +15,7 @@
         <Row Gutter="8">
             <Space>
                 <SpaceItem>
-                    <Button Icon="plus" OnClick="@OpenCreateAsync" Type="@ButtonType.Primary" Color="Color.Green7">Thêm mới</Button>
+                    <Button Icon="plus" OnClick="@AddNewGame" Type="@ButtonType.Primary" Color="Color.Green7">Thêm mới</Button>
                 </SpaceItem>
             </Space>
         </Row>
@@ -29,5 +29,7 @@
         Title="@title"
         OnClose="() => createVisible = false"
         MaskClosable="false">
-    <GameDetail @ref="gameDetailRef" ReSize="ReSize"></GameDetail>
+    <GameDetail @ref="gameDetailRef" ReSize="ReSize" CompanyDatas="CompanyDatas" GameTypeDatas="GameTypeDatas">
+
+    </GameDetail>
 </Drawer>

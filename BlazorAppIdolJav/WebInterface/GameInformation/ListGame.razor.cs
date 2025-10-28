@@ -1,6 +1,7 @@
 ﻿using AntDesign;
 using AutoMapper;
 using GameManagement.CoreConfig.Extensions;
+using GameManagement.Service;
 using GameManagement.Service.IService;
 using GameManagement.Share.ClassData;
 using GameManagement.Share.ClassDB;
@@ -18,15 +19,19 @@ namespace GameManagement.WebInterface.GameInformation
     {
         [Inject] IGameService GameService { get; set; }
         [Inject] IMapper Mapper { get; set; }
+        [Inject] IGameCompanyService CompanyService { get; set; }
+        [Inject] IGameTypeService GameTypeService { get; set; }
         [Inject] NotificationService Notice { get; set; }
 
         List<GameViewModel> ViewModels { get; set; }
         List<GameData> GameDatas { get; set; }
+        List<GameTypeData> GameTypeDatas { get; set; } = new();
+        List<GameCompanyData> CompanyDatas { get; set; } = new();
 
-        int width;
-        int height;
         Table<GameViewModel> Table;
         GameDetail gameDetailRef;
+        int width;
+        int height;
 
         bool loading;
         bool createVisible;
@@ -38,6 +43,8 @@ namespace GameManagement.WebInterface.GameInformation
             {
                 width = ConfigTemplate.Width;
                 height = ConfigTemplate.Height;
+                await GetGameTypeDataAsync();
+                await GetGameCompanyDataAsync();
                 await GetGameDataAsync();
                 await LoadDataAsync();
             }
@@ -102,7 +109,7 @@ namespace GameManagement.WebInterface.GameInformation
             }
         }
 
-        async Task OpenCreateAsync()
+        void AddNewGame()
         {
             createVisible = true;
             title = "Thêm mới game";
@@ -119,6 +126,38 @@ namespace GameManagement.WebInterface.GameInformation
                 width = ConfigTemplate.Width / 2;
             }
             StateHasChanged();
+        }
+
+        async Task GetGameTypeDataAsync()
+        {
+            try
+            {
+                var result = await GameTypeService.GetAllWithFilterAsync(new GameTypeSearch
+                {
+
+                });
+                GameTypeDatas = result ?? new List<GameTypeData>();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        async Task GetGameCompanyDataAsync()
+        {
+            try
+            {
+                var result = await CompanyService.GetAllWithFilterAsync(new GameCompanySearch
+                {
+
+                });
+                CompanyDatas = result ?? new List<GameCompanyData>();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

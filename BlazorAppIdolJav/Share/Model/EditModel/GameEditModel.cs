@@ -1,7 +1,6 @@
 ﻿using GameManagement.CoreConfig;
 using GameManagement.CoreConfig.Extensions;
 using GameManagement.SpecialComponent.ExtensionClass;
-using Microsoft.Extensions.Localization;
 using System.ComponentModel.DataAnnotations;
 using static GameManagement.Share.Extension.EnumExtension;
 
@@ -85,9 +84,23 @@ namespace GameManagement.Share.Model.EditModel
 
         public GameEditModel()
         {
-                DataSource[Property.NameProperty(c => c.Unit)] = Enum.GetValues(typeof(UnitMoneyEnum)).Cast<UnitMoneyEnum>()
+            InputFields.Add<GameEditModel>(c => c.Price);
+
+            DataSource[Property.NameProperty(c => c.Unit)] = Enum.GetValues(typeof(UnitMoneyEnum)).Cast<UnitMoneyEnum>()
                    .ToDictionary(c => c.ToString(), v => (ISelectItem)new SelectItem(v.ToString(), v.GetDescription()));
-               
+        }
+
+        public override Dictionary<string, List<string>> Validate(string nameProperty)
+        {
+            var Errors = new Dictionary<string, List<string>>();
+            if (nameProperty == Property.Name(c => c.Price))
+            {
+                if (Price <= 0)
+                {
+                    Errors.AddExist(nameProperty, "Giá tiền của game phải lớn hơn 0");
+                }
+            }
+            return Errors;
         }
 
     }

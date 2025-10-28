@@ -2,8 +2,8 @@
 {
     public class ConfigTemplate
     {
-        public const int Width = 800;
-        public const int Height = 1200;
+        public const int Width = 1200;
+        public const int Height = 600;
     }
 
     public class DefaultTableConfig

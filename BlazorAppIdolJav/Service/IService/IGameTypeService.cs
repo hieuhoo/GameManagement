@@ -10,7 +10,6 @@ namespace GameManagement.Service.IService
         Task<bool> SaveGameTypeAsync(GameTypeData data);
         Task<bool> UpdateGameTypeAsync(GameTypeData data);
         Task<bool> DeleteGameTypeAsync(GameTypeData data);
-
         Task<List<GameTypeData>> GetAllWithFilterAsync(GameTypeSearch search);
     }
 

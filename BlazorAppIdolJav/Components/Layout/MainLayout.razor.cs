@@ -62,13 +62,21 @@ namespace GameManagement.Components.Layout
                 var isLoginSuccess = await UserService.CheckUserLoginAsync(data);
                 if (isLoginSuccess)
                 {
-                    await ((CustomAuthenticationStateProvider)AuthProvider)
-                            .MarkUserAsAuthenticated(EditModel.UserName);
-                    currentUser = EditModel.UserName;
                     Data = await UserService.GetUserInfoAsync(new UserSearch
                     {
-                        UserName = currentUser
+                        UserName = EditModel.UserName
                     });
+                    var role = Data.Role.Trim();
+                    if (string.Equals(role, UserRole.Admin.ToString(), StringComparison.OrdinalIgnoreCase))
+                    {
+                        currentUser = "ADMIN";
+                    }
+                    else
+                    {
+                        currentUser = Data.Name.Trim();
+                    }
+                    await ((CustomAuthenticationStateProvider)AuthProvider)
+                            .MarkUserAsAuthenticated(EditModel.UserName);
                     isLoggedIn = true;
                     loginVisible = false;
                     StateHasChanged();
@@ -97,6 +105,7 @@ namespace GameManagement.Components.Layout
                 throw ex;
             }
         }
+
 
         async Task HandleRegisterAsync()
         {
@@ -182,11 +191,32 @@ namespace GameManagement.Components.Layout
 
         async Task LogoutAccount()
         {
-            await ((CustomAuthenticationStateProvider)AuthProvider).MarkUserAsLoggedOut();
-            isLoggedIn = false;
-            EditModel = new UserEditModel();
-            error = false;
-            StateHasChanged();
+            try
+            {
+                await ((CustomAuthenticationStateProvider)AuthProvider).MarkUserAsLoggedOut();
+                isLoggedIn = false;
+                EditModel = new UserEditModel();
+                error = false;
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        string DisplayUserNameImage(string userName)
+        {
+            if (userName.IsNullOrEmpty())
+            {
+                return String.Empty;
+            }
+            if (string.Equals(userName, "ADMIN", StringComparison.OrdinalIgnoreCase))
+            {
+                return "AD";
+            }
+            var parts = userName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            return string.Concat(parts.TakeLast(2).Select(p => p[0])).ToUpper();
         }
     }
 }

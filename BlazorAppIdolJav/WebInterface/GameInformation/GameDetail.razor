@@ -4,6 +4,7 @@
 @using GameManagement.SpecialComponent
 @using GameManagement.SpecialComponent.ExtensionClass
 @using Microsoft.AspNetCore.Components.Forms
+@using GameManagement.Share.ClassData
 <AntDesign.Row>
     <AntDesign.Col Span="@(Size)">
         @if (EditModel.ImagePath.IsNotNullOrEmpty())
@@ -48,18 +49,31 @@
                                     DataSource="NationalOptions"
                                     LabelName="@nameof(SelectItem.Text)"
                                     ValueName="@nameof(SelectItem.Value)"
+                                    AllowClear
                                     @bind-Value="EditModel.Country" Disabled="EditModel.ReadOnly">
                             </Select>
                         </AntDesign.Col>
-                      @*   <AntDesign.Col Span="12">
-                            <LabelFor For="() => EditModel.Country"></LabelFor>
-                            <Select TItemValue="string" TItem="SelectItem" EnableSearch
-                                    DataSource="NationalOptions"
-                                    LabelName="@nameof(SelectItem.Text)"
-                                    ValueName="@nameof(SelectItem.Value)"
-                                    @bind-Value="EditModel.Country" Disabled="EditModel.ReadOnly">
+                        <AntDesign.Col Span="12">
+                            <LabelFor For="() => EditModel.GameCompanyId"></LabelFor>
+                            <Select TItemValue="string" TItem="GameCompanyData" EnableSearch
+                                    DataSource="CompanyDatas"
+                                    LabelName="@nameof(GameCompanyData.Name)"
+                                    ValueName="@nameof(GameCompanyData.Id)"
+                                    AllowClear
+                                    @bind-Value="EditModel.GameCompanyId" Disabled="EditModel.ReadOnly">
                             </Select>
-                        </AntDesign.Col> loại game nhé *@
+                        </AntDesign.Col>
+                        <AntDesign.Col Span="12">
+                            <LabelFor For="() => EditModel.GameTypeId"></LabelFor>
+                            <Select TItemValue="string" TItem="GameTypeData" EnableSearch
+                                    DataSource="GameTypeDatas"
+                                    Mode="SelectMode.Multiple"
+                                    AllowClear
+                                    LabelName="@nameof(GameTypeData.Name)"
+                                    ValueName="@nameof(GameTypeData.Id)"
+                                    @bind-Value="EditModel.GameTypeId" Disabled="EditModel.ReadOnly">
+                            </Select>
+                        </AntDesign.Col>
                         <AntDesign.Col Span="12">
                             <LabelFor FieldIdentifier="context.Field(nameof(EditModel.ReleaseDate))"></LabelFor>
                             <br>
@@ -89,13 +103,14 @@
                             </Select>
                         </AntDesign.Col>
                         <AntDesign.Col Span="12">
-                            <Row Gutter="4">
-                                <AntDesign.Col Span="19">
+                            <Row Gutter="8" Align="RowAlign.Middle">
+                                <AntDesign.Col Span="16">
                                     <LabelFor FieldIdentifier="context.Field(nameof(EditModel.Price))"></LabelFor>
                                     <Input Type="@InputType.Number" @bind-Value="@EditModel.Price" Disabled="@EditModel.ReadOnly" Placeholder="">
                                     <ValidationMessage For="() => EditModel.Price"></ValidationMessage>
                                 </AntDesign.Col>
-                                <AntDesign.Col Span="5">
+                                <AntDesign.Col Span="8">
+                                    <LabelFor FieldIdentifier="context.Field(nameof(EditModel.Unit))"></LabelFor>
                                     <SimpleSelect @bind-Value=@EditModel.Unit Disabled="EditModel.ReadOnly">
                                         <SelectOptions>
                                             @foreach (var item in EditModel.DataSource[nameof(EditModel.Unit)])
@@ -117,15 +132,11 @@
                                     @bind-Value="EditModel.SystemSupport" Disabled="EditModel.ReadOnly">
                             </Select>
                         </AntDesign.Col>
-                       @*  <AntDesign.Col Span="12">
-                            <LabelFor For="() => EditModel.SystemSupport"></LabelFor>
-                            <Select TItemValue="string" TItem="SelectItem" EnableSearch
-                                    DataSource="PlatformOptions"
-                                    LabelName="@nameof(SelectItem.Text)"
-                                    ValueName="@nameof(SelectItem.Value)"
-                                    @bind-Value="EditModel.SystemSupport" Disabled="EditModel.ReadOnly">
-                            </Select>
-                        </AntDesign.Col>  hãng game (lưu bảng)*@
+                        <AntDesign.Col Span="24">
+                            <LabelFor FieldIdentifier="context.Field(EditModel.Property.NameProperty(c => c.Description))"></LabelFor>
+                            <TextArea @bind-Value="EditModel.Description" MinRows="4" Disabled="EditModel.ReadOnly"></TextArea>
+                            <ValidationMessage For="() => EditModel.Description"></ValidationMessage>
+                        </AntDesign.Col>
                     </AntDesign.Row>
                 </div>
             </Row>

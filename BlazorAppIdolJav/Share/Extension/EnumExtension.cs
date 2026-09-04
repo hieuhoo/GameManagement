@@ -96,5 +96,13 @@ namespace GameManagement.Share.Extension
 			[Display(Name = "Qua tin nhắn")]
 			SMS = 1,
 		}
+
+		public enum TypeOTP
+		{
+			[Display(Name = "Thay đổi mật khẩu")]
+			ResetPassword = 0,
+            [Display(Name = "Thay đổi email")]
+            ResetEmail = 1
+		}
 	}
 }

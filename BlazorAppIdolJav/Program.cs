@@ -5,6 +5,7 @@ using GameManagement.Repository.IRepository;
 using GameManagement.Service;
 using GameManagement.Service.IService;
 using GameManagement.Services;
+using GameManagement.Share.Extension;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IGameCompanyService, GameCompanyService>();
 builder.Services.AddScoped<IGameTypeService, GameTypeService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IUserOtpHistoryService, UserOtpHistoryService>();
+
 
 
 //cấu hình repo vào đây
@@ -37,6 +40,11 @@ builder.Services.AddScoped<IGameRepository, GameRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IGameCompanyRepository, GameCompanyRepository>();
 builder.Services.AddScoped<IGameTypeRepository, GameTypeRepository>();
+builder.Services.AddScoped<IUserOtpHistoryRepository, UserOtpHistoryRepository>();
+
+
+// cấu hình extension
+builder.Services.AddScoped<StringExtension>();
 
 var app = builder.Build();
 

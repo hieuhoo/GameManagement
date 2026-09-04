@@ -14,6 +14,8 @@ namespace GameManagement.Data
         public DbSet<User> User { get; set; }
         public DbSet<GameCompany> GameCompany { get; set; }
         public DbSet<GameType> GameType { get; set; }
+        public DbSet<UserOtpHistory> UserOtpHistory { get; set; }
+
 
     }
 }

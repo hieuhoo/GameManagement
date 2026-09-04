@@ -11,6 +11,7 @@ namespace GameManagement.Repository.IRepository
         Task<bool> CheckExistUserInfoAsync(User data);
         Task<bool> CheckUserLoginAsync(User data);
         Task<User> GetUserInfoAsync(UserSearch search);
+        Task<bool> CheckExistEmailAsync(string email);
 
     }
 }

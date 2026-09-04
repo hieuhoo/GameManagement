@@ -125,7 +125,7 @@
     <Row>
         <Input Type="@InputType.Email" @bind-Value="emailReceiveOtp" Placeholder="Nhập email" />
     </Row>
-    @if (emailReceiveOtp == "")
+    @if (emailReceiveOtp == "" || missingEmail)
     {
         <AntDesign.Text Style="color:red;">Vui lòng nhập email của bạn</AntDesign.Text>
     }
@@ -133,6 +133,26 @@
         <Space>
             <SpaceItem>
                 <Button Style="margin-top:20px;" HtmlType="submit" Type="@ButtonType.Primary" OnClick="() => SendOtpAsync(emailReceiveOtp)">Gửi OTP</Button>
+            </SpaceItem>
+        </Space>
+    </Row>
+</Modal>
+
+<Modal Visible="otpFormVisible"
+       Title="Tạo lại mật khẩu"
+       Footer="@null" MaskClosable=true
+       OnCancel="CloseOTPForm">
+    <Row>
+        <Input Type="@InputType.Text" @bind-Value="otpValid" Placeholder="Nhập mã OTP" />
+    </Row>
+    @if (otpValid == "" || missingOtp)
+    {
+        <AntDesign.Text Style="color:red;">Vui lòng nhập mã OTP</AntDesign.Text>
+    }
+    <Row Gutter="8" Justify="@RowJustify.End">
+        <Space>
+            <SpaceItem>
+                <Button Style="margin-top:20px;" HtmlType="submit" Type="@ButtonType.Primary" OnClick="() => VerifyOtpAndContinueAsync(otpValid, emailReceiveOtp)">Tiếp tục</Button>
             </SpaceItem>
         </Space>
     </Row>

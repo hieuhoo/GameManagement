@@ -29,7 +29,7 @@ namespace GameManagement.Share.ClassData
 			set;
 		}
 		[DataMember(Order = 5)]
-		public virtual String Email
+		public virtual String? Email
 		{
 			get;
 			set;
@@ -47,7 +47,7 @@ namespace GameManagement.Share.ClassData
 			set;
 		}
 		[DataMember(Order = 8)]
-		public virtual String Role
+		public virtual String? Role
 		{
 			get;
 			set;
@@ -59,7 +59,7 @@ namespace GameManagement.Share.ClassData
 			set;
 		}
 		[DataMember(Order = 10)]
-		public virtual String PasswordHash
+		public virtual String? PasswordHash
 		{
 			get;
 			set;

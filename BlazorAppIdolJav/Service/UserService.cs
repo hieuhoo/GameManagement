@@ -76,6 +76,19 @@ namespace GameManagement.Service
             }
         }
 
+        public async Task<bool> CheckExistEmailAsync(string email)
+        {
+            try
+            {
+                var result = await _repo.CheckExistEmailAsync(email);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
 
         public async Task<UserData> GetUserInfoAsync(UserSearch search)
         {

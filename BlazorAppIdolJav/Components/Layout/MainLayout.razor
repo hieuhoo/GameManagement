@@ -15,7 +15,7 @@
         </CascadingValue>
     </div>
     <main>
-        <div class="top-row px-4"> 
+        <div class="top-row px-4">
             <AuthorizeView>
                 <Authorized Context="auth">
                     <Avatar Style="background-color: #1890ff; color: white;margin-right: 8px;">
@@ -29,7 +29,7 @@
                 </NotAuthorized>
             </AuthorizeView>
         </div>
-        <article class="content"> 
+        <article class="content">
             @Body
         </article>
     </main>
@@ -52,8 +52,8 @@
             <ValidationMessage For="() => EditModel.PassWord"></ValidationMessage>
         </Row>
         <Row>
-            Bạn chưa có tài khoản?
-            <a href="#" @onclick="RegisterAccount">Click here</a>
+            Bạn chưa có tài khoản ?
+            <a href="#" @onclick="RegisterAccount">Tạo mới account</a>
         </Row>
         <Row>
             @if (error)
@@ -61,10 +61,17 @@
                 <AntDesign.Text Style="color:red;">Vui lòng nhập tên đăng nhập hoặc mật khẩu</AntDesign.Text>
             }
         </Row>
+        @if (showForgetPassLink)
+        {
+            <Row>
+                Quên mật khẩu ?
+                <a href="#" @onclick="OpenResetpassForm">Ấn vào đây</a>
+            </Row>
+        }
         <Row Gutter="8" Justify="@RowJustify.End">
             <Space>
                 <SpaceItem>
-                    <Button HtmlType="submit" Type="@ButtonType.Primary">Đăng nhập</Button>
+                    <Button HtmlType="submit" Type="@ButtonType.Primary" Disabled="@isLoggingIn">Đăng nhập</Button>
                 </SpaceItem>
             </Space>
         </Row>
@@ -95,7 +102,7 @@
         </Row>
         <Row>
             <LabelFor For="() => EditModel.Email"></LabelFor>
-            <Input Type="@InputType.Text" @bind-Value="@EditModel.Email" />
+            <Input Type="@InputType.Email" @bind-Value="@EditModel.Email" />
             <ValidationMessage For="() => EditModel.Email"></ValidationMessage>
         </Row>
         <Row Gutter="8" Justify="@RowJustify.Center">
@@ -110,5 +117,26 @@
         </Row>
     </EditForm>
 </Modal>
+
+<Modal Visible="forgotPasswordVisible"
+       Title="Tạo lại mật khẩu"
+       Footer="@null" MaskClosable=true
+       OnCancel="CloseResetpassForm">
+    <Row>
+        <Input Type="@InputType.Email" @bind-Value="emailReceiveOtp" Placeholder="Nhập email" />
+    </Row>
+    @if (emailReceiveOtp == "")
+    {
+        <AntDesign.Text Style="color:red;">Vui lòng nhập email của bạn</AntDesign.Text>
+    }
+    <Row Gutter="8" Justify="@RowJustify.End">
+        <Space>
+            <SpaceItem>
+                <Button Style="margin-top:20px;" HtmlType="submit" Type="@ButtonType.Primary" OnClick="() => SendOtpAsync(emailReceiveOtp)">Gửi OTP</Button>
+            </SpaceItem>
+        </Space>
+    </Row>
+</Modal>
+
 
 <AntContainer /> @* // them cái này ms có thông báo ở góc *@

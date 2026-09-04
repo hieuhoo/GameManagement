@@ -29,6 +29,8 @@ builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IGameCompanyService, GameCompanyService>();
 builder.Services.AddScoped<IGameTypeService, GameTypeService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+
 
 //cấu hình repo vào đây
 builder.Services.AddScoped<IGameRepository, GameRepository>();

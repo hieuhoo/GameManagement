@@ -38,6 +38,7 @@ namespace GameManagement.Repository
 		{
 			try
 			{
+				data.PasswordHash = BCrypt.Net.BCrypt.HashPassword(data.PassWord); // hash thành chuỗi
 				await AddAsync(data);
 				return true;
 			}
@@ -77,6 +78,27 @@ namespace GameManagement.Repository
 			}
 
 		}
+		//public async Task<bool> CheckUserLoginAsync(User data)
+		//{
+		//	try
+		//	{
+		//		var user = await FirstOrDefaultAsync(x => x.UserName == data.UserName);
+
+		//		if (user == null)
+		//		{
+		//			return false;
+		//		}
+
+		//		return BCrypt.Net.BCrypt.Verify(
+		//			data.PassWord,
+		//			user.PasswordHash
+		//		);
+		//	}
+		//	catch
+		//	{
+		//		return false;
+		//	}
+		//}
 
 		public async Task<User> GetUserInfoAsync(UserSearch search)
 		{

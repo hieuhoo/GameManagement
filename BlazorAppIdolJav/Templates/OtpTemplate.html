@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác thực OTP</title>
+</head>
+
+<body style="margin:0;padding:0;background:#f4f6f8;font-family:Arial,sans-serif;">
+
+    <div style="
+        max-width:600px;
+        margin:30px auto;
+        background:#ffffff;
+        border-radius:16px;
+        overflow:hidden;
+        box-shadow:0 4px 20px rgba(0,0,0,0.08);">
+
+        <div style="
+            background:url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80')
+            center/cover no-repeat;
+            padding:50px 20px;
+            text-align:center;">
+
+            <div style="
+                background:rgba(0,0,0,0.4);
+                padding:20px;
+                border-radius:12px;
+                display:inline-block;">
+
+                <h2 style="margin:0;color:#ffffff;">
+                    Xác thực tài khoản
+                </h2>
+
+            </div>
+        </div>
+
+        <div style="padding:32px;text-align:center;">
+
+            <p style="font-size:16px;color:#333333;">
+                Mã OTP của bạn là:
+            </p>
+
+            <div style="
+                display:inline-block;
+                padding:14px 28px;
+                margin:20px 0;
+                background:#eef4ff;
+                border:2px dashed #2563eb;
+                border-radius:12px;
+                font-size:30px;
+                font-weight:bold;
+                letter-spacing:6px;
+                color:#2563eb;">
+
+                {{OTP}}
+
+            </div>
+
+            <p style="font-size:14px;color:#666666;">
+                Mã OTP có hiệu lực trong <span style="color:red;font-weight:bold;">{{EXPIRE_MINUTES}}</span> phút.
+            </p>
+
+            <p style="font-size:13px;color:#999999;">
+                Không chia sẻ mã OTP này với bất kỳ ai.Vui lòng bỏ qua email này nếu bạn không yêu cầu đổi mật khẩu
+            </p>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

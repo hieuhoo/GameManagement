@@ -12,6 +12,7 @@
         public string Role { get; set; }
         public DateTime? DateOfBirth { get; set; }
 
+        public string PasswordHash { get; set; }
 
     }
 }

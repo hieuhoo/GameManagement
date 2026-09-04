@@ -88,5 +88,13 @@ namespace GameManagement.Share.Extension
 			[Display(Name = "Thể loại game")]
 			GameType = 1,
 		}
+
+		public enum SendOtpMethod // hiện tại chỉ hỗ trợ qua email
+		{
+			[Display(Name = "Qua email")]
+			Email = 0,
+			[Display(Name = "Qua tin nhắn")]
+			SMS = 1,
+		}
 	}
 }

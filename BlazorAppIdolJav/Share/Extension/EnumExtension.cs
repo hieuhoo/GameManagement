@@ -118,10 +118,20 @@ namespace GameManagement.Share.Extension
 
 		public enum AccountLockReason
 		{
-			[Display(Name = "Khóa do admin")]
-			ByAdmin = 0,
+			[Display(Name = "Khóa do vi phạm chính sách")]
+			ByPolicyViolation = 0,
 			[Display(Name = "Khóa do nhập sai mật khẩu")]
 			ByIncorrectPassword = 1,
-		}
-	}
+            [Display(Name = "Khóa do Admin ghét :))")]
+            ByAdmin = 2,
+        }
+
+        public enum LockPerson
+        {
+            [Display(Name = "Admin")]
+            Admin= 0,
+            [Display(Name = "Hệ thống")]
+            System = 1,
+        }
+    }
 }

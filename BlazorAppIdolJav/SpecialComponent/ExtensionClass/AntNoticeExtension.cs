@@ -1,4 +1,5 @@
 ﻿using AntDesign;
+using GameManagement.CoreConfig.Extensions;
 using GameManagement.Share.Extension;
 using static GameManagement.Share.Extension.MessageEnumExtension;
 
@@ -10,10 +11,10 @@ namespace GameManagement.SpecialComponent.ExtensionClass
         {
             _ = notificationService.Open(new NotificationConfig()
             {
-                Message = TypeAlert.ThongBao.ToString(),
+                Message = TypeAlert.ThongBao.GetDescription(),
                 Description = message,
                 NotificationType = type,
-                Duration = 2,
+                Duration = 3,
             });
         }
 

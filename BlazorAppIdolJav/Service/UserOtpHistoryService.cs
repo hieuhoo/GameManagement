@@ -32,6 +32,20 @@ namespace GameManagement.Service
             }
         }
 
+        public async Task<bool> UpdateOtpHistoryAsync(UserOtpHistoryData data)
+        {
+            try
+            {
+                var history = _mapper.Map<UserOtpHistory>(data);
+                var isSuccess = await _repo.UpdateOtpHistoryAsync(history);
+                return isSuccess;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<UserOtpHistoryData> GetLatestOtpAsync(
             string email,
             string otpType)

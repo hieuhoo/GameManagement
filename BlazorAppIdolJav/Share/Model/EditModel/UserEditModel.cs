@@ -21,7 +21,7 @@ namespace GameManagement.Share.Model.EditModel
         public string PassWord { get; set; }
         [Display(Name = "Email cá nhân")]
         public string? Email { get; set; }
-        public int? QuantityLoginCount { get; set; }
+        public int? FailedLoginCount { get; set; }
         [Display(Name = "Họ và tên")]
         public string Name { get; set; }
         public DateTime CreateDate { get; set; }
@@ -29,6 +29,9 @@ namespace GameManagement.Share.Model.EditModel
         public bool IsRegister { get; set; } = false;
         [Display(Name = "Ngày sinh")]
         public DateTime? DateOfBirth { get; set; }
+        public string Status { get; set; }
+        public string LockReason { get; set; }
+
 
         public UserEditModel()
         {

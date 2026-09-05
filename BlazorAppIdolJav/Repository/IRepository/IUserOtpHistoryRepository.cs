@@ -6,6 +6,8 @@ namespace GameManagement.Repository.IRepository
     {
         IQueryable<UserOtpHistory> GetQueryable();
         Task<bool> AddOtpHistoryAsync(UserOtpHistory data);
+        Task<bool> UpdateOtpHistoryAsync(UserOtpHistory data);
+
         Task<UserOtpHistory> GetLatestOtpAsync(string email, string otpType);
 
     }

@@ -101,8 +101,27 @@ namespace GameManagement.Share.Extension
 		{
 			[Display(Name = "Thay đổi mật khẩu")]
 			ResetPassword = 0,
-            [Display(Name = "Thay đổi email")]
-            ResetEmail = 1
+			[Display(Name = "Thay đổi email")]
+			ResetEmail = 1
+		}
+
+		public enum AccountStatus
+		{
+			[Display(Name = "Hoạt động")]
+			Active = 0,
+			[Display(Name = "Ngừng hoạt động")]
+			Inactive = 1,
+			[Display(Name = "Khóa")]
+			Lock = 2
+		
+		}
+
+		public enum AccountLockReason
+		{
+			[Display(Name = "Khóa do admin")]
+			ByAdmin = 0,
+			[Display(Name = "Khóa do nhập sai mật khẩu")]
+			ByIncorrectPassword = 1,
 		}
 	}
 }

@@ -1,28 +1,32 @@
 ﻿@using AntDesign
 @inject NavigationManager Navigation
 
-<Menu Mode="MenuMode.Vertical" Class="navmenu-config">
+<Menu Mode="MenuMode.Vertical"
+      Theme="MenuTheme.Dark"
+      Class="admin-nav">
+
     <MenuItem Key="home">
         <NavLink href="/" Match="NavLinkMatch.All">
-            <Icon Type="home" /> Trang chủ
+            <Icon Type="home" />
+            <span>Trang chủ</span>
         </NavLink>
     </MenuItem>
+
     @if (HaveLogged)
     {
-        <MenuItem Key="setup">
-            <NavLink href="/thiet-lap-chung">
-                <Icon Type="setting" /> Thiết lập
-            </NavLink>
-        </MenuItem>
         <MenuItem Key="game">
             <NavLink href="/danh-sach-game">
-                <Icon Type="appstore" /> Danh sách Game
+                <Icon Type="appstore" />
+                <span>Danh sách Game</span>
+            </NavLink>
+        </MenuItem>
+
+        <MenuItem Key="setup">
+            <NavLink href="/thiet-lap-chung">
+                <Icon Type="setting" />
+                <span>Thiết lập</span>
             </NavLink>
         </MenuItem>
     }
+
 </Menu>
-
-
-
-
-

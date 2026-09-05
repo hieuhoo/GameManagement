@@ -41,7 +41,7 @@ namespace GameManagement.Share.ClassData
 			set;
 		}
 		[DataMember(Order = 7)]
-		public virtual int? QuantityLoginCount
+		public virtual int? FailedLoginCount
 		{
 			get;
 			set;
@@ -60,6 +60,24 @@ namespace GameManagement.Share.ClassData
 		}
 		[DataMember(Order = 10)]
 		public virtual String? PasswordHash
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 11)]
+		public virtual String? Status
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 12)]
+		public virtual String? LockReason
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 13)]
+		public virtual DateTime? UpdatedDate
 		{
 			get;
 			set;

@@ -21,16 +21,18 @@
                     <Avatar Style="background-color: #1890ff; color: white;margin-right: 8px;">
                         @DisplayUserNameImage(currentUser)
                     </Avatar>
-                    <AntDesign.Text>Xin chào, @currentUser</AntDesign.Text>
+                    <AntDesign.Text>@GetGreetingByHour()</AntDesign.Text>
                     <a href="#" class="ms-3" @onclick="LogoutAccount">Đăng xuất</a>
                 </Authorized>
                 <NotAuthorized>
-                    <a href="#" @onclick="ShowLoginModal">Đăng nhập</a>
+                    <a href="#" @onclick="() => ShowLoginModalAsync()">Đăng nhập</a>
                 </NotAuthorized>
             </AuthorizeView>
         </div>
         <article class="content">
-            @Body
+            <CascadingValue Value="this">
+                @Body
+            </CascadingValue>
         </article>
     </main>
 </div>
@@ -64,8 +66,7 @@
         @if (showForgetPassLink)
         {
             <Row>
-                Quên mật khẩu ?
-                <a href="#" @onclick="OpenResetpassForm">Ấn vào đây</a>
+                <a href="#" @onclick="OpenResetpassForm">Quên mật khẩu </a>
             </Row>
         }
         <Row Gutter="8" Justify="@RowJustify.End">
@@ -132,7 +133,7 @@
     <Row Gutter="8" Justify="@RowJustify.End">
         <Space>
             <SpaceItem>
-                <Button Style="margin-top:20px;" HtmlType="submit" Type="@ButtonType.Primary" OnClick="() => SendOtpAsync(emailReceiveOtp)">Gửi OTP</Button>
+                <Button Style="margin-top:20px;" HtmlType="submit" Type="@ButtonType.Primary" OnClick="() => SendOtpAsync(emailReceiveOtp)">Lấy OTP</Button>
             </SpaceItem>
         </Space>
     </Row>
@@ -153,6 +154,27 @@
         <Space>
             <SpaceItem>
                 <Button Style="margin-top:20px;" HtmlType="submit" Type="@ButtonType.Primary" OnClick="() => VerifyOtpAndContinueAsync(otpValid, emailReceiveOtp)">Tiếp tục</Button>
+            </SpaceItem>
+        </Space>
+    </Row>
+</Modal>
+
+<Modal Visible="resetPassFormVisible"
+       Title="Tạo lại mật khẩu"
+       Footer="@null" MaskClosable=true
+       OnCancel="CloseFinalForm">
+    <Row>
+        <label>Mật khẩu mới <span style="color:red;">(*)</span></label>
+        <AntDesign.InputPassword @bind-Value="newPassword" />
+    </Row>
+    <Row>
+        <label>Nhập lại mật khẩu mới <span style="color:red;">(*)</span></label>
+        <AntDesign.InputPassword @bind-Value="retypeNewPassword" />
+    </Row>
+    <Row Gutter="8" Justify="@RowJustify.End">
+        <Space>
+            <SpaceItem>
+                <Button Style="margin-top:20px;" HtmlType="submit" Type="@ButtonType.Primary" OnClick="() => ChangeNewPasswordAsync()">Lưu</Button>
             </SpaceItem>
         </Space>
     </Row>

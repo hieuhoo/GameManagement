@@ -111,3 +111,129 @@
         border-color: #fff;
         background-color: #cb1214;
     }
+
+.admin-nav {
+    height: 100%;
+    background: #171a21;
+    border-right: none;
+    padding-top: 8px;
+}
+
+    /* Menu item */
+    .admin-nav .ant-menu-item {
+        height: 46px;
+        line-height: 46px;
+        margin: 6px 8px;
+        padding-left: 14px !important;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+    }
+
+        /* Link bên trong item */
+        .admin-nav .ant-menu-item a {
+            display: flex;
+            align-items: center;
+            color: #c7d5e0;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+        }
+
+    /* Icon */
+    .admin-nav .anticon {
+        margin-right: 10px;
+        font-size: 16px;
+        color: #9fb7cc;
+        transition: all 0.2s ease;
+    }
+
+    /* Hover item */
+    .admin-nav .ant-menu-item:hover {
+        background: #2a475e;
+    }
+
+        /* Hover text */
+        .admin-nav .ant-menu-item:hover a {
+            color: #ffffff;
+        }
+
+        /* Hover icon */
+        .admin-nav .ant-menu-item:hover .anticon {
+            color: #66c0f4;
+        }
+
+    /* Item đang được chọn */
+    .admin-nav .ant-menu-item-selected {
+        background: #1b3a57 !important;
+    }
+
+        /* Text active */
+        .admin-nav .ant-menu-item-selected a {
+            color: #ffffff !important;
+            font-weight: 700;
+        }
+
+        /* Icon active */
+        .admin-nav .ant-menu-item-selected .anticon {
+            color: #66c0f4 !important;
+        }
+
+    /* Bỏ thanh active mặc định bên phải của Ant Design */
+    .admin-nav .ant-menu-item::after {
+        border-right: none !important;
+    }
+
+    /* Bỏ background mặc định khi Ant Design active */
+    .admin-nav.ant-menu:not(.ant-menu-horizontal)
+    .ant-menu-item-selected {
+        background: #1b3a57 !important;
+    }
+
+    /* Nếu NavLink có class active */
+    .admin-nav a.active {
+        color: #ffffff !important;
+        font-weight: 700;
+    }
+
+    /* Tạo cảm giác mềm hơn khi rê chuột */
+    .admin-nav .ant-menu-item:hover {
+        transform: translateX(2px);
+    }
+
+    /* Không underline link */
+    .admin-nav a,
+    .admin-nav a:hover,
+    .admin-nav a:focus {
+        text-decoration: none;
+    }
+
+    /* Nếu menu bị Ant Design gán màu nền khác */
+    .admin-nav.ant-menu {
+        background: #171a21;
+        color: #c7d5e0;
+    }
+
+    /* Nếu icon + text bị lệch */
+    .admin-nav .ant-menu-item > span,
+    .admin-nav .ant-menu-item a {
+        width: 100%;
+    }
+
+/* Responsive nhẹ */
+@media (max-width: 768px) {
+    .admin-nav .ant-menu-item {
+        margin: 4px 6px;
+        height: 42px;
+        line-height: 42px;
+    }
+
+        .admin-nav .ant-menu-item a {
+            font-size: 14px;
+        }
+
+    .admin-nav .anticon {
+        font-size: 15px;
+    }
+}
+

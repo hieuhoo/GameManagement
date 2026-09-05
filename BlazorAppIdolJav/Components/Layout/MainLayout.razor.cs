@@ -16,410 +16,487 @@ using static System.Net.WebRequestMethods;
 
 namespace GameManagement.Components.Layout
 {
-    public partial class MainLayout
-    {
-        [Inject] IMapper Mapper { get; set; }
-        [Inject] IUserService UserService { get; set; }
-        [Inject] IEmailService EmailService { get; set; }
-        [Inject] IUserOtpHistoryService OtpService { get; set; }
+	public partial class MainLayout
+	{
+		[Inject] IMapper Mapper { get; set; }
+		[Inject] IUserService UserService { get; set; }
+		[Inject] IEmailService EmailService { get; set; }
+		[Inject] IUserOtpHistoryService OtpService { get; set; }
 
 
-        [Inject] NotificationService NoticeService { get; set; }
-        [Inject] AuthenticationStateProvider AuthProvider { get; set; }
+		[Inject] NotificationService NoticeService { get; set; }
+		[Inject] AuthenticationStateProvider AuthProvider { get; set; }
 
-        UserEditModel EditModel { get; set; } = new UserEditModel();
-        UserData Data { get; set; } = new UserData();
-        UserData EmailUserData { get; set; } = new UserData();
+		UserEditModel EditModel { get; set; } = new UserEditModel();
+		UserData Data { get; set; } = new UserData();
+		UserData EmailUserData { get; set; } = new UserData();
 
-        InputWatcher inputWatcher;
-        StringExtension extension = new StringExtension();
+		InputWatcher inputWatcher;
+		StringExtension extension = new StringExtension();
 
-        bool loginVisible;
-        bool registerVisible;
-        bool isLoggedIn = false;
-        bool error;
-        bool showForgetPassLink;
-        bool forgotPasswordVisible = false;
-        bool otpFormVisible = false;
-        bool missingEmail;
-        bool missingOtp;
-        bool isLoggingIn = false;
-        string currentUser;
-        string emailReceiveOtp = string.Empty;
-        string otpValid = string.Empty;
+		bool loginVisible;
+		bool registerVisible;
+		bool isLoggedIn = false;
+		bool error;
+		bool showForgetPassLink;
+		bool forgotPasswordVisible = false;
+		bool otpFormVisible = false;
+		bool missingEmail;
+		bool missingOtp;
+		bool isLoggingIn = false;
+		bool resetPassFormVisible = false;
 
-        int maxAttemptLogin = 3;
-        int failedLoginCount;
-        int lockTimeRelogin = 60;
-        int minuteExpired = 3;
+		string currentUser;
+		string emailReceiveOtp = string.Empty;
+		string otpValid = string.Empty;
+		string? redirectAfterLogin;
+		int maxAttemptLogin = 3;
+		int failedLoginCount;
+		int lockTimeRelogin = 60;
+		int minuteExpired = 3;
+		string newPassword = string.Empty;
+		string retypeNewPassword = string.Empty;
+		DateTime? lockoutUntil;
 
-        DateTime? lockoutUntil;
+		protected override async Task OnInitializedAsync()
+		{
+			try
+			{
+				EditModel = new UserEditModel();
+				var authState = await AuthProvider.GetAuthenticationStateAsync();
+				var user = authState.User;
+				isLoggedIn = user.Identity?.IsAuthenticated ?? false;
+				currentUser = user.Identity?.Name;
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
 
-        protected override async Task OnInitializedAsync()
-        {
-            try
-            {
-                EditModel = new UserEditModel();
-                var authState = await AuthProvider.GetAuthenticationStateAsync();
-                var user = authState.User;
-                isLoggedIn = user.Identity?.IsAuthenticated ?? false;
-                currentUser = user.Identity?.Name;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+		public async Task ShowLoginModalAsync(string? redirectUrl = null)
+		{
+			redirectAfterLogin = redirectUrl;
+			loginVisible = true;
 
-        async Task HandleLoginAsync()
-        {
-            if (isLoggingIn)
-                return;
-            try
-            {
-                isLoggingIn = true;
-                if (EditModel.UserName.IsNullOrEmpty() || EditModel.PassWord.IsNullOrEmpty())
-                {
-                    error = true;
-                    return;
-                }
+			await InvokeAsync(StateHasChanged);
+		}
 
-                if (EditModel.UserName.IsNotNullOrEmpty() && EditModel.PassWord.IsNotNullOrEmpty())
-                {
-                    error = false;
-                }
+		async Task HandleLoginAsync()
+		{
+			if (isLoggingIn)
+				return;
 
-                if (lockoutUntil.HasValue && DateTime.UtcNow < lockoutUntil.Value)
-                {
-                    showForgetPassLink = true;
-                    var remainingSeconds = (int)Math.Ceiling(
-                        (lockoutUntil.Value - DateTime.UtcNow).TotalSeconds
-                    );
-                    NoticeService.NotiError(
-                        $"Bạn đã đăng nhập không thành công quá {maxAttemptLogin} lần. " +
-                        $"Vui lòng thử lại sau {remainingSeconds} giây."
-                    );
+			try
+			{
+				isLoggingIn = true;
 
-                    return;
-                }
+				if (EditModel.UserName.IsNullOrEmpty() ||
+					EditModel.PassWord.IsNullOrEmpty())
+				{
+					error = true;
+					return;
+				}
 
-                if (lockoutUntil.HasValue && DateTime.UtcNow > lockoutUntil.Value)
-                {
-                    failedLoginCount = 0;
-                    lockoutUntil = null;
-                }
+				error = false;
 
-                var data = Mapper.Map<UserData>(EditModel);
-                var isLoginSuccess = await UserService.CheckUserLoginAsync(data);
-                if (isLoginSuccess)
-                {
-                    failedLoginCount = 0;
-                    lockoutUntil = null;
-                    Data = await UserService.GetUserInfoAsync(new UserSearch
-                    {
-                        UserName = EditModel.UserName
-                    });
-                    var role = Data.Role.Trim();
-                    if (string.Equals(role, UserRole.Admin.ToString(), StringComparison.OrdinalIgnoreCase))
-                    {
-                        currentUser = UserRole.Admin.GetDescription();
-                    }
-                    else
-                    {
-                        currentUser = Data.Name.Trim();
-                    }
-                    await ((CustomAuthenticationStateProvider)AuthProvider)
-                            .MarkUserAsAuthenticated(EditModel.UserName);
-                    isLoggedIn = true;
-                    loginVisible = false;
-                    StateHasChanged();
-                }
-                else
-                {
-                    failedLoginCount++;
-                    showForgetPassLink = true;
-                    if (failedLoginCount > maxAttemptLogin)
-                    {
-                        lockoutUntil = DateTime.UtcNow.AddSeconds(lockTimeRelogin);
-                        NoticeService.NotiError(
-                            $"Bạn đã đăng nhập sai quá {maxAttemptLogin} lần. " +
-                            $"Vui lòng thử lại sau {lockoutUntil} giây."
-                        );
-                    }
-                    else
-                    {
-                        var remainingAttempt = maxAttemptLogin - failedLoginCount;
-                        NoticeService.NotiError($"Sai tên đăng nhập hoặc mật khẩu." +
-                                            $"Bạn còn lại {remainingAttempt} lần thử ");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                isLoggingIn = false;
-            }
-        }
+				Data = await UserService.GetUserInfoAsync(new UserSearch
+				{
+					UserName = EditModel.UserName
+				});
 
-        void RegisterAccount()
-        {
-            try
-            {
-                loginVisible = false;
-                registerVisible = true;
-                EditModel.IsRegister = true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+				if (Data == null)
+				{
+					showForgetPassLink = true;
+					NoticeService.NotiError("Sai tên đăng nhập hoặc mật khẩu.");
+					return;
+				}
 
+				if (string.Equals(
+					Data.Status,
+					AccountStatus.Lock.ToString(),
+					StringComparison.OrdinalIgnoreCase))
+				{
+					showForgetPassLink = false;
+					NoticeService.NotiError(
+						"Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên để được mở khóa."
+					);
+					return;
+				}
+				// 4. Check username + password
+				var loginData = Mapper.Map<UserData>(EditModel);
 
+				var isLoginSuccess =
+					await UserService.CheckUserLoginAsync(loginData);
 
-        async Task HandleRegisterAsync()
-        {
-            try
-            {
-                var errorMessageStore = EditModel.ValidateAll();
-                if (!inputWatcher.Validate() || errorMessageStore?.Any() == true || error)
-                {
-                    if (errorMessageStore.Any())
-                    {
-                        inputWatcher.NotifyFieldChanged(errorMessageStore.First().Key, errorMessageStore);
-                    }
-                    NoticeService.NotiWarning(TypeAlert.InvalidData.GetDescription());
-                    return;
-                }
-                var isExist = await UserService.CheckExistUserInfoAsync(new UserData
-                {
-                    UserName = EditModel.UserName,
-                    Email = EditModel.Email,
-                });
-                if (isExist)
-                {
-                    NoticeService.NotiWarning(AccountRegisterEnum.ExistEmailOrUserName.GetDescription());
-                    return;
-                }
-                EditModel.Id = ObjectExtentions.GenerateGuid();
-                EditModel.CreateDate = DateTime.Now;
-                EditModel.Role = UserRole.Normal.ToString();
-                EditModel.QuantityLoginCount = 0;
-                Data = Mapper.Map<UserData>(EditModel);
-                var result = await UserService.RegisterAccountAsync(Data);
-                if (result)
-                {
-                    NoticeService.NotiSuccess(AccountRegisterEnum.Success.GetDescription());
-                }
-                else
-                {
-                    NoticeService.NotiWarning(AccountRegisterEnum.Failed.GetDescription());
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                EditModel = new UserEditModel();
-                Data = new UserData();
-                registerVisible = false;
-            }
-        }
+				if (isLoginSuccess)
+				{
+					// Login thành công -> reset số lần đăng nhập sai
+					if (Data.FailedLoginCount > 0)
+					{
+						Data.FailedLoginCount = 0;
+						Data.UpdatedDate = DateTime.Now;
 
-        void CloseRegisterForm()
-        {
-            try
-            {
-                registerVisible = false;
-                EditModel = new UserEditModel();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+						await UserService.UpdateAccountAsync(Data);
+					}
 
-        void BackToLogin()
-        {
-            try
-            {
-                registerVisible = false;
-                loginVisible = true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+					var role = Data.Role?.Trim();
 
-        void ShowLoginModal()
-        {
-            loginVisible = true;
-        }
+					if (string.Equals(
+						role,
+						UserRole.Admin.ToString(),
+						StringComparison.OrdinalIgnoreCase))
+					{
+						currentUser = UserRole.Admin.GetDescription();
+					}
+					else
+					{
+						currentUser = Data.Name.Trim();
+					}
 
-        async Task LogoutAccount()
-        {
-            try
-            {
-                await ((CustomAuthenticationStateProvider)AuthProvider).MarkUserAsLoggedOut();
-                isLoggedIn = false;
-                EditModel = new UserEditModel();
-                error = false;
-                StateHasChanged();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+					await ((CustomAuthenticationStateProvider)AuthProvider)
+						.MarkUserAsAuthenticated(EditModel.UserName);
 
-        string DisplayUserNameImage(string userName)
-        {
-            if (userName.IsNullOrEmpty())
-            {
-                return String.Empty;
-            }
-            if (string.Equals(userName, UserRole.Admin.GetDescription(), StringComparison.OrdinalIgnoreCase))
-            {
-                return GlobalVariant.AdminShortName;
-            }
-            var parts = userName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            return string.Concat(parts.TakeLast(2).Select(p => p[0])).ToUpper();
-        }
+					isLoggedIn = true;
+					loginVisible = false;
+
+					StateHasChanged();
+				}
+				else
+				{
+					// 6. Sai password
+					showForgetPassLink = true;
+
+					Data.FailedLoginCount++;
+					Data.UpdatedDate = DateTime.Now;
+
+					// 7. Sai đủ 3 lần -> Lock
+					if (Data.FailedLoginCount >= maxAttemptLogin)
+					{
+						showForgetPassLink = false;
+
+						Data.Status = AccountStatus.Lock.ToString();
+
+						Data.LockReason =
+							AccountLockReason.ByIncorrectPassword.ToString();
+
+						await UserService.UpdateAccountAsync(Data);
+
+						NoticeService.NotiError(
+							$"Bạn đã đăng nhập sai {maxAttemptLogin} lần. " +
+							"Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên."
+						);
+
+						return;
+					}
+
+					// Chưa đủ 3 lần
+					await UserService.UpdateAccountAsync(Data);
+
+					var remainingAttempt =
+						maxAttemptLogin - Data.FailedLoginCount;
+
+					NoticeService.NotiError(
+						$"Sai tên đăng nhập hoặc mật khẩu. " +
+						$"Vui lòng ấn vào nút Quên mật khẩu hoặc" +
+						$" tài khoản của bạn sẽ bị khóa sau {remainingAttempt} lần nhập sai nữa."
+					);
+				}
+			}
+			catch
+			{
+				throw;
+			}
+			finally
+			{
+				isLoggingIn = false;
+			}
+		}
+
+		void RegisterAccount()
+		{
+			try
+			{
+				loginVisible = false;
+				registerVisible = true;
+				EditModel.IsRegister = true;
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
 
 
-        public async Task SendOtpAsync(string email)
-        {
-            try
-            {
-                if (emailReceiveOtp.IsNullOrEmpty())
-                {
-                    missingEmail = true;
-                    return;
-                }
-                var existData = await UserService.CheckExistEmailAsync(email);
 
-                if (existData != true)
-                {
-                    NoticeService.NotiError("Email ko tồn tại trong hệ thống");
-                    return;
-                }
+		async Task HandleRegisterAsync()
+		{
+			try
+			{
+				var errorMessageStore = EditModel.ValidateAll();
+				if (!inputWatcher.Validate() || errorMessageStore?.Any() == true || error)
+				{
+					if (errorMessageStore.Any())
+					{
+						inputWatcher.NotifyFieldChanged(errorMessageStore.First().Key, errorMessageStore);
+					}
+					NoticeService.NotiWarning(TypeAlert.InvalidData.GetDescription());
+					return;
+				}
+				var isExist = await UserService.CheckExistUserInfoAsync(new UserData
+				{
+					UserName = EditModel.UserName,
+					Email = EditModel.Email,
+				});
+				if (isExist)
+				{
+					NoticeService.NotiWarning(AccountRegisterEnum.ExistEmailOrUserName.GetDescription());
+					return;
+				}
+				EditModel.Id = ObjectExtentions.GenerateGuid();
+				EditModel.CreateDate = DateTime.Now;
+				EditModel.Role = UserRole.Normal.ToString();
+				EditModel.Status = AccountStatus.Active.ToString();
+				EditModel.FailedLoginCount = 0;
+				Data = Mapper.Map<UserData>(EditModel);
+				var result = await UserService.RegisterAccountAsync(Data);
+				if (result)
+				{
+					NoticeService.NotiSuccess(AccountRegisterEnum.Success.GetDescription());
+				}
+				else
+				{
+					NoticeService.NotiWarning(AccountRegisterEnum.Failed.GetDescription());
+				}
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+			finally
+			{
+				EditModel = new UserEditModel();
+				Data = new UserData();
+				registerVisible = false;
+			}
+		}
 
-                EmailUserData = await UserService.GetUserInfoAsync(new UserSearch
-                {
-                    Email = email
-                });
-                var userId = EmailUserData?.Id ?? "";
-                var otpNumber = Random.Shared.Next(100000, 999999).ToString();
+		void CloseRegisterForm()
+		{
+			try
+			{
+				registerVisible = false;
+				EditModel = new UserEditModel();
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
 
-                var otpHistory = new UserOtpHistoryData
-                {
-                    Id = ObjectExtentions.GenerateGuid(),
-                    UserId = userId,
-                    Email = email,
-                    OtpCode = otpNumber,
-                    OtpType = TypeOTP.ResetPassword.ToString(),
-                    OtpCodeHash = extension.GetCharacterHash(otpNumber),
-                    CreateDate = DateTime.Now,
-                    ExpiredDate = DateTime.Now.AddMinutes(minuteExpired),
-                    IsUsed = false
-                };
-                await OtpService.AddOtpHistoryAsync(otpHistory);
-                await EmailService.SendOtpAsync(email, otpNumber, minuteExpired);
+		void BackToLogin()
+		{
+			try
+			{
+				registerVisible = false;
+				loginVisible = true;
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
 
-                forgotPasswordVisible = false;
-                otpFormVisible = true;
-                NoticeService.NotiSuccess("Gửi OTP thành công.Vui lòng kiểm tra email để biết thêm chi tiết");
-            }
-            catch
-            {
+		//void ShowLoginModal()
+		//{
+		//	loginVisible = true;
+		//}
 
-            }
-        }
+		async Task LogoutAccount()
+		{
+			try
+			{
+				await ((CustomAuthenticationStateProvider)AuthProvider).MarkUserAsLoggedOut();
+				isLoggedIn = false;
+				EditModel = new UserEditModel();
+				error = false;
+				StateHasChanged();
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
 
-        void OpenResetpassForm()
-        {
-            try
-            {
-                forgotPasswordVisible = true;
-                showForgetPassLink = false;
-            }
-            catch
-            {
+		string DisplayUserNameImage(string userName)
+		{
+			if (userName.IsNullOrEmpty())
+			{
+				return String.Empty;
+			}
+			if (string.Equals(userName, UserRole.Admin.GetDescription(), StringComparison.OrdinalIgnoreCase))
+			{
+				return GlobalVariant.AdminShortName;
+			}
+			var parts = userName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+			return string.Concat(parts.TakeLast(2).Select(p => p[0])).ToUpper();
+		}
 
-            }
-        }
 
-        void CloseResetpassForm()
-        {
-            forgotPasswordVisible = false;
-        }
+		public async Task SendOtpAsync(string email)
+		{
+			try
+			{
+				if (emailReceiveOtp.IsNullOrEmpty())
+				{
+					missingEmail = true;
+					return;
+				}
+				var existData = await UserService.CheckExistEmailAsync(email);
 
-        void CloseOTPForm()
-        {
-            otpFormVisible = false;
-        }
+				if (existData != true)
+				{
+					NoticeService.NotiError("Email ko tồn tại trong hệ thống");
+					return;
+				}
 
-        public async Task VerifyOtpAndContinueAsync(string otpNumber, string email)
-        {
-            if (otpValid.IsNullOrEmpty())
-            {
-                missingOtp = true;
-                return;
-            }
-            var latestOtp = await OtpService.GetLatestOtpAsync(
-                email,
-                TypeOTP.ResetPassword.ToString()
-            );
+				EmailUserData = await UserService.GetUserInfoAsync(new UserSearch
+				{
+					Email = email
+				});
+				var userId = EmailUserData?.Id ?? "";
+				var otpNumber = Random.Shared.Next(100000, 999999).ToString();
 
-            if (latestOtp == null)
-            {
-                NoticeService.NotiError("Không tìm thấy mã OTP");
-                return;
-            }
+				var otpHistory = new UserOtpHistoryData
+				{
+					Id = ObjectExtentions.GenerateGuid(),
+					UserId = userId,
+					Email = email,
+					OtpCode = otpNumber,
+					OtpType = TypeOTP.ResetPassword.ToString(),
+					OtpCodeHash = extension.GetCharacterHash(otpNumber),
+					CreateDate = DateTime.Now,
+					ExpiredDate = DateTime.Now.AddMinutes(minuteExpired),
+					IsUsed = false
+				};
+				await OtpService.AddOtpHistoryAsync(otpHistory);
+				await EmailService.SendOtpAsync(email, otpNumber, minuteExpired);
 
-            if (otpNumber != latestOtp.OtpCode)
-            {
-                NoticeService.NotiError("Mã OTP không chính xác");
-                return;
-            }
+				forgotPasswordVisible = false;
+				otpFormVisible = true;
+				NoticeService.NotiSuccess("Gửi OTP thành công.Vui lòng kiểm tra email để biết thêm chi tiết");
+			}
+			catch
+			{
 
-            if (latestOtp.IsUsed)
-            {
-                NoticeService.NotiError("Mã OTP đã được sử dụng");
-                return;
-            }
+			}
+		}
 
-            if (DateTime.Now > latestOtp.ExpiredDate)
-            {
-                NoticeService.NotiError("Mã OTP đã hết hạn");
-                return;
-            }
+		void OpenResetpassForm()
+		{
+			try
+			{
+				forgotPasswordVisible = true;
+				showForgetPassLink = false;
+			}
+			catch
+			{
 
-            // 6. Verify OTP
-            //var isValid = BCrypt.Net.BCrypt.Verify(
-            //    otp,
-            //    otpHistory.OtpCodeHash
-            //);
+			}
+		}
 
-           
-            latestOtp.IsUsed = true;
+		void CloseResetpassForm()
+		{
+			forgotPasswordVisible = false;
+		}
 
-            //await OtpService.UpdateAsync(latestOtp);
+		void CloseOTPForm()
+		{
+			otpFormVisible = false;
+		}
 
-            // 8. Đóng form OTP
-            otpFormVisible = false;
+		public async Task VerifyOtpAndContinueAsync(string otpNumber, string email)
+		{
+			try
+			{
+				if (otpValid.IsNullOrEmpty())
+				{
+					missingOtp = true;
+					return;
+				}
+				var latestOtp = await OtpService.GetLatestOtpAsync(
+					email,
+					TypeOTP.ResetPassword.ToString()
+				);
 
-            // 9. Mở form nhập mật khẩu mới
-            //resetPasswordVisible = true;
+				if (latestOtp == null)
+				{
+					NoticeService.NotiError("Không tìm thấy mã OTP");
+					return;
+				}
 
-            NoticeService.NotiSuccess("Xác thực OTP thành công");
-        }
+				if (otpNumber != latestOtp.OtpCode)
+				{
+					NoticeService.NotiError("Mã OTP không chính xác");
+					return;
+				}
 
-    }
+				if (latestOtp.IsUsed)
+				{
+					NoticeService.NotiError("Mã OTP đã được sử dụng");
+					return;
+				}
+
+				if (DateTime.Now > latestOtp.ExpiredDate)
+				{
+					NoticeService.NotiError("Mã OTP đã hết hạn");
+					return;
+				}
+
+				// 6. Verify OTP
+				//var isValid = BCrypt.Net.BCrypt.Verify(
+				//    otp,
+				//    otpHistory.OtpCodeHash
+				//);
+
+				latestOtp.IsUsed = true;
+
+				await OtpService.UpdateOtpHistoryAsync(latestOtp);
+
+				otpFormVisible = false;
+				resetPassFormVisible = true;
+
+				NoticeService.NotiSuccess("Xác thực OTP thành công");
+			}
+			catch
+			{
+
+			}
+		}
+
+		string GetGreetingByHour()
+		{
+			var hour = DateTime.Now.Hour;
+
+			var greeting = hour switch
+			{
+				< 11 => "Chào buổi sáng",
+				<= 12 => "Chào buổi trưa",
+				<= 17 => "Chào buổi chiều",
+				_ => "Chào buổi tối"
+			};
+
+			return $"{greeting}, {currentUser}";
+		}
+
+		void CloseFinalForm()
+		{
+			resetPassFormVisible = false;
+		}
+
+		async Task ChangeNewPasswordAsync()
+		{
+
+		}
+	}
 }

@@ -8,6 +8,7 @@ namespace GameManagement.Repository.IRepository
         IQueryable<User> GetQueryable();
         Task<List<User>> GetAllWithFilterAsync(IQueryable<User>  query , UserSearch search);
         Task<bool> RegisterAccountAsync(User data);
+        Task<bool> UpdateAccountAsync(User data);
         Task<bool> CheckExistUserInfoAsync(User data);
         Task<bool> CheckUserLoginAsync(User data);
         Task<User> GetUserInfoAsync(UserSearch search);

@@ -1,0 +1,383 @@
+/* CSS for Home component */
+/* =========================
+   PAGE
+========================= */
+
+.steam-home {
+    min-height: 100vh;
+    padding: 24px 36px 60px;
+    background: linear-gradient( 180deg, #2a3f55 0%, #24384b 45%, #1d2d3d 100% );
+    color: #fff;
+}
+
+
+/* =========================
+   PAGE HEADER
+========================= */
+
+.site-page-header {
+    background: #171a21;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+    .site-page-header .ant-page-header-heading-title {
+        color: #ffffff;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+    }
+
+
+/* =========================
+   HERO
+========================= */
+.steam-hero {
+    position: relative;
+    min-height: 420px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 40px;
+    background: linear-gradient( 90deg, rgba(10, 18, 27, 0.96) 0%, rgba(10, 18, 27, 0.8) 45%, rgba(10, 18, 27, 0.2) 100% ), url('/images/home-background.jpg') center/cover no-repeat;
+    box-shadow: 0 18px 45px rgba(0,0,0,.35);
+}
+
+/* Overlay để chữ nổi hơn */
+.steam-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient( 90deg, rgba(8, 15, 22, 0.95) 0%, rgba(8, 15, 22, 0.78) 38%, rgba(8, 15, 22, 0.18) 75%, rgba(8, 15, 22, 0.05) 100% );
+}
+
+
+/* Hero content */
+.steam-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 580px;
+    padding: 85px 60px;
+}
+
+
+.steam-label {
+    display: inline-block;
+    margin-bottom: 12px;
+    color: #66c0f4;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+}
+
+
+.steam-hero-content h1 {
+    margin: 0 0 14px;
+    color: #ffffff;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.15;
+}
+
+
+.steam-hero-content p {
+    max-width: 520px;
+    margin-bottom: 26px;
+    color: #c7d5e0;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+
+.steam-actions {
+    display: flex;
+    gap: 12px;
+}
+
+
+    .steam-actions .ant-btn-primary {
+        height: 44px;
+        padding: 0 22px;
+        border: none;
+        background: linear-gradient( 90deg, #47bfff, #1a9fff );
+        border-radius: 4px;
+        font-weight: 600;
+    }
+
+
+        .steam-actions .ant-btn-primary:hover {
+            background: linear-gradient( 90deg, #67cfff, #2aafff );
+        }
+
+
+.steam-secondary-btn {
+    height: 44px;
+    padding: 0 22px;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 4px;
+}
+
+
+    .steam-secondary-btn:hover {
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+
+/* =========================
+   SECTION
+========================= */
+
+.steam-section {
+    max-width: 1400px;
+    margin: 0 auto 38px;
+}
+
+
+.section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+
+    .section-header h2 {
+        margin: 2px 0 0;
+        color: #ffffff;
+        font-size: 21px;
+        font-weight: 600;
+    }
+
+
+.section-subtitle {
+    color: #66c0f4;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+
+.section-header a {
+    color: #8facc0;
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+
+    .section-header a:hover {
+        color: #ffffff;
+    }
+
+
+/* =========================
+   GAME GRID
+========================= */
+
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+
+/* =========================
+   GAME CARD
+========================= */
+
+.steam-game-card {
+    overflow: hidden;
+    border-radius: 8px;
+    background: #223447;
+    box-shadow: 0 10px 24px rgba(0,0,0,.18);
+    transition: .2s ease;
+}
+
+    .steam-game-card:hover {
+        transform: translateY(-5px);
+        background: #2a4158;
+        box-shadow: 0 18px 36px rgba(0,0,0,.25);
+    }
+
+
+/* Game image */
+.game-image {
+    position: relative;
+    height: 180px;
+    background-position: center;
+    background-size: cover;
+}
+
+
+.game-image-one {
+    background-image: url('/images/game1.jpg');
+}
+
+
+.game-image-two {
+    background-image: url('/images/game2.jpg');
+}
+
+
+.game-image-three {
+    background-image: url('/images/game3.jpg');
+}
+
+
+.game-status {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 5px 8px;
+    color: #ffffff;
+    background: rgba(26, 159, 255, 0.88);
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+}
+
+
+/* Game info */
+.game-info {
+    padding: 14px 16px 16px;
+}
+
+
+    .game-info h3 {
+        margin: 0 0 5px;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+
+    .game-info p {
+        margin: 0;
+        color: #8f98a0;
+        font-size: 13px;
+    }
+
+
+.game-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 14px;
+}
+
+
+.game-company {
+    color: #c7d5e0;
+    font-size: 12px;
+}
+
+
+.game-active {
+    color: #a4d007;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+/* =========================
+   QUICK ACCESS
+========================= */
+
+.quick-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+
+.quick-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 92px;
+    padding: 18px;
+    background: linear-gradient( 135deg, #162433, #1b3142 );
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+
+    .quick-card:hover {
+        transform: translateY(-3px);
+        background: linear-gradient( 135deg, #1d3447, #244c65 );
+        border-color: rgba(102, 192, 244, 0.3);
+    }
+
+
+.quick-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    color: #66c0f4;
+    background: rgba(102, 192, 244, 0.1);
+    border-radius: 6px;
+    font-size: 19px;
+}
+
+
+.quick-card h3 {
+    margin: 0 0 4px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+
+.quick-card p {
+    margin: 0;
+    color: #8f98a0;
+    font-size: 12px;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1000px) {
+
+    .game-grid,
+    .quick-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .steam-home {
+        padding: 0 14px 30px;
+    }
+
+    .steam-hero {
+        min-height: 360px;
+    }
+
+    .steam-hero-content {
+        padding: 65px 30px;
+    }
+
+        .steam-hero-content h1 {
+            font-size: 30px;
+        }
+
+    .game-grid,
+    .quick-grid {
+        grid-template-columns: 1fr;
+    }
+}

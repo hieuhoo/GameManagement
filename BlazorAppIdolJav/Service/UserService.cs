@@ -6,102 +6,117 @@ using GameManagement.Share.ClassDB;
 
 namespace GameManagement.Service
 {
-    public class UserService : IUserService
-    {
-        private readonly IUserRepository _repo;
-        readonly IMapper _mapper;
+	public class UserService : IUserService
+	{
+		private readonly IUserRepository _repo;
+		readonly IMapper _mapper;
 
-        public UserService(IUserRepository repo, IMapper mapper)
-        {
-            _repo = repo;
-            _mapper = mapper;
-        }
+		public UserService(IUserRepository repo, IMapper mapper)
+		{
+			_repo = repo;
+			_mapper = mapper;
+		}
 
-        public async Task<List<UserData>> GetAllWithFilterAsync(UserSearch search)
-        {
-            try
-            {
-                var filter = search.CreateFilter(_repo.GetQueryable());
-                var result = await _repo.GetAllWithFilterAsync(filter, search);
-                var data = _mapper.Map<List<UserData>>(result);
-                return data;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+		public async Task<List<UserData>> GetAllWithFilterAsync(UserSearch search)
+		{
+			try
+			{
+				var filter = search.CreateFilter(_repo.GetQueryable());
+				var result = await _repo.GetAllWithFilterAsync(filter, search);
+				var data = _mapper.Map<List<UserData>>(result);
+				return data;
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
 
-        public async Task<bool> RegisterAccountAsync(UserData data)
-        {
-            try
-            {
-                var user = _mapper.Map<User>(data);
-                var result = await _repo.RegisterAccountAsync(user);
-                return result;
+		public async Task<bool> RegisterAccountAsync(UserData data)
+		{
+			try
+			{
+				var user = _mapper.Map<User>(data);
+				var result = await _repo.RegisterAccountAsync(user);
+				return result;
 
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
+			}
+			catch (Exception ex)
+			{
+				return false;
+			}
+		}
 
-        public async Task<bool> CheckExistUserInfoAsync(UserData data)
-        {
-            try
-            {
-                var user = _mapper.Map<User>(data);
-                var result = await _repo.CheckExistUserInfoAsync(user);
-                return result;
+		public async Task<bool> UpdateAccountAsync(UserData data)
+		{
+			try
+			{
+				var user = _mapper.Map<User>(data);
+				var result = await _repo.UpdateAccountAsync(user);
+				return result;
 
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
+			}
+			catch (Exception ex)
+			{
+				return false;
+			}
+		}
 
-        public async Task<bool> CheckUserLoginAsync(UserData data)
-        {
-            try
-            {
-                var user = _mapper.Map<User>(data);
-                var result = await _repo.CheckUserLoginAsync(user);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
+		public async Task<bool> CheckExistUserInfoAsync(UserData data)
+		{
+			try
+			{
+				var user = _mapper.Map<User>(data);
+				var result = await _repo.CheckExistUserInfoAsync(user);
+				return result;
 
-        public async Task<bool> CheckExistEmailAsync(string email)
-        {
-            try
-            {
-                var result = await _repo.CheckExistEmailAsync(email);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
+			}
+			catch (Exception ex)
+			{
+				return false;
+			}
+		}
+
+		public async Task<bool> CheckUserLoginAsync(UserData data)
+		{
+			try
+			{
+				var user = _mapper.Map<User>(data);
+				var result = await _repo.CheckUserLoginAsync(user);
+				return result;
+			}
+			catch (Exception ex)
+			{
+				return false;
+			}
+		}
+
+		public async Task<bool> CheckExistEmailAsync(string email)
+		{
+			try
+			{
+				var result = await _repo.CheckExistEmailAsync(email);
+				return result;
+			}
+			catch (Exception ex)
+			{
+				return false;
+			}
+		}
 
 
-        public async Task<UserData> GetUserInfoAsync(UserSearch search)
-        {
-            try
-            {
-                var result = await _repo.GetUserInfoAsync(search);
-                var data = _mapper.Map<UserData>(result);
-                return data;
-            }
-            catch (Exception ex)
-            {
-                return new UserData();
-            }
-        }
-    }
+		public async Task<UserData> GetUserInfoAsync(UserSearch search)
+		{
+			try
+			{
+				var result = await _repo.GetUserInfoAsync(search);
+				var data = _mapper.Map<UserData>(result);
+				return data;
+			}
+			catch (Exception ex)
+			{
+				return new UserData();
+			}
+		}
+	}
 }

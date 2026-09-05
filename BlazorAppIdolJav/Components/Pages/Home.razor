@@ -1,4 +1,4 @@
-﻿
+﻿@* 
 @page "/"
 @using AntDesign
 @using GameManagement.SpecialComponent
@@ -8,8 +8,189 @@
 </PageHeader>
 <AntDesign.Col Span="24">
     <div class="site-layout-content"></div>
-</AntDesign.Col>
+</AntDesign.Col> *@
+@page "/"
+@using AntDesign
 
+<PageHeader Class="site-page-header"
+            Title="Game Management">
+</PageHeader>
+
+<div class="steam-home">
+
+    <!-- HERO -->
+    <section class="steam-hero">
+
+        <div class="steam-hero-overlay"></div>
+
+        <div class="steam-hero-content">
+
+            <span class="steam-label">
+                GAME PLATFORM
+            </span>
+
+            <h1>
+                Discover & Manage Your Games
+            </h1>
+
+            <p>
+                Manage games, publishers, users and your game library
+                from one place.
+            </p>
+
+            <div class="steam-actions">
+
+                <Button Type="ButtonType.Primary"
+                        Size="ButtonSize.Default"
+                        OnClick="HandleBrowseGame">
+
+                    <Icon Type="appstore" />
+                    Browse Games
+
+                </Button>
+
+                <Button Size="ButtonSize.Default"
+                        Class="steam-secondary-btn">
+
+                    <Icon Type="plus" />
+                    Add Game
+
+                </Button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FEATURED -->
+    <section class="steam-section">
+
+        <div class="section-header">
+
+            <div>
+                <span class="section-subtitle">
+                    EXPLORE
+                </span>
+
+                <h2>Featured Games</h2>
+            </div>
+
+            <a href="/danh-sach-game">
+                View all
+            </a>
+
+        </div>
+
+
+        <div class="game-grid">
+
+            @foreach (var game in FeaturedGames)
+            {
+                <div class="steam-game-card">
+
+                    <div class="game-image"
+                         style="background-image: url('@game.ImageUrl')">
+
+                        <span class="game-status">
+                            FEATURED
+                        </span>
+
+                    </div>
+
+                    <div class="game-info">
+
+                        <h3>@game.Name</h3>
+
+                        <p>
+                            @game.CategoryName
+                        </p>
+
+                        <div class="game-footer">
+
+                            <span class="game-company">
+                                @game.CompanyName
+                            </span>
+
+                            <span class="game-active">
+                                @game.Status
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    </section>
+
+
+    <!-- QUICK ACCESS -->
+    <section class="steam-section">
+
+        <div class="section-header">
+            <div>
+                <span class="section-subtitle">
+                    MANAGEMENT
+                </span>
+
+                <h2>Quick Access</h2>
+            </div>
+        </div>
+
+
+        <div class="quick-grid">
+
+            <div class="quick-card"
+                 @onclick="">
+
+                <div class="quick-icon">
+                    <Icon Type="appstore" />
+                </div>
+
+                <div>
+                    <h3>Game Management</h3>
+                    <p>View and manage all games</p>
+                </div>
+
+            </div>
+
+
+            <div class="quick-card">
+
+                <div class="quick-icon">
+                    <Icon Type="team" />
+                </div>
+
+                <div>
+                    <h3>User Management</h3>
+                    <p>Manage users and accounts</p>
+                </div>
+
+            </div>
+
+
+            <div class="quick-card">
+
+                <div class="quick-icon">
+                    <Icon Type="bank" />
+                </div>
+
+                <div>
+                    <h3>Game Companies</h3>
+                    <p>Manage publishers and studios</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
 
 
 

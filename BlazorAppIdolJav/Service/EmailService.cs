@@ -15,7 +15,7 @@
 			_environment = environment;
 		}
 
-		public async Task SendOtpAsync(string email, string otp)
+		public async Task SendOtpAsync(string email, string otp, int minute)
 		{
 			var senderEmail = _configuration["EmailSettings:Email"] ?? "test123@gmail.com";
 			var senderPassword = _configuration["EmailSettings:Password"] ?? "";
@@ -46,7 +46,7 @@
 
 			html = html
 				.Replace("{{OTP}}", otp)
-				.Replace("{{EXPIRE_MINUTES}}", "3");
+				.Replace("{{EXPIRE_MINUTES}}", minute.ToString());
 
 			message.Body = new TextPart("html")
 			{

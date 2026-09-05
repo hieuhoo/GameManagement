@@ -12,9 +12,11 @@ namespace GameManagement.Service.IService
 		Task<bool> CheckExistUserInfoAsync(UserData data);
 		Task<bool> CheckUserLoginAsync(UserData data);
 		Task<UserData> GetUserInfoAsync(UserSearch search);
-	}
+        Task<bool> CheckExistEmailAsync(string email);
 
-	[DataContract]
+    }
+
+    [DataContract]
 	public class UserSearch
 	{
 		[DataMember(Order = 1)]

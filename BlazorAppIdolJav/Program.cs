@@ -32,6 +32,7 @@ builder.Services.AddScoped<IGameCompanyService, GameCompanyService>();
 builder.Services.AddScoped<IGameTypeService, GameTypeService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUserOtpHistoryService, UserOtpHistoryService>();
+builder.Services.AddScoped<IUserPasswordHistoryService, UserPasswordHistoryService>();
 
 
 
@@ -41,6 +42,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IGameCompanyRepository, GameCompanyRepository>();
 builder.Services.AddScoped<IGameTypeRepository, GameTypeRepository>();
 builder.Services.AddScoped<IUserOtpHistoryRepository, UserOtpHistoryRepository>();
+builder.Services.AddScoped<IUserPasswordHistoryRepository, UserPasswordHistoryRepository>();
 
 
 // cấu hình extension

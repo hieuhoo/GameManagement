@@ -17,6 +17,7 @@
 
         public string? LockReason { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        public string? LockBy { get; set; }
 
     }
 }

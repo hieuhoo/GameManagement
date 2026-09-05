@@ -1,4 +1,5 @@
 ﻿@using AntDesign
+@using static GameManagement.Share.Extension.EnumExtension
 @inject NavigationManager Navigation
 
 <Menu Mode="MenuMode.Vertical"
@@ -14,6 +15,16 @@
 
     @if (HaveLogged)
     {
+        if (IsAdmin)
+        {
+            <MenuItem Key="account">
+                <NavLink href="">
+                    <Icon Type="user" />
+                    <span>Danh sách tài khoản</span>
+                </NavLink>
+            </MenuItem>
+        }
+
         <MenuItem Key="game">
             <NavLink href="/danh-sach-game">
                 <Icon Type="appstore" />
@@ -21,12 +32,15 @@
             </NavLink>
         </MenuItem>
 
-        <MenuItem Key="setup">
-            <NavLink href="/thiet-lap-chung">
-                <Icon Type="setting" />
-                <span>Thiết lập</span>
-            </NavLink>
-        </MenuItem>
+        if (IsAdmin)
+        {
+            <MenuItem Key="setup">
+                <NavLink href="/thiet-lap-chung">
+                    <Icon Type="setting" />
+                    <span>Thiết lập</span>
+                </NavLink>
+            </MenuItem>
+        }
     }
 
 </Menu>

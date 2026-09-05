@@ -11,7 +11,7 @@
 <div class="page">
     <div class="sidebar">
         <CascadingValue Value="Data">
-            <NavMenu HaveLogged="isLoggedIn"></NavMenu>
+            <NavMenu HaveLogged="isLoggedIn" IsAdmin ="isAdmin"></NavMenu>
         </CascadingValue>
     </div>
     <main>
@@ -21,11 +21,42 @@
                     <Avatar Style="background-color: #1890ff; color: white;margin-right: 8px;">
                         @DisplayUserNameImage(currentUser)
                     </Avatar>
-                    <AntDesign.Text>@GetGreetingByHour()</AntDesign.Text>
-                    <a href="#" class="ms-3" @onclick="LogoutAccount">Đăng xuất</a>
+                    @* <AntDesign.Text>@GetGreetingByHour()</AntDesign.Text> *@
+                    <Dropdown Trigger="@(new[] { Trigger.Click })">
+                        <Overlay>
+                            <Menu>
+                                <MenuItem Key="profile">
+                                    <Icon Type="user"/>
+                                    Thông tin cá nhân
+                                </MenuItem>
+                                <MenuItem Key="wishList">
+                                    <Icon Type="heart" />
+                                    Game ưa thích
+                                </MenuItem>
+                            </Menu>
+                        </Overlay>
+
+                        <ChildContent>
+                            <span style="cursor: pointer;">
+                                @GetGreetingByHour()
+                                <Icon Type="down" style="font-size: 10px; margin-left: 4px;" />
+                            </span>
+                        </ChildContent>
+                    </Dropdown>
+                    <Popconfirm Title="Bạn có chắc muốn đăng xuất không?"
+                                OnConfirm="LogoutAccount">
+                        <Button Type="@ButtonType.Primary"
+                                Danger
+                                Style="margin-left: 12px;">
+                            Đăng xuất
+                        </Button>
+                    </Popconfirm>
                 </Authorized>
                 <NotAuthorized>
-                    <a href="#" @onclick="() => ShowLoginModalAsync()">Đăng nhập</a>
+                    <Button Type="@ButtonType.Primary"
+                            OnClick="() => ShowLoginModalAsync()">
+                        Đăng nhập
+                    </Button>
                 </NotAuthorized>
             </AuthorizeView>
         </div>
@@ -41,7 +72,7 @@
 <Modal Visible="loginVisible"
        Title="ĐĂNG NHẬP LIỀN"
        Footer="@null" MaskClosable=true
-       OnCancel="() => loginVisible = false">
+       OnCancel="() => CloseLoginForm()">
     <EditForm Model="@EditModel" OnValidSubmit="@HandleLoginAsync">
         <Row>
             <LabelFor For="() => EditModel.UserName"></LabelFor>
@@ -166,10 +197,22 @@
     <Row>
         <label>Mật khẩu mới <span style="color:red;">(*)</span></label>
         <AntDesign.InputPassword @bind-Value="newPassword" />
+        @if (isErrorPass)
+        {
+            <AntDesign.Text Style="color:red;">Vui lòng nhập mật khẩu mới</AntDesign.Text>
+        }
     </Row>
     <Row>
         <label>Nhập lại mật khẩu mới <span style="color:red;">(*)</span></label>
         <AntDesign.InputPassword @bind-Value="retypeNewPassword" />
+        @if (isErrorPass)
+        {
+            <AntDesign.Text Style="color:red;">Vui lòng nhập lại mật khẩu mới</AntDesign.Text>
+        }
+        @if (isNotMatchPass)
+        {
+            <AntDesign.Text Style="color:red;">Mật khẩu vừa nhập không khớp với mật khẩu mới</AntDesign.Text>
+        }
     </Row>
     <Row Gutter="8" Justify="@RowJustify.End">
         <Space>

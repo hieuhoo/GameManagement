@@ -5,7 +5,9 @@ namespace GameManagement.Components.Layout
 {
     public partial class NavMenu : ComponentBase
     {
-        [Parameter] public bool HaveLogged { get; set; }
         [CascadingParameter] public UserData UserData { get; set; }
+        [Parameter] public bool HaveLogged { get; set; }
+        [Parameter] public bool IsAdmin { get; set; }
+
     }
 }

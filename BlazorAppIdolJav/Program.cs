@@ -33,6 +33,7 @@ builder.Services.AddScoped<IGameTypeService, GameTypeService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUserOtpHistoryService, UserOtpHistoryService>();
 builder.Services.AddScoped<IUserPasswordHistoryService, UserPasswordHistoryService>();
+builder.Services.AddScoped<IUserLockHistoryService, UserLockHistoryService>();
 
 
 
@@ -43,10 +44,10 @@ builder.Services.AddScoped<IGameCompanyRepository, GameCompanyRepository>();
 builder.Services.AddScoped<IGameTypeRepository, GameTypeRepository>();
 builder.Services.AddScoped<IUserOtpHistoryRepository, UserOtpHistoryRepository>();
 builder.Services.AddScoped<IUserPasswordHistoryRepository, UserPasswordHistoryRepository>();
+builder.Services.AddScoped<IUserLockHistoryRepository, UserLockHistoryRepository>();
 
 
 // cấu hình extension
-builder.Services.AddScoped<StringExtension>();
 
 var app = builder.Build();
 

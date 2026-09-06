@@ -1,0 +1,207 @@
+﻿@page "/danh-sach-tai-khoan"
+@attribute [Authorize(Roles = "Admin")]
+@using AntDesign
+@using GameManagement.Share.Extension
+@using GameManagement.Share.Model.ViewModel
+@using GameManagement.SpecialComponent
+@using static GameManagement.Share.Extension.EnumExtension
+@using Microsoft.AspNetCore.Authorization
+<Row Gutter="8">
+    <AntDesign.Col Span="24">
+
+        <div class="account-table-container">
+
+            <Table TItem="AccountViewModel"
+                   DataSource="ViewModels"
+                   Class="account-table"
+                   ScrollX="1480px"
+                   ScrollY="calc(100vh - 260px)"
+                   ScrollBarWidth="@DefaultTableConfig.ScrollBarWidth"
+                   Loading="loading"
+                   OnRowClick="OnRowClick"
+                   @ref="table">
+
+                <Column @bind-Field="context.Stt"
+                        Title="STT" Fixed="ColumnFixPlacement.Left"
+                        Width="60">
+                </Column>
+
+                <Column @bind-Field="context.UserName"
+                        Title="Tên đăng nhập" Fixed="ColumnFixPlacement.Left"
+                        Width="150">
+                </Column>
+
+                <Column @bind-Field="context.Name"
+                        Title="Họ tên"
+                        Width="180">
+                </Column>
+
+                <Column @bind-Field="context.Email"
+                        Title="Email"
+                        Width="200">
+                </Column>
+
+                <Column @bind-Field="context.Status"
+                        Title="Trạng thái"
+                        Width="130">
+                    <Template>
+                        @CommonTemplate.RenderAccountStatusText(context.Status)
+                    </Template>
+                </Column>
+
+                <Column @bind-Field="context.Role"
+                        Title="Vai trò"
+                        Width="110">
+                    <Template>
+                        @CommonTemplate.RenderRoleAccountText(context.Role)
+                    </Template>
+                </Column>
+
+                <Column @bind-Field="context.LockReason"
+                        Title="Lý do khóa"
+                        Width="220">
+                    <Template>
+                        @CommonTemplate.RenderReasonLockText(context.LockReason)
+                    </Template>
+                </Column>
+
+                <Column @bind-Field="context.LockBy"
+                        Title="Người khóa"
+                        Width="130">
+                    <Template>
+                        @CommonTemplate.RenderPersonLockText(context.LockBy)
+                    </Template>
+                </Column>
+
+                <Column @bind-Field="context.CreateDate"
+                        Title="Ngày tạo"
+                        Width="170">
+                    <Template>
+                        @(context.CreateDate.ToString("dd/MM/yyyy HH:mm"))
+                    </Template>
+                </Column>
+
+                <ActionColumn Title="Thao tác"
+                              Width="130">
+
+                    <Space Size="SpaceSize.Small">
+                        <SpaceItem>
+                            <Tooltip Title="Lịch sử">
+                                <Button Type="ButtonType.Text"
+                                        Size="ButtonSize.Default"
+                                        OnClick="@(() => ViewHistoryAccountAsync(context))">
+                                    <Icon Type="history" />
+                                </Button>
+                            </Tooltip>
+                        </SpaceItem>
+                        @if (context.Status == AccountStatus.Lock.ToString())
+                        {
+                            <SpaceItem>
+                                <Tooltip Title="Mở khóa">
+                                    <Button Type="ButtonType.Text"
+                                            Size="ButtonSize.Default"
+                                            Class="action-unlock"
+                                            OnClick="@(() => UnlockAccountAsync(context))">
+                                        <Icon Type="unlock" />
+                                    </Button>
+                                </Tooltip>
+                            </SpaceItem>
+                        }
+                        else
+                        {
+                            <SpaceItem>
+                                <Tooltip Title="Khóa tài khoản">
+                                    <Button Type="ButtonType.Text"
+                                            Size="ButtonSize.Default"
+                                            Danger="true"
+                                            Class="action-lock"
+                                            OnClick="@(() => LockAccountAsync(context))">
+                                        <Icon Type="lock" />
+                                    </Button>
+                                </Tooltip>
+                            </SpaceItem>
+                        }
+
+                        <SpaceItem>
+                            <Tooltip Title="Đổi mật khẩu">
+                                <Button Type="ButtonType.Text"
+                                        Size="ButtonSize.Default"
+                                        Class="action-password"
+                                        OnClick="@(() => ChangePassword(context))">
+                                    <Icon Type="key" />
+                                </Button>
+                            </Tooltip>
+                        </SpaceItem>
+
+                    </Space>
+
+                </ActionColumn>
+
+            </Table>
+
+        </div>
+
+    </AntDesign.Col>
+</Row>
+
+<Modal Title="@($"Lịch sử khóa/mở tài khoản")"
+       Visible="historyVisible"
+       Width="600"
+       OnCancel="@CloseHistoryModal">
+
+    @* @if (LockHistoryDatas == null || !LockHistoryDatas.Any())
+    {
+        <Empty Description="Chưa có lịch sử khóa/mở khóa" />
+    }
+    else
+    { *@
+        <Timeline>
+            @foreach (var item in LockHistoryDatas)
+            {
+                var isLock = item.Action == AccountOperation.Lock.ToString();
+
+                <TimelineItem Color="@(isLock ? "red" : "green")">
+
+                    <div class="history-item">
+
+                        <div class="history-title">
+                            @if (isLock)
+                            {
+                                <span>Khóa tài khoản</span>
+
+                            }
+                            else
+                            {
+                                <span>Mở khóa tài khoản</span>
+                            }
+                        </div>
+
+                        <div class="history-time">
+                            @item.CreateDate.ToString("dd/MM/yyyy HH:mm:ss")
+                        </div>
+
+                        <div class="history-detail">
+                            <span>Thực hiện bởi:</span>
+                            <strong>@item.PerformedBy</strong>
+                        </div>
+
+                        @if (isLock && !string.IsNullOrWhiteSpace(item.Reason))
+                        {
+                            <div class="history-detail">
+                                <span>Lý do:</span>
+                                <strong>
+                                    @* @StringExtension.GetEnumDescription<AccountLockReason>
+                                    (
+                                    item.Reason) *@
+                                </strong>
+                            </div>
+                        }
+
+                    </div>
+
+                </TimelineItem>
+            }
+        </Timeline>
+    @* } *@
+
+</Modal>

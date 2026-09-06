@@ -1,5 +1,5 @@
 ﻿@page "/danh-sach-tai-khoan"
-@attribute [Authorize(Roles = "Admin")]
+@* @attribute [Authorize(Roles = "Admin")] *@
 @using AntDesign
 @using GameManagement.Share.Extension
 @using GameManagement.Share.Model.ViewModel
@@ -144,17 +144,10 @@
     </AntDesign.Col>
 </Row>
 
-<Modal Title="@($"Lịch sử khóa/mở tài khoản")"
+<Modal Title="@historyTitle"
        Visible="historyVisible"
        Width="600"
        OnCancel="@CloseHistoryModal">
-
-    @* @if (LockHistoryDatas == null || !LockHistoryDatas.Any())
-    {
-        <Empty Description="Chưa có lịch sử khóa/mở khóa" />
-    }
-    else
-    { *@
         <Timeline>
             @foreach (var item in LockHistoryDatas)
             {
@@ -177,23 +170,19 @@
                         </div>
 
                         <div class="history-time">
-                            @item.CreateDate.ToString("dd/MM/yyyy HH:mm:ss")
+                            Thời gian : @item.CreateDate.ToString("dd/MM/yyyy HH:mm:ss")
                         </div>
 
                         <div class="history-detail">
-                            <span>Thực hiện bởi:</span>
-                            <strong>@item.PerformedBy</strong>
+                             Người thao tác : <strong>@CommonTemplate.RenderPersonLockText(item.PerformedBy)</strong>
                         </div>
 
                         @if (isLock && !string.IsNullOrWhiteSpace(item.Reason))
                         {
                             <div class="history-detail">
-                                <span>Lý do:</span>
-                                <strong>
-                                    @* @StringExtension.GetEnumDescription<AccountLockReason>
-                                    (
-                                    item.Reason) *@
-                                </strong>
+                            Lý do :  <strong>
+                            @CommonTemplate.RenderReasonLockText(item.Reason)
+                        </strong>
                             </div>
                         }
 

@@ -30,5 +30,20 @@ namespace GameManagement.Service
 				throw ex;
 			}
 		}
-	}
+
+        public async Task<List<UserLockHistoryData>> GetAllWithFilterAsync(UserLockHistorySearch search)
+        {
+            try
+            {
+                var filter = search.CreateFilter(_repo.GetQueryable());
+                var result = await _repo.GetAllWithFilterAsync(filter, search);
+                var data = _mapper.Map<List<UserLockHistoryData>>(result);
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+    }
 }

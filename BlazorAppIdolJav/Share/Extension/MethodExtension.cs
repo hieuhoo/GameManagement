@@ -1,5 +1,6 @@
 ﻿using GameManagement.CoreConfig.Extensions;
 using GameManagement.Share.ClassData;
+using GameManagement.Share.Extension;
 using static GameManagement.Share.Extension.EnumExtension;
 
 namespace GameManagement.Share.Extension
@@ -24,5 +25,21 @@ namespace GameManagement.Share.Extension
 			};
 		}
 
-	}
+        public static UserPasswordHistoryData FillPasswordHistoryData(
+          this string userId,
+          string currentPassword ,
+          string? previousPassword = null)
+        {
+            return new UserPasswordHistoryData
+            {
+                Id = ObjectExtentions.GenerateGuid(),
+                UserId = userId,
+                CreateDate = DateTime.Now,
+                CurrentPassword = currentPassword,
+                CurrentPasswordHash = StringExtension.GetCharacterHash(currentPassword),
+                PreviousPassword = previousPassword
+            };
+        }
+
+    }
 }

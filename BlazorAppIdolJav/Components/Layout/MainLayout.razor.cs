@@ -182,7 +182,7 @@ namespace GameManagement.Components.Layout
                     Data.UpdatedDate = DateTime.Now;
 
                     // 7. Sai đủ 3 lần -> Lock
-                    if (Data.FailedLoginCount >= maxAttemptLogin)
+                    if (Data.FailedLoginCount >= maxAttemptLogin)   
                     {
                         showForgetPassLink = false;
 
@@ -279,15 +279,7 @@ namespace GameManagement.Components.Layout
                 var result = await UserService.RegisterAccountAsync(Data);
                 if (result)
                 {
-                    var history = new UserPasswordHistoryData
-                    {
-                        Id = ObjectExtentions.GenerateGuid(),
-                        UserId = EditModel.Id,
-                        CurrentPassword = EditModel.PassWord,
-                        CurrentPasswordHash = StringExtension.GetCharacterHash(EditModel.PassWord),
-                        CreateDate = DateTime.Now,
-                        PreviousPassword = null
-                    };
+                    var history = EditModel.Id.FillPasswordHistoryData(EditModel.PassWord);
                     await PasswordService.AddPasswordHistoryAsync(history);
                     NoticeService.NotiSuccess(AccountRegisterEnum.Success.GetDescription());
                 }
@@ -556,15 +548,7 @@ namespace GameManagement.Components.Layout
                 }
 
                 // lưu 1 record vào bảng lịch sử
-                var passwordData = new UserPasswordHistoryData
-                {
-                    Id = ObjectExtentions.GenerateGuid(),
-                    UserId = data.Id,
-                    CurrentPassword = newPassword,
-                    PreviousPassword = data.PassWord,
-                    CurrentPasswordHash = StringExtension.GetCharacterHash(newPassword),
-                    CreateDate = DateTime.Now,
-                };
+                var passwordData = data.Id.FillPasswordHistoryData(newPassword, data.PassWord);
                 var result = await PasswordService.AddPasswordHistoryAsync(passwordData);
                 if (result)
                 {

@@ -1,9 +1,13 @@
-﻿using GameManagement.Share.ClassDB;
+﻿using GameManagement.Service.IService;
+using GameManagement.Share.ClassDB;
 
 namespace GameManagement.Repository.IRepository
 {
 	public interface IUserLockHistoryRepository
 	{
-		Task<bool> AddLockHistoryAsync(UserLockHistory data);
+        IQueryable<UserLockHistory> GetQueryable();
+        Task<List<UserLockHistory>> GetAllWithFilterAsync(IQueryable<UserLockHistory> query, UserLockHistorySearch search);
+
+        Task<bool> AddLockHistoryAsync(UserLockHistory data);
 	}
 }

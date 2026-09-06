@@ -1,7 +1,9 @@
 ﻿using GameManagement.CoreConfig.Repository;
 using GameManagement.Data;
 using GameManagement.Repository.IRepository;
+using GameManagement.Service.IService;
 using GameManagement.Share.ClassDB;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameManagement.Repository
 {
@@ -25,5 +27,23 @@ namespace GameManagement.Repository
 				return false;
 			}
 		}
-	}
+
+        public IQueryable<UserLockHistory> GetQueryable()
+        {
+            return _context.UserLockHistory.AsQueryable();
+        }
+
+        public async Task<List<UserLockHistory>> GetAllWithFilterAsync(IQueryable<UserLockHistory> query, UserLockHistorySearch search)
+        {
+            try
+            {
+                var result = await query.ToListAsync();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+    }
 }

@@ -25,16 +25,15 @@ namespace GameManagement.WebInterface.Account
 		[Inject] NotificationService NoticeService { get; set; }
 		[Inject] AuthenticationStateProvider AuthProvider { get; set; }
 		List<AccountViewModel> ViewModels { get; set; } = new();
-		UserData SelectModel { get; set; }
 		List<UserData> AccountDatas { get; set; }
 		UserData CurrentUser { get; set; }
-		List<UserLockHistoryData> LockHistoryDatas { get; set; }
+		List<UserLockHistoryData> LockHistoryDatas { get; set; } = new();
 		Table<AccountViewModel> table;
-		GameCompanyEditModel EditModel;
 		InputWatcher inputWatcher;
 
 		bool loading;
 		bool historyVisible;
+		string historyTitle = string.Empty;
 		protected override async Task OnInitializedAsync()
 		{
 			try
@@ -82,7 +81,7 @@ namespace GameManagement.WebInterface.Account
 		{
 			try
 			{
-				SelectModel = AccountDatas.FirstOrDefault(c => c.Id == rowData.Data.Id) ?? new UserData();
+				//SelectModel = AccountDatas.FirstOrDefault(c => c.Id == rowData.Data.Id) ?? new UserData();
 				//Mapper.Map(SelectModel, EditModel);
 				//EditModel.ReadOnly = true;
 			}
@@ -91,10 +90,6 @@ namespace GameManagement.WebInterface.Account
 				throw ex;
 			}
 			StateHasChanged();
-		}
-
-		void ViewAccount(AccountViewModel data)
-		{
 		}
 
 		async Task LockAccountAsync(AccountViewModel model)
@@ -189,8 +184,14 @@ namespace GameManagement.WebInterface.Account
 		{
 			try
 			{
-
-			}
+				historyVisible = true;
+				historyTitle = $"Lịch sử khóa/mở tài khoản {model.UserName}";
+                LockHistoryDatas = await HistoryLockService.GetAllWithFilterAsync(new UserLockHistorySearch
+				{
+					UserId = model.Id
+				}) ?? new List<UserLockHistoryData>();
+                LockHistoryDatas = LockHistoryDatas.OrderByDescending(c => c.CreateDate).ToList();
+            }
 			catch
 			{
 
@@ -200,7 +201,6 @@ namespace GameManagement.WebInterface.Account
 		void CloseHistoryModal()
 		{
 			historyVisible = false;
-			SelectedAccount = null;
 			LockHistoryDatas.Clear();
 		}
 	}

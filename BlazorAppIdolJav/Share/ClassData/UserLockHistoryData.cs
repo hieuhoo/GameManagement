@@ -2,9 +2,9 @@
 
 namespace GameManagement.Share.ClassData
 {
-    public class UserPasswordHistoryData
-    {
-        [DataMember(Order = 1)]
+	public class UserLockHistoryData
+	{
+		[DataMember(Order = 1)]
         public virtual String Id
         {
             get;
@@ -17,28 +17,28 @@ namespace GameManagement.Share.ClassData
             set;
         }
         [DataMember(Order = 3)]
-        public virtual String CurrentPassword
+        public virtual String Action
         {
             get;
             set;
         }
         [DataMember(Order = 4)]
-        public virtual string? PreviousPassword
-        {
-            get;
-            set;
-        }
-        [DataMember(Order = 5)]
-        public virtual String CurrentPasswordHash
-        {
-            get;
-            set;
-        }
-        [DataMember(Order = 6)]
         public virtual DateTime CreateDate
         {
             get;
             set;
         }
-    }
+        [DataMember(Order = 5)]
+        public virtual String? Reason
+        {
+            get;
+            set;
+        }
+        [DataMember(Order = 6)]
+        public virtual String PerformedBy
+        {
+            get;
+            set;
+        }
+	}
 }

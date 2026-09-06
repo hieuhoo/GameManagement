@@ -11,7 +11,7 @@
 <div class="page">
     <div class="sidebar">
         <CascadingValue Value="Data">
-            <NavMenu HaveLogged="isLoggedIn" IsAdmin ="isAdmin"></NavMenu>
+            <NavMenu HaveLogged="isLoggedIn" IsAdmin="isAdmin"></NavMenu>
         </CascadingValue>
     </div>
     <main>
@@ -26,13 +26,16 @@
                         <Overlay>
                             <Menu>
                                 <MenuItem Key="profile">
-                                    <Icon Type="user"/>
+                                    <Icon Type="user" />
                                     Thông tin cá nhân
                                 </MenuItem>
-                                <MenuItem Key="wishList">
-                                    <Icon Type="heart" />
-                                    Game ưa thích
-                                </MenuItem>
+                                @if (!isAdmin)
+                                {
+                                    <MenuItem Key="wishList">
+                                        <Icon Type="heart" />
+                                        Game ưa thích
+                                    </MenuItem>
+                                }
                             </Menu>
                         </Overlay>
 

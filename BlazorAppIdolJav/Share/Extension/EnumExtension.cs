@@ -120,7 +120,7 @@ namespace GameManagement.Share.Extension
 		{
 			[Display(Name = "Khóa do vi phạm chính sách")]
 			ByPolicyViolation = 0,
-			[Display(Name = "Khóa do nhập sai mật khẩu")]
+			[Display(Name = "Khóa do nhập sai mật khẩu nhiều lần")]
 			ByIncorrectPassword = 1,
             [Display(Name = "Khóa do Admin ghét :))")]
             ByAdmin = 2,
@@ -132,6 +132,14 @@ namespace GameManagement.Share.Extension
             Admin= 0,
             [Display(Name = "Hệ thống")]
             System = 1,
+        }
+
+		public enum AccountOperation
+        {
+            [Display(Name = "Khóa")]
+            Lock= 0,
+            [Display(Name = "Mở khóa")]
+            Unlock = 1,
         }
     }
 }

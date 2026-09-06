@@ -12,12 +12,10 @@ namespace GameManagement.Repository
 	public class UserRepository : Repository<User>, IUserRepository
 	{
 		private readonly ApplicationDbContext _context;
-		private readonly StringExtension _extension;
 
-		public UserRepository(ApplicationDbContext context, StringExtension extension) : base(context)
+		public UserRepository(ApplicationDbContext context) : base(context)
 		{
 			_context = context;
-			_extension = extension;
 		}
 
 		public async Task<List<User>> GetAllWithFilterAsync(IQueryable<User> query, UserSearch search)
@@ -42,7 +40,7 @@ namespace GameManagement.Repository
 		{
 			try
 			{
-				data.PasswordHash = _extension.GetCharacterHash(data.PassWord); // hash thành chuỗi
+				data.PasswordHash = StringExtension.GetCharacterHash(data.PassWord); // hash thành chuỗi
 				await AddAsync(data);
 				return true;
 			}

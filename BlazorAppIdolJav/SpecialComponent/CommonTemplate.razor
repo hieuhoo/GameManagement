@@ -1,5 +1,6 @@
 ﻿@using AntDesign
 @using GameManagement.CoreConfig.Extensions
+@using GameManagement.Share.Extension
 @using static GameManagement.Share.Extension.EnumExtension;
 <h3>CommonTemplate</h3>
 @code {
@@ -47,4 +48,47 @@
     <AntDesign.Text Type="@TextElementType.Danger" Copyable="false">@StatusEnum.Disable.GetDescription()</AntDesign.Text>
     }
 </div>;
+
+    public static RenderFragment RenderAccountStatusText(string status) => @<div>
+        @if (status == AccountStatus.Active.ToString())
+        {
+            <AntDesign.Text Type="@TextElementType.Success">@AccountStatus.Active.GetDescription()</AntDesign.Text>
+        }
+        else if (status == AccountStatus.Inactive.ToString())
+        {
+            <AntDesign.Text Type="@TextElementType.Warning">@AccountStatus.Inactive.GetDescription()</AntDesign.Text>
+        }
+        else if (status == AccountStatus.Lock.ToString())
+        {
+            <AntDesign.Text Type="@TextElementType.Danger">@AccountStatus.Lock.GetDescription()</AntDesign.Text>
+        }
+    </div>;
+
+    public static RenderFragment RenderPersonLockText(string person) => @<div>
+        <AntDesign.Text Copyable="false">
+            @(string.IsNullOrWhiteSpace(person)
+                ? " "
+                : person.GetEnumDescription<LockPerson>())
+        </AntDesign.Text>
+    </div>;
+
+    public static RenderFragment RenderReasonLockText(string reason) => @<div>
+        <AntDesign.Text Copyable="false">
+            @(string.IsNullOrWhiteSpace(reason)
+                ? " "
+                : reason.GetEnumDescription<AccountLockReason>())
+        </AntDesign.Text>
+    </div>;
+
+    public static RenderFragment RenderRoleAccountText(string role) => @<div>
+        @if (role == UserRole.Admin.ToString())
+        {
+            <AntDesign.Text Copyable="false">@UserRole.Admin.GetDescription()</AntDesign.Text>
+        }
+        else if (role == UserRole.Normal.ToString())
+        {
+            <AntDesign.Text Copyable="false">@UserRole.Normal.GetDescription()</AntDesign.Text>
+        }
+    </div>;
+
 }

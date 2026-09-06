@@ -10,9 +10,11 @@ using GameManagement.SpecialComponent.ExtensionClass;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Security.Claims;
 using static GameManagement.Share.Extension.EnumExtension;
 using static GameManagement.Share.Extension.MessageEnumExtension;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static System.Net.WebRequestMethods;
 
 namespace GameManagement.Components.Layout
@@ -24,8 +26,9 @@ namespace GameManagement.Components.Layout
         [Inject] IEmailService EmailService { get; set; }
         [Inject] IUserOtpHistoryService OtpService { get; set; }
         [Inject] IUserPasswordHistoryService PasswordService { get; set; }
+        [Inject] IUserLockHistoryService HistoryLockService { get; set; }
 
-
+		[Inject] NavigationManager NavigationManager { get; set; } = default!;
         [Inject] NotificationService NoticeService { get; set; }
         [Inject] AuthenticationStateProvider AuthProvider { get; set; }
 
@@ -34,7 +37,6 @@ namespace GameManagement.Components.Layout
         UserData EmailUserData { get; set; } = new UserData();
 
         InputWatcher inputWatcher;
-        StringExtension extension = new StringExtension();
 
         bool loginVisible;
         bool registerVisible;
@@ -124,8 +126,9 @@ namespace GameManagement.Components.Layout
                     StringComparison.OrdinalIgnoreCase))
                 {
                     showForgetPassLink = false;
+                    string reason = Data.LockReason.GetEnumDescription<AccountLockReason>();
                     NoticeService.NotiError(
-                        "Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên để được mở khóa."
+                        $"Tài khoản đã bị {reason}. Vui lòng liên hệ quản trị viên để được mở khóa."
                     );
                     return;
                 }
@@ -190,7 +193,12 @@ namespace GameManagement.Components.Layout
                         Data.LockBy = LockPerson.System.ToString();
 
                         await UserService.UpdateAccountAsync(Data);
-
+                        var lockHistory = Data.Id.FillLockHistoryData(
+							AccountOperation.Lock,
+							LockPerson.System,
+							AccountLockReason.ByIncorrectPassword
+						);
+                        await HistoryLockService.AddLockHistoryAsync(lockHistory);
                         NoticeService.NotiError(
                             $"Bạn đã đăng nhập sai {maxAttemptLogin} lần. " +
                             "Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên."
@@ -271,6 +279,16 @@ namespace GameManagement.Components.Layout
                 var result = await UserService.RegisterAccountAsync(Data);
                 if (result)
                 {
+                    var history = new UserPasswordHistoryData
+                    {
+                        Id = ObjectExtentions.GenerateGuid(),
+                        UserId = EditModel.Id,
+                        CurrentPassword = EditModel.PassWord,
+                        CurrentPasswordHash = StringExtension.GetCharacterHash(EditModel.PassWord),
+                        CreateDate = DateTime.Now,
+                        PreviousPassword = null
+                    };
+                    await PasswordService.AddPasswordHistoryAsync(history);
                     NoticeService.NotiSuccess(AccountRegisterEnum.Success.GetDescription());
                 }
                 else
@@ -316,11 +334,6 @@ namespace GameManagement.Components.Layout
             }
         }
 
-        //void ShowLoginModal()
-        //{
-        //	loginVisible = true;
-        //}
-
         async Task LogoutAccount()
         {
             try
@@ -329,6 +342,7 @@ namespace GameManagement.Components.Layout
                 isLoggedIn = false;
                 EditModel = new UserEditModel();
                 error = false;
+                NavigationManager.NavigateTo("/");
                 StateHasChanged();
             }
             catch (Exception ex)
@@ -383,7 +397,7 @@ namespace GameManagement.Components.Layout
                     Email = email,
                     OtpCode = otpNumber,
                     OtpType = TypeOTP.ResetPassword.ToString(),
-                    OtpCodeHash = extension.GetCharacterHash(otpNumber),
+                    OtpCodeHash = StringExtension.GetCharacterHash(otpNumber),
                     CreateDate = DateTime.Now,
                     ExpiredDate = DateTime.Now.AddMinutes(minuteExpired),
                     IsUsed = false
@@ -548,14 +562,14 @@ namespace GameManagement.Components.Layout
                     UserId = data.Id,
                     CurrentPassword = newPassword,
                     PreviousPassword = data.PassWord,
-                    CurrentPasswordHash = extension.GetCharacterHash(newPassword),
+                    CurrentPasswordHash = StringExtension.GetCharacterHash(newPassword),
                     CreateDate = DateTime.Now,
                 };
                 var result = await PasswordService.AddPasswordHistoryAsync(passwordData);
                 if (result)
                 {
                     data.PassWord = newPassword;
-                    data.PasswordHash = extension.GetCharacterHash(newPassword);
+                    data.PasswordHash = StringExtension.GetCharacterHash(newPassword);
                     data.FailedLoginCount = 0;
                     await UserService.UpdateAccountAsync(data);
                     NoticeService.NotiSuccess("Đổi mật khẩu mới thành công");

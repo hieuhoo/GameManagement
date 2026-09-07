@@ -23,7 +23,9 @@ namespace GameManagement.WebInterface.GameInformation
 		[Parameter] public List<GameCompanyData> CompanyDatas { get; set; }
 		[Parameter] public List<GameTypeData> GameTypeDatas { get; set; }
 		[Parameter] public EventCallback OnCancel { get; set; }
-		GameEditModel EditModel { get; set; } = new();
+        [Parameter] public EventCallback ReloadGameData { get; set; }
+
+        GameEditModel EditModel { get; set; } = new();
 		List<SelectItem> NationalOptions { get; set; } = new();
 		List<SelectItem> GameReleaseStatusOptions { get; set; } = new();
 		List<SelectItem> GameSoldStatusOptions { get; set; } = new();
@@ -230,6 +232,7 @@ namespace GameManagement.WebInterface.GameInformation
 					NoticeService.NotiSuccess(OperationEnum.AddSuccessfully.GetDescription());
 					EditModel = new();
 					await OnCancel.InvokeAsync();
+					await ReloadGameData.InvokeAsync();
 				}
 				else
 				{

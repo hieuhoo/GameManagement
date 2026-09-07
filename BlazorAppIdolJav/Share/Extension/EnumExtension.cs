@@ -96,7 +96,9 @@ namespace GameManagement.Share.Extension
 			GameCompany = 0,
 			[Display(Name = "Thể loại game")]
 			GameType = 1,
-		}
+            [Display(Name = "Giảm giá game")]
+            GameDiscount = 2,
+        }
 
 		public enum SendOtpMethod // hiện tại chỉ hỗ trợ qua email
 		{

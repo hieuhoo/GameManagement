@@ -17,12 +17,19 @@ namespace GameManagement.Share.Model.EditModel
         [Required]
         public string UserName { get; set; }
         [Display(Name = "Mật khẩu")]
-        [Required]
+        [Required(ErrorMessage = "Mật khẩu không được để trống")]
+        [StringLength(8, MinimumLength = 3, ErrorMessage = "Mật khẩu phải từ 3 đến 8 ký tự")]
+        [RegularExpression(
+        @"^(?=.*[@_]).*$",
+        ErrorMessage = "Mật khẩu phải có ít nhất 1 ký tự đặc biệt (@ hoặc _)"
+        )]
         public string PassWord { get; set; }
         [Display(Name = "Email cá nhân")]
+        [Required]
         public string? Email { get; set; }
         public int? FailedLoginCount { get; set; }
         [Display(Name = "Họ và tên")]
+        [Required]
         public string Name { get; set; }
         public DateTime CreateDate { get; set; }
         public string Role { get; set; }
@@ -42,26 +49,6 @@ namespace GameManagement.Share.Model.EditModel
         public override Dictionary<string, List<string>> Validate(string nameProperty)
         {
             var Errors = new Dictionary<string, List<string>>();
-            if (nameProperty == Property.Name(c => c.Email))
-            {
-                if (IsRegister)
-                {
-                    if (Email.IsNullOrEmpty())
-                    {
-                        Errors.AddExist(nameProperty, TypeAlert.Required.GetDescription());
-                    }
-                }
-            }
-            if (nameProperty == Property.Name(c => c.Name))
-            {
-                if (IsRegister)
-                {
-                    if (Name.IsNullOrEmpty())
-                    {
-                        Errors.AddExist(nameProperty, TypeAlert.Required.GetDescription());
-                    }
-                }
-            }
             return Errors;
         }
 

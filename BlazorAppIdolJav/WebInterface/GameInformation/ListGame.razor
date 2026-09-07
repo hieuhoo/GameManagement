@@ -1,6 +1,7 @@
 ﻿@page "/danh-sach-game"
 @using AntDesign
 @using GameManagement.CoreConfig.Extensions;
+@using GameManagement.Share.Extension
 @using GameManagement.Share.Model.ViewModel;
 @using GameManagement.SpecialComponent;
 @using Microsoft.AspNetCore.Components.Routing
@@ -21,83 +22,102 @@
         </Row>
     </AntDesign.Col>
     <AntDesign.Col Span="24">
-        @* <Table TItem="GameViewModel"
+        <Table TItem="GameViewModel"
                DataSource="ViewModels"
-               Class="account-table"
                ScrollX="1480px"
                ScrollY="calc(100vh - 260px)"
                ScrollBarWidth="@DefaultTableConfig.ScrollBarWidth"
                Loading="loading"
                OnRowClick="OnRowClick"
-               @ref="table">
+               @ref="Table">
 
             <Column @bind-Field="context.Stt"
                     Title="STT" Fixed="ColumnFixPlacement.Left"
                     Width="60">
             </Column>
 
-            <Column @bind-Field="context.UserName"
-                    Title="Tên đăng nhập" Fixed="ColumnFixPlacement.Left"
-                    Width="150">
-            </Column>
-
             <Column @bind-Field="context.Name"
-                    Title="Họ tên"
-                    Width="180">
+                    Title="Tên game"
+                    Width="200">
             </Column>
 
-            <Column @bind-Field="context.Email"
-                    Title="Email"
-                    Width="200">
+            <Column @bind-Field="context.GameCompanyName"
+                    Title="Hãng game"
+                    Width="150">
             </Column>
 
             <Column @bind-Field="context.Status"
                     Title="Trạng thái"
+                    Width="120">
+                <Template>
+                    @CommonTemplate.RenderGameStatusText(context.Status)
+                </Template>
+            </Column>
+
+            <Column @bind-Field="context.SoldStatus"
+                    Title="Trạng thái bán"
+                    Width="120">
+                <Template>
+                    @CommonTemplate.RenderGameSoldStatusText(context.SoldStatus)
+                </Template>
+            </Column>
+
+            <Column @bind-Field="context.ReleaseStatus"
+                    Title="Trạng thái phát hành"
+                    Width="150">
+                    <Template>
+                        @CommonTemplate.RenderGameReleaseStatusText(context.ReleaseStatus)
+                    </Template>
+            </Column>
+
+            <Column Field="@context.DisplayPrice"
+                    Title="Giá tiền"
+                    Width="130">
+            </Column>
+
+            <Column @bind-Field="context.IsFeatured"
+                    Title="Game nổi bật"
                     Width="130">
                 <Template>
-                    @CommonTemplate.RenderAccountStatusText(context.Status)
-                </Template>
-            </Column>
-
-            <Column @bind-Field="context.Role"
-                    Title="Vai trò"
-                    Width="110">
-                <Template>
-                    @CommonTemplate.RenderRoleAccountText(context.Role)
-                </Template>
-            </Column>
-
-            <Column @bind-Field="context.LockReason"
-                    Title="Lý do khóa"
-                    Width="220">
-                <Template>
-                    @CommonTemplate.RenderReasonLockText(context.LockReason)
-                </Template>
-            </Column>
-
-            <Column @bind-Field="context.LockBy"
-                    Title="Người khóa"
-                    Width="130">
-                <Template>
-                    @CommonTemplate.RenderPersonLockText(context.LockBy)
-                </Template>
-            </Column>
-
-            <Column @bind-Field="context.CreateDate"
-                    Title="Ngày tạo"
-                    Width="170">
-                <Template>
-                    @(context.CreateDate.ToString("dd/MM/yyyy HH:mm"))
+                    <Badge Count="@(context.OrderFeatured ?? 0)">
+                        @if (context.IsFeatured)
+                        {
+                            <Tag>Có</Tag>
+                        }
+                        else
+                        {
+                            <Tag>Không</Tag>
+                        }
+                    </Badge>
                 </Template>
             </Column>
 
             <ActionColumn Title="Thao tác"
                           Width="130">
-
-
+                <Space Size="SpaceSize.Small">
+                    <SpaceItem>
+                        <Tooltip Title="Chi tiết">
+                            <Button Type="ButtonType.Text"
+                                    Size="ButtonSize.Default" Color="Color.Blue2"
+                                    >
+                                <Icon Type="eye" />
+                            </Button>
+                        </Tooltip>
+                    </SpaceItem>
+                        <SpaceItem>
+                            <Tooltip Title="Xóa">
+                                <Button Type="ButtonType.Text" Danger
+                                        Size="ButtonSize.Default"
+                                        >
+                                    <Icon Type="delete" />
+                                </Button>
+                            </Tooltip>
+                        </SpaceItem>
+                  
+                </Space>
             </ActionColumn>
 
-        </Table> *@
+        </Table>
 
     </AntDesign.Col>
 </AntDesign.Row>
@@ -108,7 +128,8 @@
         Title="@title"
         OnClose="CloseDetailGame"
         MaskClosable="false">
-    <GameDetail @ref="gameDetailRef" ReSize="ReSize" CompanyDatas="CompanyDatas" GameTypeDatas="GameTypeDatas" OnCancel="CloseDetailGame">
+    <GameDetail @ref="gameDetailRef" ReSize="ReSize" CompanyDatas="CompanyDatas" GameTypeDatas="GameTypeDatas"
+                OnCancel="CloseDetailGame" ReloadGameData="LoadDataAsync">
 
     </GameDetail>
 </Drawer>

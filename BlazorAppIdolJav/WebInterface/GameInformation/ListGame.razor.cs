@@ -159,5 +159,10 @@ namespace GameManagement.WebInterface.GameInformation
                 throw ex;
             }
         }
+
+        void CloseDetailGame()
+        {
+            createVisible = false;
+        }
     }
 }

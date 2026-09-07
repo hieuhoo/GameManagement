@@ -8,6 +8,10 @@ namespace GameManagement.Service.IService
     public interface IGameService
     {
         Task<List<GameData>> GetAllWithFilterAsync(GameSearch search);
+        Task<bool> SaveGameAsync(GameData data);
+        Task<bool> UpdateGameAsync(GameData data);
+        Task<bool> DeleteGameAsync(GameData data);
+
     }
 
     [DataContract]

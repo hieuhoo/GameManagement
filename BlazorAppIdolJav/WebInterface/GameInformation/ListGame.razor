@@ -20,16 +20,95 @@
             </Space>
         </Row>
     </AntDesign.Col>
-    
+    <AntDesign.Col Span="24">
+        @* <Table TItem="GameViewModel"
+               DataSource="ViewModels"
+               Class="account-table"
+               ScrollX="1480px"
+               ScrollY="calc(100vh - 260px)"
+               ScrollBarWidth="@DefaultTableConfig.ScrollBarWidth"
+               Loading="loading"
+               OnRowClick="OnRowClick"
+               @ref="table">
+
+            <Column @bind-Field="context.Stt"
+                    Title="STT" Fixed="ColumnFixPlacement.Left"
+                    Width="60">
+            </Column>
+
+            <Column @bind-Field="context.UserName"
+                    Title="Tên đăng nhập" Fixed="ColumnFixPlacement.Left"
+                    Width="150">
+            </Column>
+
+            <Column @bind-Field="context.Name"
+                    Title="Họ tên"
+                    Width="180">
+            </Column>
+
+            <Column @bind-Field="context.Email"
+                    Title="Email"
+                    Width="200">
+            </Column>
+
+            <Column @bind-Field="context.Status"
+                    Title="Trạng thái"
+                    Width="130">
+                <Template>
+                    @CommonTemplate.RenderAccountStatusText(context.Status)
+                </Template>
+            </Column>
+
+            <Column @bind-Field="context.Role"
+                    Title="Vai trò"
+                    Width="110">
+                <Template>
+                    @CommonTemplate.RenderRoleAccountText(context.Role)
+                </Template>
+            </Column>
+
+            <Column @bind-Field="context.LockReason"
+                    Title="Lý do khóa"
+                    Width="220">
+                <Template>
+                    @CommonTemplate.RenderReasonLockText(context.LockReason)
+                </Template>
+            </Column>
+
+            <Column @bind-Field="context.LockBy"
+                    Title="Người khóa"
+                    Width="130">
+                <Template>
+                    @CommonTemplate.RenderPersonLockText(context.LockBy)
+                </Template>
+            </Column>
+
+            <Column @bind-Field="context.CreateDate"
+                    Title="Ngày tạo"
+                    Width="170">
+                <Template>
+                    @(context.CreateDate.ToString("dd/MM/yyyy HH:mm"))
+                </Template>
+            </Column>
+
+            <ActionColumn Title="Thao tác"
+                          Width="130">
+
+
+            </ActionColumn>
+
+        </Table> *@
+
+    </AntDesign.Col>
 </AntDesign.Row>
 
 <Drawer Width="@width.ToString()" ZIndex="1000"
         Height="@height.ToString()"
         Visible="createVisible"
         Title="@title"
-        OnClose="() => createVisible = false"
+        OnClose="CloseDetailGame"
         MaskClosable="false">
-    <GameDetail @ref="gameDetailRef" ReSize="ReSize" CompanyDatas="CompanyDatas" GameTypeDatas="GameTypeDatas">
+    <GameDetail @ref="gameDetailRef" ReSize="ReSize" CompanyDatas="CompanyDatas" GameTypeDatas="GameTypeDatas" OnCancel="CloseDetailGame">
 
     </GameDetail>
 </Drawer>

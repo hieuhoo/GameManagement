@@ -54,9 +54,10 @@ namespace GameManagement.Share.Model.EditModel
 
         [Display(Name = "Trạng thái")]
         [Required]
-        public string Status { get; set; }
+        public string Status { get; set; } = GameActiveStatus.Active.ToString();
 
         [Display(Name = "Trạng thái bán hàng")]
+        [Required]
         public string SoldStatus { get; set; }
 
         [Display(Name = "Giá tiền")]
@@ -80,8 +81,18 @@ namespace GameManagement.Share.Model.EditModel
 
         [Display(Name = "Thể loại game")]
         [Required]
-        public string GameTypeId { get; set; }
+       public IEnumerable<string> GameTypeId { get; set; }
+            = new List<string>();
 
+        [Display(Name = "Trạng thái phát hành")]
+        [Required]
+        public string ReleaseStatus { get; set; }
+
+        [Display(Name = "Game nổi bật")]
+        public bool IsFeatured { get; set; }
+
+        [Display(Name = "Thứ tự nổi bật")]
+        public int? OrderFeatured { get; set; }
         public GameEditModel()
         {
             InputFields.Add<GameEditModel>(c => c.Price);

@@ -6,6 +6,7 @@ using GameManagement.Service;
 using GameManagement.Service.IService;
 using GameManagement.Services;
 using GameManagement.Share.Extension;
+using GameManagement.SpecialComponent.ExtensionClass;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +49,15 @@ builder.Services.AddScoped<IUserLockHistoryRepository, UserLockHistoryRepository
 
 
 // cấu hình extension
+GlobalVariant.UploadFolder = Path.Combine(
+    builder.Environment.WebRootPath,
+    "Upload"
+);
+
+if (!Directory.Exists(GlobalVariant.UploadFolder))
+{
+    Directory.CreateDirectory(GlobalVariant.UploadFolder);
+}
 
 var app = builder.Build();
 

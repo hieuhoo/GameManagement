@@ -37,7 +37,7 @@ namespace GameManagement.Share.Extension
 			Normal = 1,
 		}
 
-		public enum GameStatus
+		public enum GameReleaseStatus
 		{
 			[Display(Name = "Chưa ra mắt")]
 			UnReleased = 0,
@@ -45,12 +45,21 @@ namespace GameManagement.Share.Extension
 			Released = 1,
 		}
 
-		public enum SoldStatus
+		public enum GameSaleStatus
 		{
-			[Display(Name = "Hết hàng")]
-			OutOfStock = 0,
-			[Display(Name = "Còn hàng")]
-			InStock = 1,
+			[Display(Name = "Không bán")]
+			NotForSale = 0,
+			[Display(Name = "Đang bán")]
+			OnSale = 1,
+		}
+
+		public enum GameActiveStatus
+		{
+			[Display(Name = "Không hoạt động")]
+			Inactive = 0,
+
+			[Display(Name = "Hoạt động")]
+			Active = 1
 		}
 
 		public enum PlatformSystem
@@ -113,7 +122,7 @@ namespace GameManagement.Share.Extension
 			Inactive = 1,
 			[Display(Name = "Khóa")]
 			Lock = 2
-		
+
 		}
 
 		public enum AccountLockReason
@@ -122,24 +131,24 @@ namespace GameManagement.Share.Extension
 			ByPolicyViolation = 0,
 			[Display(Name = "Khóa do nhập sai mật khẩu nhiều lần")]
 			ByIncorrectPassword = 1,
-            [Display(Name = "Khóa do Admin ghét :))")]
-            ByAdmin = 2,
-        }
+			[Display(Name = "Khóa do Admin ghét :))")]
+			ByAdmin = 2,
+		}
 
-        public enum LockPerson
-        {
-            [Display(Name = "Admin")]
-            Admin= 0,
-            [Display(Name = "Hệ thống")]
-            System = 1,
-        }
+		public enum LockPerson
+		{
+			[Display(Name = "Admin")]
+			Admin = 0,
+			[Display(Name = "Hệ thống")]
+			System = 1,
+		}
 
 		public enum AccountOperation
-        {
-            [Display(Name = "Khóa")]
-            Lock= 0,
-            [Display(Name = "Mở khóa")]
-            Unlock = 1,
-        }
-    }
+		{
+			[Display(Name = "Khóa")]
+			Lock = 0,
+			[Display(Name = "Mở khóa")]
+			Unlock = 1,
+		}
+	}
 }

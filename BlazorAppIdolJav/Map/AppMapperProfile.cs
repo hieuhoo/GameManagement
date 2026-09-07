@@ -70,6 +70,25 @@ namespace GameManagement.Map
             }
             #endregion
             CreateMap<UserData, AccountViewModel>();
+            CreateMap<GameEditModel, GameData>()
+                .ForMember(
+                    dest => dest.GameTypeId,
+                    opt => opt.MapFrom(src =>
+                        JsonSerializer.Serialize(src.GameTypeId, options)
+                    )
+                )
+                .ReverseMap()
+                .ForMember(
+                    dest => dest.GameTypeId,
+                    opt => opt.MapFrom(src =>
+                        string.IsNullOrWhiteSpace(src.GameTypeId)
+                            ? new List<string>()
+                            : JsonSerializer.Deserialize<List<string>>(
+                                src.GameTypeId,
+                                options
+                            ) ?? new List<string>()
+                    )
+                );
         }
     }
 }

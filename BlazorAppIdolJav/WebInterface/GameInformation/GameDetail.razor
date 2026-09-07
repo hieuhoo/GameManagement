@@ -1,24 +1,56 @@
 ﻿@using AntDesign
 @using GameManagement.CoreConfig
 @using GameManagement.CoreConfig.Extensions
+@using GameManagement.Share.ClassData
 @using GameManagement.SpecialComponent
 @using GameManagement.SpecialComponent.ExtensionClass
 @using Microsoft.AspNetCore.Components.Forms
-@using GameManagement.Share.ClassData
+@using static GameManagement.Share.Extension.EnumExtension
+
 <AntDesign.Row>
-    <AntDesign.Col Span="@(Size)">
-        @if (EditModel.ImagePath.IsNotNullOrEmpty())
+    <AntDesign.Col Span="24">
+
+        <AntDesign.Row Justify="RowJustify.End">
+            <Space Size="SpaceSize.Small">
+
+                <SpaceItem>
+                    <Button Type="ButtonType.Primary" Color="Color.Green7"
+                            OnClick="SaveAsync">
+                        <Icon Type="save" />
+                        Lưu
+                    </Button>
+                </SpaceItem>
+                <SpaceItem>
+                    <Button Type="ButtonType.Primary" Danger
+                            OnClick="CancelAsync">
+                        Hủy
+                    </Button>
+                </SpaceItem>
+            </Space>
+        </AntDesign.Row>
+
+    </AntDesign.Col>
+</AntDesign.Row>
+<AntDesign.Row Class="game-detail-row">
+    <AntDesign.Col Span="10" Class="game-image-col">
+
+        @if (!string.IsNullOrWhiteSpace(ImagePreviewUrl))
         {
-            <div class="pdf-file pernament-cv" style="flex: 1; text-align: center; margin:4px">
-                <iframe id="pdf-candidate-preview" src="@EditModel.ImagePathView"
-                        width="100%"
-                        style="height: 850px;"
-                        loading="lazy"
-                        title="PDF-file"></iframe>
+            <div class="image-preview">
+                <img src="@ImagePreviewUrl"
+                     alt="Ảnh đại diện game" />
             </div>
         }
+        else if (EditModel.ImagePath.IsNotNullOrEmpty())
+        {
+            <div class="image-preview">
+                <img src="@EditModel.ImagePathView"
+                     alt="Ảnh đại diện game" />
+            </div>
+        }
+
     </AntDesign.Col>
-    <AntDesign.Col Span="@(24 - Size)">
+    <AntDesign.Col Span="14">
         <EditForm Model="EditModel" Context="context">
             <DataAnnotationsValidator />
             <InputWatcher @ref="inputWatcher"></InputWatcher>
@@ -28,11 +60,39 @@
                     <AntDesign.Col Span="11" Offset="1" Class="image-character">
                         <LabelFor FieldIdentifier="context.Field(EditModel.Property.NameProperty(c => c.ImageName))"></LabelFor>
                         <br />
-                        <input id="uploadIdentityImage" disabled class="f-input" style="margin: 0 !important; padding-right: 30px !important " value="@EditModel.ImageName" />
-                        <div class="fileUpload btn btn--browse" style="margin: 0 !important; padding: 0 !important;">
-                            <label for="@idCardUpload" class="ant-btn ant-btn-primary" style="width: 100%"> <Icon Type="plus" Theme="@IconThemeType.Outline" />Đính kèm</label>
-                            <InputFile id="@idCardUpload" hidden OnChange="ReadImageAsync" accept="application/pdf,image/*" />
-                        </div>
+                        <AntDesign.Row Gutter="8" Align="RowAlign.Middle">
+                            @* Tên ảnh + nút xóa nằm trong ô *@
+                            <AntDesign.Col Span="16">
+                                <div class="image-name-wrapper">
+                                    <input id="uploadIdentityImage"
+                                           disabled
+                                           class="f-input image-name-input"
+                                           value="@EditModel.ImageName" />
+
+                                    @if (!string.IsNullOrWhiteSpace(EditModel.ImageName))
+                                    {
+                                        <Icon Type="delete" OnClick="RemoveImage" Class="image-delete-btn" />
+                                    }
+                                </div>
+                            </AntDesign.Col>
+                            @* Nút đính kèm cùng dòng *@
+                            <AntDesign.Col Span="8">
+                                <div class="fileUpload btn btn--browse"
+                                     style="margin:0 !important;padding:0 !important;">
+                                    <label for="@idCardUpload"
+                                           class="ant-btn ant-btn-primary"
+                                           style="width:100%;">
+                                        <Icon Type="plus"
+                                              Theme="@IconThemeType.Outline" />
+                                        Đính kèm
+                                    </label>
+                                    <InputFile id="@idCardUpload"
+                                               hidden
+                                               OnChange="ReadImageAsync"
+                                               accept="image/*" />
+                                </div>
+                            </AntDesign.Col>
+                        </AntDesign.Row>
                     </AntDesign.Col>
                 </div>
                 <div class="wrap_content">
@@ -52,6 +112,7 @@
                                     AllowClear
                                     @bind-Value="EditModel.Country" Disabled="EditModel.ReadOnly">
                             </Select>
+                            <ValidationMessage For="() => EditModel.Country"></ValidationMessage>
                         </AntDesign.Col>
                         <AntDesign.Col Span="12">
                             <LabelFor For="() => EditModel.GameCompanyId"></LabelFor>
@@ -62,17 +123,20 @@
                                     AllowClear
                                     @bind-Value="EditModel.GameCompanyId" Disabled="EditModel.ReadOnly">
                             </Select>
+                            <ValidationMessage For="() => EditModel.GameCompanyId"></ValidationMessage>
                         </AntDesign.Col>
                         <AntDesign.Col Span="12">
-                            <LabelFor For="() => EditModel.GameTypeId"></LabelFor>
+                            <LabelFor FieldIdentifier="context.Field(nameof(EditModel.GameTypeId))"></LabelFor>
                             <Select TItemValue="string" TItem="GameTypeData" EnableSearch
                                     DataSource="GameTypeDatas"
                                     Mode="SelectMode.Multiple"
                                     AllowClear
                                     LabelName="@nameof(GameTypeData.Name)"
                                     ValueName="@nameof(GameTypeData.Id)"
-                                    @bind-Value="EditModel.GameTypeId" Disabled="EditModel.ReadOnly">
+                                    @bind-Values="EditModel.GameTypeId" Disabled="EditModel.ReadOnly">
                             </Select>
+                            <ValidationMessage For="() => EditModel.GameTypeId"></ValidationMessage>
+
                         </AntDesign.Col>
                         <AntDesign.Col Span="12">
                             <LabelFor FieldIdentifier="context.Field(nameof(EditModel.ReleaseDate))"></LabelFor>
@@ -87,11 +151,13 @@
                         <AntDesign.Col Span="12">
                             <LabelFor For="() => EditModel.Status"></LabelFor>
                             <Select TItemValue="string" TItem="SelectItem" EnableSearch
-                                    DataSource="StatusGameOptions"
+                                    DataSource="GameStatusOptions"
                                     LabelName="@nameof(SelectItem.Text)"
                                     ValueName="@nameof(SelectItem.Value)"
+                                    OnSelectedItemChanged="@(item => CheckChangeStatus(item.Value))"
                                     @bind-Value="EditModel.Status" Disabled="EditModel.ReadOnly">
                             </Select>
+                            <ValidationMessage For="() => EditModel.Status"></ValidationMessage>
                         </AntDesign.Col>
                         <AntDesign.Col Span="12">
                             <LabelFor For="() => EditModel.SoldStatus"></LabelFor>
@@ -101,8 +167,19 @@
                                     ValueName="@nameof(SelectItem.Value)"
                                     @bind-Value="EditModel.SoldStatus" Disabled="EditModel.ReadOnly">
                             </Select>
+                            <ValidationMessage For="() => EditModel.SoldStatus"></ValidationMessage>
                         </AntDesign.Col>
                         <AntDesign.Col Span="12">
+                            <LabelFor For="() => EditModel.ReleaseStatus"></LabelFor>
+                            <Select TItemValue="string" TItem="SelectItem" EnableSearch
+                                    DataSource="GameReleaseStatusOptions"
+                                    LabelName="@nameof(SelectItem.Text)"
+                                    ValueName="@nameof(SelectItem.Value)"
+                                    @bind-Value="EditModel.ReleaseStatus" Disabled="EditModel.ReadOnly">
+                            </Select>
+                            <ValidationMessage For="() => EditModel.ReleaseStatus"></ValidationMessage>
+                        </AntDesign.Col>
+                        <AntDesign.Col Span="24">
                             <Row Gutter="8" Align="RowAlign.Middle">
                                 <AntDesign.Col Span="16">
                                     <LabelFor FieldIdentifier="context.Field(nameof(EditModel.Price))"></LabelFor>
@@ -131,7 +208,38 @@
                                     ValueName="@nameof(SelectItem.Value)"
                                     @bind-Value="EditModel.SystemSupport" Disabled="EditModel.ReadOnly">
                             </Select>
+                            <ValidationMessage For="() => EditModel.SystemSupport"></ValidationMessage>
                         </AntDesign.Col>
+                        @if (EditModel.Status == GameActiveStatus.Active.ToString())
+                        {
+                            <AntDesign.Col Span="24">
+                                <div class="featured-setting">
+
+                                    <Checkbox Checked="@EditModel.IsFeatured"
+                                              CheckedChanged="OnChangeFeatured"
+                                              Disabled="@EditModel.ReadOnly">
+                                        Game nổi bật
+                                    </Checkbox>
+
+                                    @if (EditModel.IsFeatured)
+                                    {
+                                        <div class="featured-order">
+                                            <span>Thứ tự nổi bật</span>
+
+                                            <RadioGroup TValue="int?"
+                                                        @bind-Value="EditModel.OrderFeatured">
+
+                                                <Radio Value="@((int?)1)">1</Radio>
+                                                <Radio Value="@((int?)2)">2</Radio>
+                                                <Radio Value="@((int?)3)">3</Radio>
+
+                                            </RadioGroup>
+                                        </div>
+                                    }
+
+                                </div>
+                            </AntDesign.Col>
+                        }
                         <AntDesign.Col Span="24">
                             <LabelFor FieldIdentifier="context.Field(EditModel.Property.NameProperty(c => c.Description))"></LabelFor>
                             <TextArea @bind-Value="EditModel.Description" MinRows="4" Disabled="EditModel.ReadOnly"></TextArea>

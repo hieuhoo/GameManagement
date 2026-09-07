@@ -1,4 +1,5 @@
 ﻿using AntDesign;
+using AntDesign.TableModels;
 using AutoMapper;
 using GameManagement.CoreConfig.Extensions;
 using GameManagement.Service;
@@ -45,28 +46,11 @@ namespace GameManagement.WebInterface.GameInformation
                 height = ConfigTemplate.Height;
                 await GetGameTypeDataAsync();
                 await GetGameCompanyDataAsync();
-                await GetGameDataAsync();
                 await LoadDataAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
-            }
-        }
-
-        async Task GetGameDataAsync()
-        {
-            try
-            {
-                var result = await GameService.GetAllWithFilterAsync(new GameSearch
-                {
-                    Country = National.Japan.ToString()
-                });
-                GameDatas = result ?? new List<GameData>();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                throw ;
             }
         }
 
@@ -74,13 +58,28 @@ namespace GameManagement.WebInterface.GameInformation
         {
             try
             {
+                var result = await GameService.GetAllWithFilterAsync(new GameSearch
+                {
+
+                });
+                GameDatas = result ?? new List<GameData>();
                 ViewModels = Mapper.Map<List<GameViewModel>>(GameDatas);
+                var dict = CompanyDatas.ToDictionary(x => x.Id, x => x.Name);
                 int stt = 1;
-                ViewModels.ForEach(c => c.Stt = stt++);
+                foreach (var game in ViewModels)
+                {
+                    game.Stt = stt++;
+
+                    if (game.GameCompanyId != null &&
+                        dict.TryGetValue(game.GameCompanyId, out var companyName))
+                    {
+                        game.GameCompanyName = companyName;
+                    }
+                }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw ;
             }
         }
 
@@ -138,9 +137,9 @@ namespace GameManagement.WebInterface.GameInformation
                 });
                 GameTypeDatas = result ?? new List<GameTypeData>();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -163,6 +162,21 @@ namespace GameManagement.WebInterface.GameInformation
         void CloseDetailGame()
         {
             createVisible = false;
+        }
+
+        void OnRowClick(RowData<GameViewModel> rowData)
+        {
+            try
+            {
+                //SelectModel = AccountDatas.FirstOrDefault(c => c.Id == rowData.Data.Id) ?? new UserData();
+                //Mapper.Map(SelectModel, EditModel);
+                //EditModel.ReadOnly = true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            StateHasChanged();
         }
     }
 }

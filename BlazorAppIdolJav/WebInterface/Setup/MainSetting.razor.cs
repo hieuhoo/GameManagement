@@ -6,6 +6,7 @@ namespace GameManagement.WebInterface.Setup
     {
         GameCompany gameCompany;
         GameType gameType;
+        GameDiscount gameDiscount;
 
         protected override async Task OnInitializedAsync()
         {

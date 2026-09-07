@@ -91,4 +91,37 @@
         }
     </div>;
 
+    public static RenderFragment RenderGameReleaseStatusText(string status) => @<div>
+        @if (status == GameReleaseStatus.Released.ToString())
+        {
+            <AntDesign.Text Copyable="false">@GameReleaseStatus.Released.GetDescription()</AntDesign.Text>
+        }
+        else if (status == GameReleaseStatus.UnReleased.ToString())
+        {
+            <AntDesign.Text Copyable="false">@GameReleaseStatus.UnReleased.GetDescription()</AntDesign.Text>
+        }
+    </div>;
+
+    public static RenderFragment RenderGameSoldStatusText(string status) => @<div>
+        @if (status == GameSaleStatus.OnSale.ToString())
+        {
+            <AntDesign.Text Copyable="false">@GameSaleStatus.OnSale.GetDescription()</AntDesign.Text>
+        }
+        else if (status == GameSaleStatus.NotForSale.ToString())
+        {
+            <AntDesign.Text Copyable="false">@GameSaleStatus.NotForSale.GetDescription()</AntDesign.Text>
+        }
+    </div>;
+
+    public static RenderFragment RenderGameStatusText(string status) => @<div>
+        @if (status == GameActiveStatus.Active.ToString())
+        {
+            <AntDesign.Text Copyable="false">@GameActiveStatus.Active.GetDescription()</AntDesign.Text>
+        }
+        else if (status == GameActiveStatus.Inactive.ToString())
+        {
+            <AntDesign.Text Copyable="false">@GameActiveStatus.Inactive.GetDescription()</AntDesign.Text>
+        }
+    </div>;
+
 }

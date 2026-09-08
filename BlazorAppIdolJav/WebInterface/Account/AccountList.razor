@@ -77,7 +77,7 @@
                         Title="Ngày tạo"
                         Width="170">
                     <Template>
-                        @(context.CreateDate.ToString("dd/MM/yyyy HH:mm"))
+                        @(context.CreateDate.GetFormatDateWithSecond())
                     </Template>
                 </Column>
 
@@ -170,7 +170,7 @@
                         </div>
 
                         <div class="history-time">
-                            Thời gian : @item.CreateDate.ToString("dd/MM/yyyy HH:mm:ss")
+                            Thời gian : @item.CreateDate.GetFormatDateWithSecond()
                         </div>
 
                         <div class="history-detail">

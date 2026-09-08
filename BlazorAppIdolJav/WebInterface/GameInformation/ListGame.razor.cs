@@ -16,167 +16,207 @@ using static GameManagement.Share.Extension.MessageEnumExtension;
 
 namespace GameManagement.WebInterface.GameInformation
 {
-    public partial class ListGame : ComponentBase
-    {
-        [Inject] IGameService GameService { get; set; }
-        [Inject] IMapper Mapper { get; set; }
-        [Inject] IGameCompanyService CompanyService { get; set; }
-        [Inject] IGameTypeService GameTypeService { get; set; }
-        [Inject] NotificationService Notice { get; set; }
+	public partial class ListGame : ComponentBase
+	{
+		[Inject] IGameService GameService { get; set; }
+		[Inject] IMapper Mapper { get; set; }
+		[Inject] IGameCompanyService CompanyService { get; set; }
+		[Inject] IGameTypeService GameTypeService { get; set; }
+		[Inject] IGameDiscountService GameDiscountService { get; set; }
 
-        List<GameViewModel> ViewModels { get; set; }
-        List<GameData> GameDatas { get; set; }
-        List<GameTypeData> GameTypeDatas { get; set; } = new();
-        List<GameCompanyData> CompanyDatas { get; set; } = new();
+		[Inject] NotificationService Notice { get; set; }
 
-        Table<GameViewModel> Table;
-        GameDetail gameDetailRef;
-        int width;
-        int height;
+		List<GameViewModel> ViewModels { get; set; }
+		List<GameData> GameDatas { get; set; }
+		List<GameTypeData> GameTypeDatas { get; set; } = new();
+		List<GameCompanyData> CompanyDatas { get; set; } = new();
+		Dictionary<string, DiscountInformationData> DiscountDict = new();
 
-        bool loading;
-        bool createVisible;
-        string title;
+		Table<GameViewModel> Table;
+		GameDetail gameDetailRef;
+		int width;
+		int height;
 
-        protected override async Task OnInitializedAsync()
-        {
-            try
-            {
-                width = ConfigTemplate.Width;
-                height = ConfigTemplate.Height;
-                await GetGameTypeDataAsync();
-                await GetGameCompanyDataAsync();
-                await LoadDataAsync();
-            }
-            catch (Exception)
-            {
-                throw ;
-            }
-        }
+		bool loading;
+		bool createVisible;
+		string title;
 
-        async Task LoadDataAsync()
-        {
-            try
-            {
-                var result = await GameService.GetAllWithFilterAsync(new GameSearch
-                {
+		protected override async Task OnInitializedAsync()
+		{
+			try
+			{
+				width = ConfigTemplate.Width;
+				height = ConfigTemplate.Height;
+				await GetGameTypeDataAsync();
+				await GetGameCompanyDataAsync();
+				await LoadDataAsync();
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+		}
 
-                });
-                GameDatas = result ?? new List<GameData>();
-                ViewModels = Mapper.Map<List<GameViewModel>>(GameDatas);
-                var dict = CompanyDatas.ToDictionary(x => x.Id, x => x.Name);
-                int stt = 1;
-                foreach (var game in ViewModels)
-                {
-                    game.Stt = stt++;
+		async Task LoadDataAsync()
+		{
+			try
+			{
+				await GetDiscountDataAsync();
+				var result = await GameService.GetAllWithFilterAsync(new GameSearch
+				{
 
-                    if (game.GameCompanyId != null &&
-                        dict.TryGetValue(game.GameCompanyId, out var companyName))
-                    {
-                        game.GameCompanyName = companyName;
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                throw ;
-            }
-        }
+				});
+				GameDatas = result ?? new List<GameData>();
+				ViewModels = Mapper.Map<List<GameViewModel>>(GameDatas);
+				var dict = CompanyDatas.ToDictionary(x => x.Id, x => x.Name);
+				int stt = 1;
+				foreach (var game in ViewModels)
+				{
+					game.Stt = stt++;
 
-        async Task UpdateAsync(GameViewModel model)
-        {
-            try
-            {
-                createVisible = true;
-                title = "Thông tin game";
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+					if (game.GameCompanyId != null &&
+						dict.TryGetValue(game.GameCompanyId, out var companyName))
+					{
+						game.GameCompanyName = companyName;
+					}
 
-        async Task DeleteAsync(GameViewModel model)
-        {
-            try
-            {
+					if (game.Id != null &&
+						DiscountDict.TryGetValue(game.Id, out var currentPercent))
+					{
+						game.CurrentSalePercent = currentPercent.Percent;
+					}
+					game.CurrentPrice = $"{(game.Price * (100 - game.CurrentSalePercent)/100):N0} {game.Unit}";
+				}
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+		}
 
-            }
-            catch
-            {
+		async Task UpdateAsync(GameViewModel model)
+		{
+			try
+			{
+				createVisible = true;
+				title = "Thông tin game";
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
 
-            }
-        }
+		async Task DeleteAsync(GameViewModel model)
+		{
+			try
+			{
 
-        void AddNewGame()
-        {
-            createVisible = true;
-            title = "Thêm mới game";
-        }
+			}
+			catch
+			{
 
-        public void ReSize(int size)
-        {
-            if (size == 12)
-            {
-                width = ConfigTemplate.Width;
-            }
-            else
-            {
-                width = ConfigTemplate.Width / 2;
-            }
-            StateHasChanged();
-        }
+			}
+		}
 
-        async Task GetGameTypeDataAsync()
-        {
-            try
-            {
-                var result = await GameTypeService.GetAllWithFilterAsync(new GameTypeSearch
-                {
+		void AddNewGame()
+		{
+			createVisible = true;
+			title = "Thêm mới game";
+		}
 
-                });
-                GameTypeDatas = result ?? new List<GameTypeData>();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+		public void ReSize(int size)
+		{
+			if (size == 12)
+			{
+				width = ConfigTemplate.Width;
+			}
+			else
+			{
+				width = ConfigTemplate.Width / 2;
+			}
+			StateHasChanged();
+		}
 
-        async Task GetGameCompanyDataAsync()
-        {
-            try
-            {
-                var result = await CompanyService.GetAllWithFilterAsync(new GameCompanySearch
-                {
+		async Task GetGameTypeDataAsync()
+		{
+			try
+			{
+				var result = await GameTypeService.GetAllWithFilterAsync(new GameTypeSearch
+				{
 
-                });
-                CompanyDatas = result ?? new List<GameCompanyData>();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+				});
+				GameTypeDatas = result ?? new List<GameTypeData>();
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+		}
 
-        void CloseDetailGame()
-        {
-            createVisible = false;
-        }
+		async Task GetGameCompanyDataAsync()
+		{
+			try
+			{
+				var result = await CompanyService.GetAllWithFilterAsync(new GameCompanySearch
+				{
 
-        void OnRowClick(RowData<GameViewModel> rowData)
-        {
-            try
-            {
-                //SelectModel = AccountDatas.FirstOrDefault(c => c.Id == rowData.Data.Id) ?? new UserData();
-                //Mapper.Map(SelectModel, EditModel);
-                //EditModel.ReadOnly = true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            StateHasChanged();
-        }
-    }
+				});
+				CompanyDatas = result ?? new List<GameCompanyData>();
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+
+		void CloseDetailGame()
+		{
+			createVisible = false;
+		}
+
+		void OnRowClick(RowData<GameViewModel> rowData)
+		{
+			try
+			{
+				//SelectModel = AccountDatas.FirstOrDefault(c => c.Id == rowData.Data.Id) ?? new UserData();
+				//Mapper.Map(SelectModel, EditModel);
+				//EditModel.ReadOnly = true;
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+			StateHasChanged();
+		}
+
+		async Task GetDiscountDataAsync()
+		{
+			try
+			{
+				var data = await GameDiscountService.GetAllWithFilterAsync(new DiscountSearch
+				{
+
+				});
+				var now = DateTime.Now;
+
+				DiscountDict = data
+					.Where(x =>
+						x.StartDate <= now &&
+						x.EndDate >= now)
+					.ToDictionary(
+						x => x.GameId,
+						x => new DiscountInformationData
+						{
+							Percent = x.DiscountPercent,
+							StartDate = x.StartDate,
+							EndDate = x.EndDate
+						});
+			}
+			catch (Exception)
+			{
+
+			}
+		}
+	}
 }

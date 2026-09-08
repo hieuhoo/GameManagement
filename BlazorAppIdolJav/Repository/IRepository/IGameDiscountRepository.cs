@@ -10,5 +10,6 @@ namespace GameManagement.Repository.IRepository
         Task<bool> SaveDiscountAsync(GameDiscount data);
         Task<bool> UpdateDiscountAsync(GameDiscount data);
         Task<bool> DeleteDiscountAsync(GameDiscount data);
+        Task<bool> CheckDiscountOverlapTimeAsync(string id, DateTime? start, DateTime? end);
     }
 }

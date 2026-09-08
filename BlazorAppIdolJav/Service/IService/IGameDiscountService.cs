@@ -11,6 +11,7 @@ namespace GameManagement.Service.IService
         Task<bool> SaveDiscountAsync(GameDiscountData data);
         Task<bool> UpdateDiscountAsync(GameDiscountData data);
         Task<bool> DeleteDiscountAsync(GameDiscountData data);
+        Task<bool> CheckDiscountOverlapTimeAsync(string id, DateTime? start, DateTime? end);
     }
 
     [DataContract]

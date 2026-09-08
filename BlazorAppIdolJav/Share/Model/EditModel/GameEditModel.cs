@@ -96,6 +96,8 @@ namespace GameManagement.Share.Model.EditModel
         public GameEditModel()
         {
             InputFields.Add<GameEditModel>(c => c.Price);
+            InputFields.Add<GameEditModel>(c => c.OrderFeatured);
+
 
             DataSource[Property.NameProperty(c => c.Unit)] = Enum.GetValues(typeof(UnitMoneyEnum)).Cast<UnitMoneyEnum>()
                    .ToDictionary(c => c.ToString(), v => (ISelectItem)new SelectItem(v.ToString(), v.GetDescription()));
@@ -109,6 +111,13 @@ namespace GameManagement.Share.Model.EditModel
                 if (Price <= 0)
                 {
                     Errors.AddExist(nameProperty, "Giá tiền của game phải lớn hơn 0");
+                }
+            }
+            if (nameProperty == Property.Name(c => c.OrderFeatured))
+            {
+                if (OrderFeatured == null)
+                {
+                    Errors.AddExist(nameProperty, "Vui lòng chọn thứ tự nổi bật của game");
                 }
             }
             return Errors;

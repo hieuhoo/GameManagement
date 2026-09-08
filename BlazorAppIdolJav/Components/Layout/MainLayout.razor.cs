@@ -52,6 +52,8 @@ namespace GameManagement.Components.Layout
         bool isErrorPass = false;
         bool isNotMatchPass = false;
         bool isAdmin = false;
+        bool isErrorPasswordLength = false;
+        bool isErrorPasswordSpecial = false;
         string currentUser;
         string emailReceiveOtp = string.Empty;
         string otpValid = string.Empty;
@@ -380,6 +382,7 @@ namespace GameManagement.Components.Layout
                     Email = email
                 });
                 var userId = EmailUserData?.Id ?? "";
+                var name = EmailUserData?.UserName ?? "";
                 var otpNumber = Random.Shared.Next(100000, 999999).ToString();
 
                 var otpHistory = new UserOtpHistoryData
@@ -395,7 +398,7 @@ namespace GameManagement.Components.Layout
                     IsUsed = false
                 };
                 await OtpService.AddOtpHistoryAsync(otpHistory);
-                await EmailService.SendOtpAsync(email, otpNumber, minuteExpired);
+                await EmailService.SendOtpAsync(email, otpNumber, minuteExpired, name);
 
                 forgotPasswordVisible = false;
                 otpFormVisible = true;
@@ -519,12 +522,32 @@ namespace GameManagement.Components.Layout
         {
             try
             {
+                isErrorPass = false;
+                isNotMatchPass = false;
+                isErrorPasswordLength = false;
+                isErrorPasswordSpecial = false;
+
                 //không nhập
                 if (newPassword.IsNullOrEmpty() || retypeNewPassword.IsNullOrEmpty())
                 {
                     isErrorPass = true;
                     return;
                 }
+
+                // Mật khẩu phải từ 3 đến 8 ký tự
+                if (newPassword.Length < 3 || newPassword.Length > 8)
+                {
+                    isErrorPasswordLength = true;
+                    return;
+                }
+
+                // Phải có ít nhất 1 ký tự @ hoặc _
+                if (!newPassword.Contains("@") && !newPassword.Contains("_"))
+                {
+                    isErrorPasswordSpecial = true;
+                    return;
+                }
+
                 // không khớp
                 if (newPassword != retypeNewPassword)
                 {

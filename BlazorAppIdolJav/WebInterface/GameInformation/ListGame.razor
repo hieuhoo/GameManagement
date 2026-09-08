@@ -123,7 +123,7 @@
                         <Tooltip Title="Chi tiết">
                             <Button Type="ButtonType.Text"
                                     Size="ButtonSize.Default" Color="Color.Blue2"
-                                    >
+                                    OnClick="() => ViewDetailAsync(context)">
                                 <Icon Type="eye" />
                             </Button>
                         </Tooltip>
@@ -132,7 +132,7 @@
                             <Tooltip Title="Xóa">
                                 <Button Type="ButtonType.Text" Danger
                                         Size="ButtonSize.Default"
-                                        >
+                                        OnClick="() => DeleteGameAsync(context)">
                                     <Icon Type="delete" />
                                 </Button>
                             </Tooltip>
@@ -153,7 +153,7 @@
         OnClose="CloseDetailGame"
         MaskClosable="false">
     <GameDetail @ref="gameDetailRef" ReSize="ReSize" CompanyDatas="CompanyDatas" GameTypeDatas="GameTypeDatas"
-                OnCancel="CloseDetailGame" ReloadGameData="LoadDataAsync">
+                OnCancel="CloseDetailGame" ReloadGameData="LoadDataAsync" TotalCurrentFeatureGame="@totalFeature" FeatureDatas="FeatureGameDatas">
 
     </GameDetail>
 </Drawer>

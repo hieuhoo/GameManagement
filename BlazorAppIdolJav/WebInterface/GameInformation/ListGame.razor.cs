@@ -10,6 +10,7 @@ using GameManagement.Share.Extension;
 using GameManagement.Share.Model.EditModel;
 using GameManagement.Share.Model.ViewModel;
 using GameManagement.SpecialComponent;
+using GameManagement.SpecialComponent.ExtensionClass;
 using Microsoft.AspNetCore.Components;
 using static GameManagement.Share.Extension.EnumExtension;
 using static GameManagement.Share.Extension.MessageEnumExtension;
@@ -31,11 +32,13 @@ namespace GameManagement.WebInterface.GameInformation
 		List<GameTypeData> GameTypeDatas { get; set; } = new();
 		List<GameCompanyData> CompanyDatas { get; set; } = new();
 		Dictionary<string, DiscountInformationData> DiscountDict = new();
+        List<GameData> FeatureGameDatas { get; set; }
 
-		Table<GameViewModel> Table;
+        Table<GameViewModel> Table;
 		GameDetail gameDetailRef;
 		int width;
 		int height;
+		int totalFeature;
 
 		bool loading;
 		bool createVisible;
@@ -66,7 +69,9 @@ namespace GameManagement.WebInterface.GameInformation
 				{
 
 				});
+				totalFeature = result.Where(c => c.IsFeatured == true).Count();
 				GameDatas = result ?? new List<GameData>();
+				FeatureGameDatas = GameDatas.Where(c => c.IsFeatured).ToList();
 				ViewModels = Mapper.Map<List<GameViewModel>>(GameDatas);
 				var dict = CompanyDatas.ToDictionary(x => x.Id, x => x.Name);
 				int stt = 1;
@@ -218,5 +223,32 @@ namespace GameManagement.WebInterface.GameInformation
 
 			}
 		}
-	}
+
+		async Task ViewDetailAsync(GameViewModel model)
+		{
+			try
+			{
+				createVisible = true;
+				await gameDetailRef.LoadEditModelAsync(model);
+            }
+			catch
+			{
+
+			}
+		}
+
+		async Task DeleteGameAsync(GameViewModel model)
+		{
+			try
+			{
+				Notice.NotiWarning("Đang phát triển chưa làm tới ");
+				return;
+			}
+			catch
+			{
+
+			}
+		}
+
+    }
 }

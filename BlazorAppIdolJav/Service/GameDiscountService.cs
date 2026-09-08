@@ -66,5 +66,17 @@ namespace GameManagement.Service
                 throw ex;
             }
         }
-    }
+
+		public async Task<bool> CheckDiscountOverlapTimeAsync(string id, DateTime? start, DateTime? end)
+		{
+            try
+            {
+                return await _repo.CheckDiscountOverlapTimeAsync(id, start, end);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+		}
+	}
 }

@@ -37,7 +37,7 @@
             </Column>
 
             <Column @bind-Field="context.Name"
-                    Title="Tên game"
+                    Title="Tên game" Fixed="ColumnFixPlacement.Left"
                     Width="200">
             </Column>
 
@@ -71,8 +71,32 @@
             </Column>
 
             <Column Field="@context.DisplayPrice"
-                    Title="Giá tiền"
+                    Title="Giá gốc"
                     Width="130">
+            </Column>
+
+            <Column Field="@context.CurrentSalePercent"
+                    Width="140">
+                <TitleTemplate>
+                    <Tooltip Title="Sẽ căn cứ theo giảm giá theo thời gian bên thiết lập, nếu không có mặc định là 0">
+                        <span>
+                            Giảm hiện tại (%)
+                            <Icon Type="info-circle" />
+                        </span>
+                    </Tooltip>
+                </TitleTemplate>
+            </Column>
+
+            <Column Field="@context.CurrentPrice"
+                    Width="130">
+                <TitleTemplate>
+                    <Tooltip Title="Giá hiện tại = Giá gốc * (100 - N%)/100">
+                        <span>
+                            Giá hiện tại
+                            <Icon Type="info-circle" />
+                        </span>
+                    </Tooltip>
+                </TitleTemplate>
             </Column>
 
             <Column @bind-Field="context.IsFeatured"

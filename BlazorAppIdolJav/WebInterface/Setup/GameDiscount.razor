@@ -107,6 +107,7 @@
                             <DatePicker @bind-Value="@EditModel.StartDate"
                                         Disabled="@EditModel.ReadOnly"
                                         Style="display:block"
+                                        ShowTime="true"
                                         ChangeOnClose>
                             </DatePicker>
                             <ValidationMessage For="() => EditModel.StartDate"></ValidationMessage>
@@ -118,6 +119,7 @@
                             <DatePicker @bind-Value="@EditModel.EndDate"
                                         Disabled="@EditModel.ReadOnly"
                                         Style="display:block"
+                                        ShowTime="true"
                                         ChangeOnClose>
                             </DatePicker>
                             <ValidationMessage For="() => EditModel.EndDate"></ValidationMessage>

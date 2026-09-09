@@ -210,34 +210,52 @@
                             </Select>
                             <ValidationMessage For="() => EditModel.SystemSupport"></ValidationMessage>
                         </AntDesign.Col>
+                        <br />
                         @if (EditModel.Status == GameActiveStatus.Active.ToString())
                         {
                             <AntDesign.Col Span="24">
-                                <div class="featured-setting">
+                                <AntDesign.Row Gutter="8">
+                                    <AntDesign.Col Span="12">
+                                        <Checkbox Checked="@EditModel.IsFeatured"
+                                                  CheckedChanged="OnChangeFeatured"
+                                                  Disabled="EditModel.ReadOnly || DisableCheckboxFeature()">
+                                            Game nổi bật
+                                        </Checkbox>
+                                        <Text Style="color:red;">
+                                            @if (TotalCurrentFeatureGame < 3)
+                                            {
+                                                <span>
+                                                    Đã có @TotalCurrentFeatureGame / 3 game nổi bật
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span>
+                                                    Đã đạt tối đa số game nổi bật
+                                                </span>
+                                            }
+                                        </Text>
+                                    </AntDesign.Col>
 
-                                    <Checkbox Checked="@EditModel.IsFeatured"
-                                              CheckedChanged="OnChangeFeatured"
-                                              Disabled="@EditModel.ReadOnly">
-                                        Game nổi bật
-                                    </Checkbox>
+                                    <AntDesign.Col Span="12">
+                                        @if (EditModel.IsFeatured)
+                                        {
+                                            <div class="featured-order">
+                                                <span>Thứ tự nổi bật</span>
 
-                                    @if (EditModel.IsFeatured)
-                                    {
-                                        <div class="featured-order">
-                                            <span>Thứ tự nổi bật</span>
+                                                <RadioGroup TValue="int?"
+                                                            @bind-Value="EditModel.OrderFeatured">
 
-                                            <RadioGroup TValue="int?"
-                                                        @bind-Value="EditModel.OrderFeatured">
+                                                    <Radio Disabled="@IsOrderDisabled(1)" Value="@((int?)1)">1</Radio>
+                                                    <Radio Disabled="@IsOrderDisabled(2)" Value="@((int?)2)">2</Radio>
+                                                    <Radio Disabled="@IsOrderDisabled(3)" Value="@((int?)3)">3</Radio>
 
-                                                <Radio Value="@((int?)1)">1</Radio>
-                                                <Radio Value="@((int?)2)">2</Radio>
-                                                <Radio Value="@((int?)3)">3</Radio>
-
-                                            </RadioGroup>
-                                        </div>
-                                    }
-
-                                </div>
+                                                </RadioGroup>
+                                            </div>
+                                        }
+                                        <ValidationMessage For="() => EditModel.OrderFeatured"></ValidationMessage>
+                                    </AntDesign.Col>
+                                </AntDesign.Row>
                             </AntDesign.Col>
                         }
                         <AntDesign.Col Span="24">

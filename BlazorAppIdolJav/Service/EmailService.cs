@@ -15,7 +15,7 @@
 			_environment = environment;
 		}
 
-		public async Task SendOtpAsync(string email, string otp, int minute)
+		public async Task SendOtpAsync(string email, string otp, int minute, string name)
 		{
 			var senderEmail = _configuration["EmailSettings:Email"] ?? "test123@gmail.com";
 			var senderPassword = _configuration["EmailSettings:Password"] ?? "";
@@ -34,9 +34,9 @@
 				MailboxAddress.Parse(email)
 			);
 
-			message.Subject = "Test take OTP Veryfication";
+            message.Subject = $"{otp} là mã xác minh của bạn (Test version)";
 
-			var templatePath = Path.Combine(
+            var templatePath = Path.Combine(
 				_environment.ContentRootPath,
 				"Templates",
 				"OtpTemplate.html"
@@ -46,7 +46,8 @@
 
 			html = html
 				.Replace("{{OTP}}", otp)
-				.Replace("{{EXPIRE_MINUTES}}", minute.ToString());
+				.Replace("{{EXPIRE_MINUTES}}", minute.ToString())
+				.Replace("{{NAME}}", name);
 
 			message.Body = new TextPart("html")
 			{

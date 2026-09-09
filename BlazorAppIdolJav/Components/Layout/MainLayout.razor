@@ -35,6 +35,10 @@
                                         <Icon Type="heart" />
                                         Game ưa thích
                                     </MenuItem>
+                                    <MenuItem Key="library">
+                                        <Icon Type="shop" />
+                                        Thư viện
+                                    </MenuItem>
                                 }
                             </Menu>
                         </Overlay>
@@ -203,6 +207,19 @@
         @if (isErrorPass)
         {
             <AntDesign.Text Style="color:red;">Vui lòng nhập mật khẩu mới</AntDesign.Text>
+        }
+        @if (isErrorPasswordLength)
+        {
+            <AntDesign.Text Style="color:red;">
+                Mật khẩu phải từ 3 đến 8 ký tự
+            </AntDesign.Text>
+        }
+
+        @if (isErrorPasswordSpecial)
+        {
+            <AntDesign.Text Style="color:red;">
+                Mật khẩu phải có ít nhất 1 ký tự đặc biệt (a còng hoặc _)
+            </AntDesign.Text>
         }
     </Row>
     <Row>

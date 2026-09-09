@@ -30,6 +30,8 @@ namespace GameManagement.Service.IService
         public virtual string SoldStatus { get; set; }
         [DataMember(Order = 6)]
         public virtual string ReleaseStatus { get; set; }
+        [DataMember(Order = 7)]
+        public virtual bool IsFeatured { get; set; }
 
         public IQueryable<Game> CreateFilter(IQueryable<Game> filter)
         {
@@ -52,6 +54,10 @@ namespace GameManagement.Service.IService
             if (ReleaseStatus.IsNotNullOrEmpty())
             {
                 filter = filter.Where(x => x.ReleaseStatus == ReleaseStatus);
+            }
+            if (IsFeatured)
+            {
+                filter = filter.Where(x => x.IsFeatured == IsFeatured);
             }
             return filter;
         }

@@ -18,6 +18,7 @@ namespace GameManagement.Data
         public DbSet<UserPasswordHistory> UserPasswordHistory { get; set; }
         public DbSet<UserLockHistory> UserLockHistory { get; set; }
         public DbSet<GameDiscount> GameDiscount { get; set; }
+        public DbSet<RefreshToken> RefreshToken { get; set; }
 
 
     }

@@ -256,7 +256,7 @@ namespace GameManagement.WebInterface.GameInformation
 
         async Task UpdateAsync()
         {
-
+            NoticeService.NotiWarning("Bận chưa làm");
         }
 
         bool DisableCheckboxFeature()

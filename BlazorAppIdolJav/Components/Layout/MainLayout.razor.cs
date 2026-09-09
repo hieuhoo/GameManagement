@@ -1,5 +1,7 @@
 ﻿using AntDesign;
 using AutoMapper;
+using GameManagement.Auth;
+using GameManagement.Auth.Models;
 using GameManagement.CoreConfig.Extensions;
 using GameManagement.Service.IService;
 using GameManagement.Services;
@@ -23,12 +25,13 @@ namespace GameManagement.Components.Layout
     {
         [Inject] IMapper Mapper { get; set; }
         [Inject] IUserService UserService { get; set; }
+        [Inject] IAuthService AuthService { get; set; }
         [Inject] IEmailService EmailService { get; set; }
         [Inject] IUserOtpHistoryService OtpService { get; set; }
         [Inject] IUserPasswordHistoryService PasswordService { get; set; }
         [Inject] IUserLockHistoryService HistoryLockService { get; set; }
 
-		[Inject] NavigationManager NavigationManager { get; set; } = default!;
+        [Inject] NavigationManager NavigationManager { get; set; } = default!;
         [Inject] NotificationService NoticeService { get; set; }
         [Inject] AuthenticationStateProvider AuthProvider { get; set; }
 
@@ -77,6 +80,7 @@ namespace GameManagement.Components.Layout
                 //userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 isLoggedIn = user.Identity?.IsAuthenticated ?? false;
                 currentUser = user.Identity?.Name;
+                isAdmin = user.IsInRole(UserRole.Admin.ToString());
             }
             catch (Exception ex)
             {
@@ -100,131 +104,49 @@ namespace GameManagement.Components.Layout
             try
             {
                 isLoggingIn = true;
-
-                if (EditModel.UserName.IsNullOrEmpty() ||
-                    EditModel.PassWord.IsNullOrEmpty())
-                {
-                    error = true;
-                    return;
-                }
-
                 error = false;
+                showForgetPassLink = false;
 
-                Data = await UserService.GetUserInfoAsync(new UserSearch
+                var result = await AuthService.LoginAsync(new LoginRequest
                 {
-                    UserName = EditModel.UserName
+                    UserName = EditModel.UserName,
+                    Password = EditModel.PassWord
                 });
 
-                if (Data == null)
+                if (!result.Succeeded || result.Tokens is null)
                 {
                     showForgetPassLink = true;
-                    NoticeService.NotiError("Sai tên đăng nhập hoặc mật khẩu.");
+                    NoticeService.NotiError(result.ErrorMessage);
                     return;
                 }
 
-                if (string.Equals(
-                    Data.Status,
-                    AccountStatus.Lock.ToString(),
-                    StringComparison.OrdinalIgnoreCase))
+                var authProvider = (CustomAuthenticationStateProvider)AuthProvider;
+                await authProvider.MarkUserAsAuthenticatedAsync(result.Tokens);
+
+                isLoggedIn = true;
+                isAdmin = string.Equals(
+                    result.Tokens.Role,
+                    UserRole.Admin.ToString(),
+                    StringComparison.OrdinalIgnoreCase);
+
+                currentUser = isAdmin
+                    ? UserRole.Admin.GetDescription()
+                    : result.Tokens.Name;
+
+                loginVisible = false;
+                EditModel = new UserEditModel();
+
+                if (!string.IsNullOrWhiteSpace(redirectAfterLogin))
                 {
-                    showForgetPassLink = false;
-                    string reason = Data.LockReason.GetEnumDescription<AccountLockReason>();
-                    NoticeService.NotiError(
-                        $"Tài khoản đã bị {reason}. Vui lòng liên hệ quản trị viên để được mở khóa."
-                    );
-                    return;
+                    NavigationManager.NavigateTo(redirectAfterLogin);
+                    redirectAfterLogin = null;
                 }
-                // 4. Check username + password
-                var loginData = Mapper.Map<UserData>(EditModel);
 
-                var isLoginSuccess =
-                    await UserService.CheckUserLoginAsync(loginData);
-
-                if (isLoginSuccess)
-                {
-                    // Login thành công -> reset số lần đăng nhập sai
-                    if (Data.FailedLoginCount > 0)
-                    {
-                        Data.FailedLoginCount = 0;
-                        Data.UpdatedDate = DateTime.Now;
-
-                        await UserService.UpdateAccountAsync(Data);
-                    }
-
-                    var role = Data.Role?.Trim();
-
-                    if (string.Equals(
-                        role,
-                        UserRole.Admin.ToString(),
-                        StringComparison.OrdinalIgnoreCase))
-                    {
-                        currentUser = UserRole.Admin.GetDescription();
-                        isAdmin = true;
-                    }
-                    else
-                    {
-                        currentUser = Data.Name.Trim();
-                        isAdmin = false;
-                    }
-
-                    await ((CustomAuthenticationStateProvider)AuthProvider)
-                        .MarkUserAsAuthenticated(EditModel.UserName);
-
-                    isLoggedIn = true;
-                    loginVisible = false;
-
-                    StateHasChanged();
-                }
-                else
-                {
-                    // 6. Sai password
-                    showForgetPassLink = true;
-
-                    Data.FailedLoginCount++;
-                    Data.UpdatedDate = DateTime.Now;
-
-                    // 7. Sai đủ 3 lần -> Lock
-                    if (Data.FailedLoginCount >= maxAttemptLogin)   
-                    {
-                        showForgetPassLink = false;
-
-                        Data.Status = AccountStatus.Lock.ToString();
-
-                        Data.LockReason = AccountLockReason.ByIncorrectPassword.ToString();
-
-                        Data.LockBy = LockPerson.System.ToString();
-
-                        await UserService.UpdateAccountAsync(Data);
-                        var lockHistory = Data.Id.FillLockHistoryData(
-							AccountOperation.Lock,
-							LockPerson.System,
-							AccountLockReason.ByIncorrectPassword
-						);
-                        await HistoryLockService.AddLockHistoryAsync(lockHistory);
-                        NoticeService.NotiError(
-                            $"Bạn đã đăng nhập sai {maxAttemptLogin} lần. " +
-                            "Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên."
-                        );
-
-                        return;
-                    }
-
-                    // Chưa đủ 3 lần
-                    await UserService.UpdateAccountAsync(Data);
-
-                    var remainingAttempt =
-                        maxAttemptLogin - Data.FailedLoginCount;
-
-                    NoticeService.NotiError(
-                        $"Sai tên đăng nhập hoặc mật khẩu. " +
-                        $"Vui lòng ấn vào nút Quên mật khẩu hoặc" +
-                        $" tài khoản của bạn sẽ bị khóa sau {remainingAttempt} lần nhập sai nữa."
-                    );
-                }
+                StateHasChanged();
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                NoticeService.NotiError($"Đăng nhập thất bại: {ex.Message}");
             }
             finally
             {
@@ -332,16 +254,21 @@ namespace GameManagement.Components.Layout
         {
             try
             {
-                await ((CustomAuthenticationStateProvider)AuthProvider).MarkUserAsLoggedOut();
+                await ((CustomAuthenticationStateProvider)AuthProvider)
+                    .MarkUserAsLoggedOutAsync();
+
                 isLoggedIn = false;
+                isAdmin = false;
+                currentUser = string.Empty;
                 EditModel = new UserEditModel();
                 error = false;
+
                 NavigationManager.NavigateTo("/");
                 StateHasChanged();
             }
             catch (Exception ex)
             {
-                throw ex;
+                NoticeService.NotiError($"Đăng xuất thất bại: {ex.Message}");
             }
         }
 

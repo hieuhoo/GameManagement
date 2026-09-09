@@ -322,3 +322,106 @@
     .featured-order > span {
         white-space: nowrap;
     }
+
+.game-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    margin-top: 18px;
+}
+
+.game-company {
+    font-size: 13px;
+    color: #d6e0ea;
+    flex: 1;
+}
+
+/* Khu vực giá */
+.game-price {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+/* Badge giảm giá */
+.discount-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    padding: 0 9px;
+    background: #a4d007;
+    color: #1b2838;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+/* Giá gốc + giá hiện tại */
+.price-detail {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    line-height: 1.15;
+}
+
+/* Giá gốc */
+.original-price {
+    color: #7f8c99;
+    font-size: 12px;
+    text-decoration: line-through;
+    white-space: nowrap;
+}
+
+/* Giá hiện tại */
+.current-price {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.steam-game-card {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.game-image {
+    position: relative;
+    overflow: hidden;
+}
+
+.game-description-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    background: rgba(10, 20, 30, 0.88);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+    .game-description-overlay p {
+        margin: 0;
+        color: #ffffff;
+        font-size: 14px;
+        line-height: 1.6;
+        text-align: center;
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+.steam-game-card:hover .game-description-overlay {
+    opacity: 1;
+    visibility: visible;
+}

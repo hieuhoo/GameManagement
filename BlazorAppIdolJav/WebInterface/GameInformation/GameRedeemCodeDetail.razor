@@ -1,0 +1,89 @@
+﻿@using AntDesign
+@using GameManagement.CoreConfig.Extensions
+@using GameManagement.SpecialComponent
+@using GameManagement.SpecialComponent.ExtensionClass
+@using Microsoft.AspNetCore.Components.Forms
+@using static GameManagement.Share.Extension.EnumExtension
+
+<Modal Width="600" ZIndex="1000"
+       Visible="@redeemVisible"
+       Title="Thông tin mã nạp"
+       OnCancel="CloseRedeemDetail"
+       Footer="@null"
+       MaskClosable="false">
+
+    <EditForm Model="EditModel" Context="context" OnSubmit="SaveRedeemAsync">
+        <DataAnnotationsValidator />
+        <InputWatcher @ref="inputWatcher"></InputWatcher>
+        <div class="redeem-code-detail">
+            <div class="wrap-content">
+                <AntDesign.Row Gutter="16">
+                    <AntDesign.Col Span="24">
+                        <LabelFor For="() => EditModel.GenerateType"></LabelFor>
+                        <RadioGroup TValue="string" @bind-Value="EditModel.GenerateType" OnChange="() => ChangeTypeGenCode(EditModel.GenerateType)">
+                            <Radio Value="GenerateRedeemType.ByHand.ToString()"> @GenerateRedeemType.ByHand.GetDescription()</Radio>
+                            <Radio Value="GenerateRedeemType.Auto.ToString()"> @GenerateRedeemType.Auto.GetDescription() </Radio>
+                        </RadioGroup>
+                    </AntDesign.Col>
+                </AntDesign.Row>
+            </div>
+            <br />
+            <div class="wrap_content">
+                <AntDesign.Col Span="24">
+                    <Text>Thông tin chi tiết</Text>
+                </AntDesign.Col>
+                <AntDesign.Row Gutter="16">
+                    <AntDesign.Col Span="12">
+                        @if (EditModel.GenerateType == GenerateRedeemType.ByHand.ToString())
+                        {
+                            <LabelFor For="() => EditModel.Code"></LabelFor>
+                            <Input Type="@InputType.Text" @bind-Value="@EditModel.Code" Disabled="@EditModel.ReadOnly" Placeholder="Mã có dạng VOU-XXX">
+                            <ValidationMessage For="() => EditModel.Code"> </ValidationMessage>
+                        }
+                        else
+                        {
+                            <LabelFor FieldIdentifier="context.Field(nameof(EditModel.QuantityCode))"></LabelFor>
+                            <Input Type="@InputType.Number" @bind-Value="@EditModel.QuantityCode" Disabled="@EditModel.ReadOnly" Placeholder="">
+                            <ValidationMessage For="() => EditModel.QuantityCode"> </ValidationMessage>
+                        }
+                    </AntDesign.Col>
+                    <AntDesign.Col Span="12">
+                        <LabelFor FieldIdentifier="context.Field(nameof(EditModel.Value))"></LabelFor>
+                        <Input Type="@InputType.Number" @bind-Value="@EditModel.Value" Disabled="@EditModel.ReadOnly"  Placeholder="">
+                        <ValidationMessage For="() => EditModel.Value"> </ValidationMessage>
+                    </AntDesign.Col>
+                    <AntDesign.Col Span="24">
+                        <LabelFor FieldIdentifier="context.Field(nameof(EditModel.ExpiredDate))"></LabelFor>
+                        <br>
+                        <DatePicker @bind-Value="@EditModel.ExpiredDate"
+                                    Disabled="@EditModel.ReadOnly"
+                                    Style="display:block"
+                                    ChangeOnClose>
+                        </DatePicker>
+                        <ValidationMessage For="() => EditModel.ExpiredDate"> </ValidationMessage>
+                    </AntDesign.Col>
+                </AntDesign.Row>
+            </div>
+            <br />
+            <AntDesign.Row Gutter="8" Justify="RowJustify.End">
+                <AntDesign.Col>
+                    <Button Type="@ButtonType.Primary"
+                            HtmlType="submit"
+                            Loading="@saving">
+                        Lưu
+                    </Button>
+                </AntDesign.Col>
+                <AntDesign.Col>
+                    <Button Type="@ButtonType.Default"
+                            HtmlType="button" 
+                            OnClick="CloseRedeemDetail">
+                        Hủy
+                    </Button>
+                </AntDesign.Col>
+
+            </AntDesign.Row>
+        </div>
+    </EditForm>
+</Modal>
+
+

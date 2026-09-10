@@ -77,10 +77,21 @@ namespace GameManagement.CoreConfig.Repository
 			return await _dbSet.AnyAsync(predicate);
 		}
 
-		//public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
-		//{
-		//	return await _dbSet.FirstOrDefaultAsync(predicate);
-		//}
-	}
+        public async Task AddRangeAsync(IEnumerable<T> entities)
+        {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                await _dbSet.AddRangeAsync(entities);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+    }
 
 }

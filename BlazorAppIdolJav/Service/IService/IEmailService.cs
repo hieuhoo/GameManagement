@@ -1,7 +1,9 @@
-﻿namespace GameManagement.Service.IService
+﻿using static GameManagement.Share.Extension.EnumExtension;
+
+namespace GameManagement.Service.IService
 {
 	public interface IEmailService
 	{
-		public Task SendOtpAsync(string email, string otpNumber, int minuteExpired, string name);
+		public Task SendTemplateMailAsync(MailType type, Object data);
 	}
 }

@@ -16,14 +16,14 @@
                OnRowClick="OnRowClick"
                @ref="table">
             <Column @bind-Field="context.Stt" Width="60" Title="Stt"></Column>
-            <Column @bind-Field="context.Name" Title="Tên hãng"></Column>
-            <Column @bind-Field="context.Country" Title="Quốc gia" Width="150">
+            <Column @bind-Field="context.Name" Title="Tên hãng" Width="170"></Column>
+            <Column @bind-Field="context.Country" Title="Quốc gia" Width="120">
                 <Template>
                     @CommonTemplate.RenderNationalityText(context.Country)
                 </Template>
             </Column>
             <Column @bind-Field="context.Description" Title="Giới thiệu ngắn" Width="280" Ellipsis></Column>
-            <Column @bind-Field="context.Status" Title="Trạng thái">
+            <Column @bind-Field="context.Status" Title="Trạng thái" Width="120">
                 <Template>
                     @CommonTemplate.RenderStatusText(context.Status)
                 </Template>

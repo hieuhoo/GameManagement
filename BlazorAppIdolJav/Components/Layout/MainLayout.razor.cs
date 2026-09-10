@@ -205,6 +205,17 @@ namespace GameManagement.Components.Layout
                 {
                     var history = EditModel.Id.FillPasswordHistoryData(EditModel.PassWord);
                     await PasswordService.AddPasswordHistoryAsync(history);
+                    await EmailService.SendTemplateMailAsync(
+                        MailType.RegisterAccountSuccess,
+                        new RegisterSuccessMailData
+                        {
+                            UserName = EditModel.UserName,
+                            Email = EditModel.Email ?? "",
+                            FullName = EditModel.Name,
+                            RegistrationDate = DateTime.Now,
+                        }
+                    );
+
                     NoticeService.NotiSuccess(AccountRegisterEnum.Success.GetDescription());
                 }
                 else
@@ -325,7 +336,16 @@ namespace GameManagement.Components.Layout
                     IsUsed = false
                 };
                 await OtpService.AddOtpHistoryAsync(otpHistory);
-                await EmailService.SendOtpAsync(email, otpNumber, minuteExpired, name);
+                await EmailService.SendTemplateMailAsync(
+                      MailType.OTP,
+                      new OtpMailData
+                      {
+                          Name = name,
+                          Email = email,
+                          Otp = otpNumber,
+                          Minute = minuteExpired
+                      }
+                  );
 
                 forgotPasswordVisible = false;
                 otpFormVisible = true;

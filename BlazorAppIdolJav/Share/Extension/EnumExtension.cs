@@ -16,6 +16,12 @@ namespace GameManagement.Share.Extension
 			VietNam,
 			[Display(Name = "Trung Quốc")]
 			China,
+			[Display(Name = "Ba Lan")]
+			Poland,
+			[Display(Name = "Anh Quốc")]
+			England,
+			[Display(Name = "Canada")]
+			Canada,
 		}
 
 		public enum CharacterGender
@@ -96,9 +102,9 @@ namespace GameManagement.Share.Extension
 			GameCompany = 0,
 			[Display(Name = "Thể loại game")]
 			GameType = 1,
-            [Display(Name = "Giảm giá game")]
-            GameDiscount = 2,
-        }
+			[Display(Name = "Giảm giá game")]
+			GameDiscount = 2,
+		}
 
 		public enum SendOtpMethod // hiện tại chỉ hỗ trợ qua email
 		{
@@ -151,6 +157,16 @@ namespace GameManagement.Share.Extension
 			Lock = 0,
 			[Display(Name = "Mở khóa")]
 			Unlock = 1,
+		}
+
+		public enum MailType
+		{
+			[Display(Name = "Xác thực otp")]
+			OTP = 0,
+			[Display(Name = "Đăng kí tài khoản thành công")]
+			RegisterAccountSuccess = 1,
+			[Display(Name = "Mua game thành công (mock)")] // sẽ chưa có payment do là mock
+			PurchaseSuccess = 2,
 		}
 	}
 }

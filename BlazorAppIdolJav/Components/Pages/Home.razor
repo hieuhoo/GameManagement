@@ -63,76 +63,84 @@
 
 
         <div class="game-grid">
-
-            @foreach (var game in FeaturedGames)
+            @if (FeaturedGames.Count() == 0)
             {
-                <div class="steam-game-card">
+                <p>
+                    Không có game nổi bật
+                </p>
+            }
+            else
+            {
+                @foreach (var game in FeaturedGames)
+                {
+                    <div class="steam-game-card">
 
-                    <div class="game-image"
-                         style="background-image: url('@game.ImagePath')">
+                        <div class="game-image"
+                             style="background-image: url('@game.ImagePath')">
 
-                        <span class="game-status">
-                            NỔI BẬT
-                        </span>
-
-                        <div class="game-description-overlay">
-                            <p>@game.Description</p>
-                        </div>
-
-                    </div>
-
-                    <div class="game-info">
-
-                        <h3>@game.Name</h3>
-                        @if (game.DiscountPercent > 0)
-                        {
-                            <p>
-                                Hạ giá sẽ hết sau @GetRemainingTime(game.DiscountEndDate)
-                            </p>
-                        }
-
-                        <div class="game-footer">
-
-                            <span class="game-company">
-                                @game.CompanyName
+                            <span class="game-status">
+                                NỔI BẬT
                             </span>
 
-                            <div class="game-price">
+                            <div class="game-description-overlay">
+                                <p>@game.Description</p>
+                            </div>
 
-                                @if (game.DiscountPercent > 0)
-                                {
-                                    <span class="discount-badge">
-                                        -@game.DiscountPercent%
-                                    </span>
+                        </div>
 
-                                    <div class="price-detail">
+                        <div class="game-info">
 
-                                        <span class="original-price">
+                            <h3>@game.Name</h3>
+                            @if (game.DiscountPercent > 0)
+                            {
+                                <p>
+                                    Hạ giá sẽ hết sau @GetRemainingTime(game.DiscountEndDate)
+                                </p>
+                            }
+
+                            <div class="game-footer">
+
+                                <span class="game-company">
+                                    @game.CompanyName
+                                </span>
+
+                                <div class="game-price">
+
+                                    @if (game.DiscountPercent > 0)
+                                    {
+                                        <span class="discount-badge">
+                                            -@game.DiscountPercent%
+                                        </span>
+
+                                        <div class="price-detail">
+
+                                            <span class="original-price">
+                                                @game.Price.ToString("N0") @ConvertMoneyUnit(game.Unit)
+                                            </span>
+
+                                            <span class="current-price">
+                                                @game.CurrentPrice.ToString("N0") @ConvertMoneyUnit(game.Unit)
+                                            </span>
+
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="current-price">
                                             @game.Price.ToString("N0") @ConvertMoneyUnit(game.Unit)
                                         </span>
+                                    }
 
-                                        <span class="current-price">
-                                            @game.CurrentPrice.ToString("N0") @ConvertMoneyUnit(game.Unit)
-                                        </span>
-
-                                    </div>
-                                }
-                                else
-                                {
-                                    <span class="current-price">
-                                        @game.Price.ToString("N0") @ConvertMoneyUnit(game.Unit)
-                                    </span>
-                                }
+                                </div>
 
                             </div>
 
                         </div>
 
                     </div>
+                }
 
-                </div>
             }
-
         </div>
     </section>
 

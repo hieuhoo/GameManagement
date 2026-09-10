@@ -6,6 +6,7 @@ using GameManagement.Share.Extension;
 using GameManagement.Share.ClassDB;
 using static GameManagement.Share.Extension.EnumExtension;
 using AutoMapper;
+using GameManagement.CoreConfig.Extensions;
 
 namespace GameManagement.Auth
 {
@@ -121,7 +122,7 @@ namespace GameManagement.Auth
 
             await _refreshTokenRepository.AddAsync(new RefreshToken
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = ObjectExtentions.GenerateGuid(),
                 UserId = user.Id,
                 TokenHash = tokenHash,
                 CreateDate = DateTime.UtcNow,

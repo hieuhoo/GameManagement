@@ -21,7 +21,6 @@
                     <Avatar Style="background-color: #1890ff; color: white;margin-right: 8px;">
                         @DisplayUserNameImage(currentUser)
                     </Avatar>
-                    @* <AntDesign.Text>@GetGreetingByHour()</AntDesign.Text> *@
                     <Dropdown Trigger="@(new[] { Trigger.Click })">
                         <Overlay>
                             <Menu>
@@ -38,6 +37,10 @@
                                     <MenuItem Key="library">
                                         <Icon Type="shop" />
                                         Thư viện
+                                    </MenuItem>
+                                    <MenuItem Key="history">
+                                        <Icon Type="shop" />
+                                        Lịch sử mua hàng
                                     </MenuItem>
                                 }
                             </Menu>

@@ -16,26 +16,9 @@
 </div>;
 
     public static RenderFragment RenderNationalityText(string national) =>@<div>
-@if (national == National.Japan.ToString())
-    {
-    <AntDesign.Text Copyable="false">@National.Japan.GetDescription()</AntDesign.Text>
-    }
-    else if (national == National.America.ToString())
-    {
-    <AntDesign.Text Copyable="false">@National.America.GetDescription()</AntDesign.Text>
-    }
-    else if (national == National.VietNam.ToString())
-    {
-    <AntDesign.Text Copyable="false">@National.VietNam.GetDescription()</AntDesign.Text>
-    }
-    else if (national == National.Taiwan.ToString())
-    {
-    <AntDesign.Text Copyable="false">@National.Taiwan.GetDescription()</AntDesign.Text>
-    }
-    else if (national == National.China.ToString())
-    {
-    <AntDesign.Text Copyable="false">@National.China.GetDescription()</AntDesign.Text>
-    }
+        @(string.IsNullOrWhiteSpace(national)
+                    ? " "
+                    : national.GetEnumDescription<National>())
 </div>;
 
     public static RenderFragment RenderStatusText(string status) =>@<div>

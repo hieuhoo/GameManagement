@@ -168,5 +168,25 @@ namespace GameManagement.Share.Extension
 			[Display(Name = "Mua game thành công (mock)")] // sẽ chưa có payment do là mock
 			PurchaseSuccess = 2,
 		}
-	}
+
+        public enum GenerateRedeemType
+        {
+            [Display(Name = "Tạo một mã")]
+            ByHand = 0,
+            [Display(Name = "Tạo nhiều mã tự động")]
+            Auto = 1,
+        }
+
+        public enum RedeemCodeStatus
+        {
+            [Display(Name = "Hiệu lực")]
+            Active = 0,
+            [Display(Name = "Đã dùng")]
+            Used = 1,
+            [Display(Name = "Khóa")]
+            Disable = 2,
+            [Display(Name = "Hết hạn")]
+            Expired = 3,
+        }
+    }
 }

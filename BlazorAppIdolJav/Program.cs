@@ -76,6 +76,7 @@ builder.Services.AddScoped<IUserOtpHistoryService, UserOtpHistoryService>();
 builder.Services.AddScoped<IUserPasswordHistoryService, UserPasswordHistoryService>();
 builder.Services.AddScoped<IUserLockHistoryService, UserLockHistoryService>();
 builder.Services.AddScoped<IGameDiscountService, GameDiscountService>();
+builder.Services.AddScoped<IGameRedeemCodeService, GameRedeemCodeService>();
 
 
 
@@ -88,6 +89,7 @@ builder.Services.AddScoped<IUserOtpHistoryRepository, UserOtpHistoryRepository>(
 builder.Services.AddScoped<IUserPasswordHistoryRepository, UserPasswordHistoryRepository>();
 builder.Services.AddScoped<IUserLockHistoryRepository, UserLockHistoryRepository>();
 builder.Services.AddScoped<IGameDiscountRepository, GameDiscountRepository>();
+builder.Services.AddScoped<IGameRedeemCodeRepository, GameRedeemCodeRepository>();
 
 // cấu hình extension
 GlobalVariant.UploadFolder = Path.Combine(

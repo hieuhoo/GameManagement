@@ -180,13 +180,21 @@ namespace GameManagement.Share.Extension
         public enum RedeemCodeStatus
         {
             [Display(Name = "Hiệu lực")]
-            Active = 0,
-            [Display(Name = "Đã dùng")]
+            Available = 0,
+            [Display(Name = "Đã sử dụng")]
             Used = 1,
             [Display(Name = "Khóa")]
-            Disable = 2,
+            Lock = 2,
             [Display(Name = "Hết hạn")]
             Expired = 3,
+        }
+
+		public enum RedeemCodeType
+        {
+            [Display(Name = "Game trong thư viện")]
+            Game = 0,
+            [Display(Name = "Tiền trong ví")]
+            Money = 1,
         }
     }
 }

@@ -216,7 +216,7 @@ namespace GameManagement.Components.Layout
                         }
                     );
 
-                    NoticeService.NotiSuccess(AccountRegisterEnum.Success.GetDescription());
+                    NoticeService.NotiSuccess(AccountRegisterEnum.SuccessAndCheckMail.GetDescription());
                 }
                 else
                 {

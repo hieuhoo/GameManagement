@@ -24,22 +24,22 @@
                     <Dropdown Trigger="@(new[] { Trigger.Click })">
                         <Overlay>
                             <Menu>
-                                <MenuItem Key="profile">
+                                <MenuItem Key="profile" RouterLink="/profile">
                                     <Icon Type="user" />
                                     Thông tin cá nhân
                                 </MenuItem>
                                 @if (!isAdmin)
                                 {
-                                    <MenuItem Key="wishList">
+                                    <MenuItem Key="wishList" RouterLink="/wishlist">
                                         <Icon Type="heart" />
                                         Game ưa thích
                                     </MenuItem>
-                                    <MenuItem Key="library">
+                                    <MenuItem Key="library" RouterLink="/library">
                                         <Icon Type="shop" />
                                         Thư viện
                                     </MenuItem>
-                                    <MenuItem Key="history">
-                                        <Icon Type="shop" />
+                                    <MenuItem Key="history" RouterLink="/purchase-history">
+                                        <Icon Type="history" />
                                         Lịch sử mua hàng
                                     </MenuItem>
                                 }

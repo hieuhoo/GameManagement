@@ -80,5 +80,18 @@ namespace GameManagement.Service
                 return false;
             }
         }
-    }
+
+		public async Task<bool> IsRedeemCodeExistsAsync(string code)
+		{
+            try
+            {
+                var isExist = await _repo.IsRedeemCodeExistsAsync(code);
+                return isExist;
+            }
+            catch
+            {
+                return false;
+            }
+		}
+	}
 }

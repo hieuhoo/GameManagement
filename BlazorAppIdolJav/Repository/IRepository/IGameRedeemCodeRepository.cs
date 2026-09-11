@@ -11,6 +11,7 @@ namespace GameManagement.Repository.IRepository
         Task<bool> UpdateRedeemAsync(GameRedeemCode data);
         Task<bool> DeleteRedeemAsync(GameRedeemCode data);
         Task<bool> SaveListRedeemAsync(List<GameRedeemCode> data);
+        Task<bool> IsRedeemCodeExistsAsync(string code);
 
     }
 }

@@ -42,6 +42,8 @@ namespace GameManagement.Share.Extension
             Failed = 1,
             [Display(Name = "Tên đăng nhập hoặc Email đã tồn tại")]
             ExistEmailOrUserName = 2,
+            [Display(Name = "Tạo tài khoản thành công.Vui lòng check mail để thêm chi tiết")]
+            SuccessAndCheckMail = 3,
         }
     }
 }

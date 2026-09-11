@@ -5,6 +5,7 @@
 @using GameManagement.Share.Model.ViewModel;
 @using GameManagement.SpecialComponent;
 @using Microsoft.AspNetCore.Components.Routing
+@using static GameManagement.Share.Extension.EnumExtension
 @using static GameManagement.Share.Extension.MessageEnumExtension
 
 <AntDesign.Row Gutter="8">
@@ -21,6 +22,123 @@
         </Row>
     </AntDesign.Col>
 </AntDesign.Row>
+
 @* //làm màn list dữ liệu *@
 
-<GameRedeemCodeDetail @ref="redeemDetailRef"></GameRedeemCodeDetail>
+<AntDesign.Col Span="24">
+    <Table TItem="GameRedeemCodeViewModel"
+           DataSource="ViewModels"
+           ScrollY="calc(100vh - 260px)"
+           ScrollBarWidth="@DefaultTableConfig.ScrollBarWidth"
+           Loading="loading"
+           OnRowClick="OnRowClick"
+           @ref="Table">
+
+        <Column @bind-Field="context.Stt"
+                Title="STT"
+                Width="50">
+        </Column>
+
+        <Column @bind-Field="context.Code"
+                Title="Mã nạp"
+                Width="80">
+        </Column>
+
+        <Column @bind-Field="context.RedeemType"
+                Title="Loại quy đổi"
+                Width="150">
+            <Template>
+                @CommonTemplate.RenderRedeemTypeText(context.RedeemType)
+            </Template>
+        </Column>
+
+        <Column @bind-Field="context.Status"
+                Title="Trạng thái"
+                Width="120">
+            <Template>
+                @CommonTemplate.RenderReedemStatusText(context.Status)
+            </Template>
+        </Column>
+
+        <Column @bind-Field="context.ExpiredDate"
+                Title="Ngày hết hạn"
+                Width="140">
+        </Column>
+
+        <Column @bind-Field="context.Value"
+                Title="Giá trị"
+                Width="80">
+            <Template>
+                @($"{context.Value:N0}")
+            </Template>
+        </Column>
+
+        <Column Field="@context.GameName"
+                Title="Tên game" Ellipsis
+                Width="130">
+        </Column>
+
+        <ActionColumn Title="Thao tác"
+                      Width="130">
+            <Space Size="SpaceSize.Small">
+
+                @* Xem chi tiết *@
+                <SpaceItem>
+                    <Tooltip Title="Chi tiết">
+                        <Button Type="ButtonType.Text"
+                                Size="ButtonSize.Small"
+                                OnClick="() => ViewDetailAsync(context)">
+                            <Icon Type="eye" />
+                        </Button>
+                    </Tooltip>
+                </SpaceItem>
+
+
+                @* Enable / Disable *@
+                @if (context.Status == RedeemCodeStatus.Available.ToString() ||
+                                                            context.Status == RedeemCodeStatus.Lock.ToString())
+                {
+
+                    <SpaceItem>
+                        <Tooltip Title="@(context.Status == RedeemCodeStatus.Available.ToString()
+                                                                                    ? "Vô hiệu hóa"
+                                                                                    : "Kích hoạt lại")">
+
+                            <Button Type="ButtonType.Text"
+                                    Size="ButtonSize.Small"
+                                    OnClick="() => ChangeStatusAsync(context)">
+
+                                @if (context.Status == RedeemCodeStatus.Available.ToString())
+                                {
+                                    <Icon Type="stop" />
+                                }
+                                else
+                                {
+                                    <Icon Type="check-circle" />
+                                }
+
+                            </Button>
+                        </Tooltip>
+                    </SpaceItem>
+                }
+                @* Xóa *@
+                <SpaceItem>
+                    <Tooltip Title="Xóa">
+                        <Button Type="ButtonType.Text"
+                                Danger
+                                Size="ButtonSize.Small"
+                                OnClick="() => DeleteRedeemAsync(context)">
+                            <Icon Type="delete" />
+                        </Button>
+                    </Tooltip>
+                </SpaceItem>
+
+
+            </Space>
+        </ActionColumn>
+
+    </Table>
+
+</AntDesign.Col>
+
+<GameRedeemCodeDetail @ref="redeemDetailRef" ReloadData="GetRedeemDataAsync"></GameRedeemCodeDetail>

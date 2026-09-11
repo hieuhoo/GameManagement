@@ -107,4 +107,34 @@
         }
     </div>;
 
+    public static RenderFragment RenderReedemStatusText(string status) => @<div>
+        @if (status == RedeemCodeStatus.Available.ToString())
+        {
+            <AntDesign.Text Copyable="false" Type="TextElementType.Success">@RedeemCodeStatus.Available.GetDescription()</AntDesign.Text>
+        }
+        else if (status == RedeemCodeStatus.Expired.ToString())
+        {
+            <AntDesign.Text Copyable="false" Type="TextElementType.Warning">@RedeemCodeStatus.Expired.GetDescription()</AntDesign.Text>
+        }
+        else if (status == RedeemCodeStatus.Used.ToString())
+        {
+            <AntDesign.Text Copyable="false">@RedeemCodeStatus.Used.GetDescription()</AntDesign.Text>
+        }
+        else if (status == RedeemCodeStatus.Lock.ToString())
+        {
+            <AntDesign.Text Copyable="false" Type="TextElementType.Danger">@RedeemCodeStatus.Lock.GetDescription()</AntDesign.Text>
+        }
+    </div>;
+
+    public static RenderFragment RenderRedeemTypeText(string type) => @<div>
+        @if (type == RedeemCodeType.Game.ToString())
+        {
+            <AntDesign.Text Copyable="false">@RedeemCodeType.Game.GetDescription()</AntDesign.Text>
+        }
+        else if (type == RedeemCodeType.Money.ToString())
+        {
+            <AntDesign.Text Copyable="false">@RedeemCodeType.Money.GetDescription()</AntDesign.Text>
+        }
+    </div>;
+
 }

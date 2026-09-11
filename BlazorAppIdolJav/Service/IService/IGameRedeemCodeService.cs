@@ -13,6 +13,7 @@ namespace GameManagement.Service.IService
         Task<bool> DeleteRedeemAsync(GameRedeemCodeData data);
         //cần hàm add list
         Task<bool> SaveListRedeemAsync(List<GameRedeemCodeData> data);
+        Task<bool> IsRedeemCodeExistsAsync(string code);
 
     }
 

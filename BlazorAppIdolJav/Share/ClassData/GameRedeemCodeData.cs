@@ -17,7 +17,7 @@ namespace GameManagement.Share.ClassData
             set;
         }
         [DataMember(Order = 3)]
-        public virtual int Value
+        public virtual int? Value
         {
             get;
             set;
@@ -66,6 +66,18 @@ namespace GameManagement.Share.ClassData
         }
         [DataMember(Order = 11)]
         public virtual String GenerateType
+        {
+            get;
+            set;
+        }
+        [DataMember(Order = 12)]
+        public virtual String RedeemType
+        {
+            get;
+            set;
+        }
+        [DataMember(Order = 13)]
+        public virtual String? GameId
         {
             get;
             set;

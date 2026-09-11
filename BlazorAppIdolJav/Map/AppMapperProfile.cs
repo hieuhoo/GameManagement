@@ -70,6 +70,7 @@ namespace GameManagement.Map
             }
             #endregion
             CreateMap<UserData, AccountViewModel>();
+            CreateMap<GameRedeemCodeEditModel, GameRedeemCodeViewModel>().ReverseMap();
             CreateMap<GameEditModel, GameData>()
                 .ForMember(
                     dest => dest.GameTypeId,

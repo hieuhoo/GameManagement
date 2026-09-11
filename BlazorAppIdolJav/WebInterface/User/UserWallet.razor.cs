@@ -1,0 +1,81 @@
+﻿using AntDesign;
+using AutoMapper;
+using GameManagement.CoreConfig.Extensions;
+using GameManagement.Service.IService;
+using GameManagement.SpecialComponent.ExtensionClass;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using System.Security.Claims;
+namespace GameManagement.WebInterface.User
+{
+    public partial class UserWallet : ComponentBase
+    {
+        [Inject] IMapper Mapper { get; set; }
+        [Inject] IGameService GameService { get; set; }
+        [Inject] NotificationService NoticeService { get; set; }
+        [Inject] AuthenticationStateProvider AuthProvider { get; set; }
+
+        string? currentUserId;
+        string redeemCode = string.Empty;
+        string cancelText = "Đóng";
+        bool isRedeemModalVisible;
+
+        protected override async Task OnInitializedAsync()
+        {
+            try
+            {
+                var authState = await AuthProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
+
+                currentUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            }
+            catch
+            {
+
+            }
+        }
+
+        private readonly int[] WalletAmounts =
+        {
+            75000,
+            150000,
+            375000,
+            750000,
+            1500000
+        };
+
+        void OpenRedeemModal()
+        {
+            isRedeemModalVisible = true;
+        }
+
+        async Task EnterRedeemCodeAsync(string code)
+        {
+            try
+            {
+                code = code.Trim().ToUpperInvariant();
+                if (code.IsNullOrEmpty())
+                {
+                    NoticeService.NotiWarning("Mã code không được bỏ trống");
+                    return;
+                }
+                //viết logic : 1.check mã code (status, update ngược vào bảng,... gameredeemcode)
+                // 2. Check nếu là giao dịch đầu thì tạo 1 record wallet, có thì update : id, userid, balance (số dư hiện tại),updatedate.createdate
+                // 3. Thêm 1 record vào bảng WalletTransactionHistory : id, userid, amount (kiểu decimal), type (RedeemVoucher/Purchase) , balancebefore,
+                //        balanceAfter (Sau = trước + amount), createdate, referenceId (là mã code nhập hoặc Id giao dịch) 
+                // Tất cả phải trong cùng 1 transaction
+                NoticeService.NotiSuccess("Test thành công");
+                isRedeemModalVisible = false;
+            }
+            catch
+            {
+
+            }
+        }
+
+        void CloseRedeemForm()
+        {
+            isRedeemModalVisible = false;
+        }
+    }
+}

@@ -34,14 +34,15 @@
                 </NavLink>
             </MenuItem>
         }
-
-        <MenuItem Key="game">
-            <NavLink href="/danh-sach-game">
-                <Icon Type="appstore" />
-                <span>Danh sách Game</span>
-            </NavLink>
-        </MenuItem>
-
+        if (IsAdmin)
+        {
+            <MenuItem Key="game">
+                <NavLink href="/danh-sach-game">
+                    <Icon Type="appstore" />
+                    <span>Danh sách Game</span>
+                </NavLink>
+            </MenuItem>
+        }
         if (IsAdmin)
         {
             <MenuItem Key="setup">

@@ -1,0 +1,161 @@
+﻿@page "/user/wallet"
+@using AntDesign
+@using GameManagement.CoreConfig.Extensions;
+@using GameManagement.Share.Extension
+@using GameManagement.Share.Model.ViewModel;
+@using GameManagement.SpecialComponent;
+@using Microsoft.AspNetCore.Components.Routing
+@using static GameManagement.Share.Extension.MessageEnumExtension
+
+<div class="wallet-page">
+    <Title Level="2">
+        Nạp tiền vào ví của bạn
+    </Title>
+
+    <div style="margin-bottom: 24px;">
+        <Text Strong>Nạp tiền vào ví của bạn </Text>
+
+        <div style="margin-top: 10px;">
+            <Text>
+                Số dư trong ví có thể được dùng để mua bất kỳ tựa game nào hoặc thực hiện giao dịch trong các trò chơi hỗ trợ thanh toán bằng ví.
+            </Text>
+        </div>
+
+        <div style="margin-top: 8px;">
+            <Text>
+                Bạn sẽ có cơ hội xem lại đơn hàng trước khi tiến hành đặt mua.
+            </Text>
+        </div>
+    </div>
+
+    <AntDesign.Row Gutter="24">
+
+        <AntDesign.Col Span="16">
+
+            <Space Direction="SpaceDirection.Vertical" Style="width: 100%;" Size="SpaceSize.Middle">
+
+                @foreach (var amount in WalletAmounts)
+                {
+                    <AntDesign.Card Class="wallet-fund-card">
+                        <AntDesign.Row Align="RowAlign.Middle" Justify="RowJustify.SpaceBetween">
+                            <AntDesign.Col>
+                                <div class="wallet-amount">
+                                    Nạp @amount.ToString("N0")đ
+                                </div>
+                            </AntDesign.Col>
+                            <AntDesign.Col>
+                                <AntDesign.Space>
+                                     <Input
+                                        Value="@amount.ToString("N0")"
+                                        ReadOnly="true"
+                                        Style="width: 120px;" />
+
+                                    <Button Type="ButtonType.Primary">
+                                        Nạp liền
+                                    </Button>
+                                </AntDesign.Space>
+                            </AntDesign.Col>
+                        </AntDesign.Row>
+                    </AntDesign.Card>
+                }
+            </Space>
+
+        </AntDesign.Col>
+
+        <AntDesign.Col Span="8">
+
+            <Card Title="Thông tin chung">
+
+                <div class="wallet-balance">
+                    <Text>Số dư ví</Text>
+
+                    <span class="wallet-balance-value">
+                        10.665,91đ (test)
+                    </span>
+                </div>
+
+                <Space Direction="SpaceDirection.Vertical" Style="width: 100%;">
+
+                    <Button Block OnClick="OpenRedeemModal">
+                        Nhập mã code tiền hoặc game để add vào thư viện
+                    </Button>
+
+                </Space>
+
+            </Card>
+
+        </AntDesign.Col>
+
+    </AntDesign.Row>
+
+</div>
+
+<Modal Title="Nhập mã code redeem"
+       Visible="isRedeemModalVisible"
+       Width="900"
+       OnCancel="CloseRedeemForm"
+       CancelText="@cancelText"
+       OnOk="CloseRedeemForm">
+
+    <Row Gutter="24">
+
+        <Col Span="16">
+
+        <Card>
+
+            <Space Direction="SpaceDirection.Vertical"
+                   Style="width: 100%;"
+                   Size="SpaceSize.Middle">
+
+                <Space>
+
+                    <Input @bind-Value="redeemCode"
+                           Placeholder="Nhập mã ở đây"
+                           Style="width: 320px;" />
+
+                    <Button Type="ButtonType.Primary" OnClick="() => EnterRedeemCodeAsync(redeemCode)">
+                        Xác nhận
+                    </Button>
+
+                </Space>
+
+                <Text Type="TextElementType.Secondary">
+                    Nhập đi đợi chờ chi
+                </Text>
+
+            </Space>
+
+        </Card>
+
+    </Col>
+
+
+    <Col Span="8">
+
+    <Card Title="Tài khoản của bạn">
+
+        <div class="redeem-balance">
+
+            <Text>
+                Số dư ví hiện tại 
+            </Text>
+
+            <span class="redeem-balance-value">
+                10.665,91đ (mock)
+            </span>
+
+        </div>
+
+    </Card>
+
+</Col>
+
+</Row>
+
+</Modal>
+
+
+
+
+
+

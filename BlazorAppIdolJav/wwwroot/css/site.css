@@ -425,3 +425,35 @@
     opacity: 1;
     visibility: visible;
 }
+
+.wallet-page {
+    margin: 0 auto;
+    padding: 32px 20px;
+}
+
+.wallet-balance {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.wallet-balance-value {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.redeem-balance {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.redeem-balance-value {
+    font-size: 14px;
+    font-weight: 600;
+    text-align: right;
+    margin: 0;
+}
+

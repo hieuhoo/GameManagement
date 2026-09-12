@@ -196,5 +196,13 @@ namespace GameManagement.Share.Extension
             [Display(Name = "Tiền trong ví")]
             Money = 1,
         }
+
+		public enum WalletTransactionType
+        {
+            [Display(Name = "Mã voucher redeem")]
+            VoucherRedeem = 0,
+            [Display(Name = "Thanh toán chuyển khoản (mock)")]
+            Purchase = 1,
+        }
     }
 }

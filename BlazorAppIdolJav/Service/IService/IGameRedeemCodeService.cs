@@ -27,6 +27,8 @@ namespace GameManagement.Service.IService
         public virtual string Status { get; set; }
         [DataMember(Order = 3)]
         public virtual string BatchId { get; set; }
+        [DataMember(Order = 4)]
+        public virtual string Code { get; set; }
 
         public IQueryable<GameRedeemCode> CreateFilter(IQueryable<GameRedeemCode> filter)
         {
@@ -41,6 +43,10 @@ namespace GameManagement.Service.IService
             if (BatchId.IsNotNullOrEmpty())
             {
                 filter = filter.Where(x => x.BatchId == BatchId);
+            }
+            if (Code.IsNotNullOrEmpty())
+            {
+                filter = filter.Where(x => x.Code == Code);
             }
             return filter;
         }

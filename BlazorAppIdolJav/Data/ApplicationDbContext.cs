@@ -20,7 +20,8 @@ namespace GameManagement.Data
         public DbSet<GameDiscount> GameDiscount { get; set; }
         public DbSet<RefreshToken> RefreshToken { get; set; }
         public DbSet<GameRedeemCode> GameRedeemCode { get; set; }
-
+        public DbSet<UserWallet> UserWallet { get; set; }
+        public DbSet<WalletTransactionHistory> WalletTransactionHistory { get; set; }
 
     }
 }

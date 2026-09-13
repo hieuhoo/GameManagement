@@ -1,0 +1,98 @@
+﻿@page "/user/purchase-history"
+@using AntDesign
+@using GameManagement.Share.Extension
+@using GameManagement.Share.Model.ViewModel;
+@using GameManagement.SpecialComponent;
+@using static GameManagement.Share.Extension.MessageEnumExtension
+
+
+<Row Gutter="8">
+    <AntDesign.Col Span="24">
+        <AntDesign.Title Level="3">Lịch sử giao dịch tài khoản @displayName </AntDesign.Title>
+    </AntDesign.Col>
+    <br />
+    <AntDesign.Col Span="24">
+
+        <div class="account-table-container">
+
+            <Table TItem="WalletTransactionHistoryViewModel"
+                   DataSource="ViewModels"
+                   Class="account-table"
+                   ScrollY="calc(100vh - 260px)"
+                   ScrollBarWidth="@DefaultTableConfig.ScrollBarWidth"
+                   Loading="loading"
+                   OnRowClick="OnRowClick"
+                   @ref="table">
+
+                <Column @bind-Field="context.Stt"
+                        Title="STT" 
+                        Width="60">
+                </Column>
+
+                <Column @bind-Field="context.CreateDate"
+                        Title="Ngày giao dịch"
+                        Width="150">
+                    <Template>
+                        @(context.CreateDate.GetFormatDateWithSecond())
+                    </Template>
+                </Column>
+
+                <Column @bind-Field="context.ItemName"
+                        Width="180">
+                    <TitleTemplate>
+                        <Tooltip Title="Nếu loại giao dịch là mua game sẽ show tên game, còn ko thì ko hiển thị gì">
+                            <span>
+                                Tên
+                                <Icon Type="info-circle" />
+                            </span>
+                        </Tooltip>
+                    </TitleTemplate>
+                </Column>
+
+                <Column @bind-Field="context.Type"
+                        Title="Loại giao dịch"
+                        Width="200">
+                        <Template>
+                            @CommonTemplate.RenderTransactionTypeText(context.Type)
+                        </Template>
+                </Column>
+
+                <Column @bind-Field="context.RedeemType"
+                        Title="Loại quy đổi voucher"
+                        Width="200">
+                    <Template>
+                        @CommonTemplate.RenderRedeemTypeText(context.RedeemType)
+                    </Template>
+                </Column>
+
+                <Column @bind-Field="context.Amount"
+                        Title="Giá"
+                        Width="100">
+                    <Template>
+                        @context.Amount.ToString("N0")
+                    </Template>
+                </Column>
+
+                <Column @bind-Field="context.ChangeMoney"
+                        Title="Thay đổi"
+                        Width="110">
+                </Column>
+
+                <Column @bind-Field="context.BalanceAfter"
+                        Title="Số dư sau"
+                        Width="100">
+                    <Template>
+                        @context.BalanceAfter.ToString("N0")
+                    </Template>
+                </Column>
+
+               
+
+            </Table>
+
+        </div>
+
+    </AntDesign.Col>
+</Row>
+
+

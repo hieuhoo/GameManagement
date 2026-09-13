@@ -35,7 +35,7 @@ namespace GameManagement.Share.ClassData
 			set;
 		}
 		[DataMember(Order = 6)]
-		public virtual string Type
+		public virtual string Type // loại giao dịch : là dùng voucher hoặc ấn nút nạp tiền
 		{
 			get;
 			set;
@@ -52,5 +52,30 @@ namespace GameManagement.Share.ClassData
 			get;
 			set;
 		}
+		[DataMember(Order = 9)]
+		public virtual int? PercentDiscount
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 10)]
+		public virtual int? OriginalGamePrice
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 11)]
+		public virtual int? PurchaseGamePrice
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 12)]
+		public virtual string RedeemType
+		{
+			get;
+			set;
+		}
+
 	}
 }

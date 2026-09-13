@@ -34,7 +34,7 @@
                         <AntDesign.Row Align="RowAlign.Middle" Justify="RowJustify.SpaceBetween">
                             <AntDesign.Col>
                                 <div class="wallet-amount">
-                                    Nạp @amount.ToString("N0")đ
+                                    Nạp @amount.ToString("N0") VNĐ
                                 </div>
                             </AntDesign.Col>
                             <AntDesign.Col>
@@ -44,7 +44,7 @@
                                         ReadOnly="true"
                                         Style="width: 120px;" />
 
-                                    <Button Type="ButtonType.Primary">
+                                    <Button Type="ButtonType.Primary" OnClick="() => OpenTopUpForm(amount)">
                                         Nạp liền
                                     </Button>
                                 </AntDesign.Space>
@@ -64,7 +64,7 @@
                     <Text>Số dư ví</Text>
 
                     <span class="wallet-balance-value">
-                        10.665,91đ (test)
+                        @currentBalance VNĐ
                     </span>
                 </div>
 
@@ -131,11 +131,11 @@
         <div class="redeem-balance">
 
             <Text>
-                Số dư ví hiện tại 
+                Số dư ví: 
             </Text>
 
             <span class="redeem-balance-value">
-                10.665,91đ (mock)
+                @currentBalance VNĐ
             </span>
 
         </div>
@@ -146,6 +146,29 @@
 
 </Row>
 
+</Modal>
+
+<Modal Visible="topUpFormVisible"
+       Title="Nạp tiền"
+       Footer="@null" MaskClosable=true
+       OnCancel="CloseTopUpForm">
+    <Row>
+        <Text>Số tiền nạp</Text>
+    </Row>
+    <br />
+    <Row>
+        <Input Type="@InputType.Text" @bind-Value="purchaseAmount" ReadOnly="true"/>
+    </Row>
+    <Row Gutter="8" Justify="@RowJustify.End">
+        <Space>
+            <SpaceItem>
+                <Button Style="margin-top:20px;" Type="@ButtonType.Default" OnClick="() => CloseTopUpForm()">Hủy</Button>
+            </SpaceItem>
+            <SpaceItem>
+                <Button Style="margin-top:20px;" HtmlType="submit" Type="@ButtonType.Primary" OnClick="() => PurchaseAsync(purchaseAmount)">Thanh toán</Button>
+            </SpaceItem>
+        </Space>
+    </Row>
 </Modal>
 
 

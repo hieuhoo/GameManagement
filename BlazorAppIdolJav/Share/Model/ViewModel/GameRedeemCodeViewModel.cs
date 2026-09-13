@@ -11,5 +11,8 @@
 		public string? Code { get; set; }
 		public string RedeemType { get; set; }
 		public int? Value { get; set; }
-	}
+        public DateTime? RedeemedDate { get; set; }
+		public string RedeemedBy { get; set; }
+
+    }
 }

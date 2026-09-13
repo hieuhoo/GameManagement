@@ -63,6 +63,9 @@
         <Column @bind-Field="context.ExpiredDate"
                 Title="Ngày hết hạn"
                 Width="140">
+                <Template>
+                @context.ExpiredDate.GetFormatDateWithSecond()
+                </Template>
         </Column>
 
         <Column @bind-Field="context.Value"

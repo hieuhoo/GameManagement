@@ -12,6 +12,7 @@ using GameManagement.Share.Model.ViewModel;
 using GameManagement.SpecialComponent;
 using GameManagement.SpecialComponent.ExtensionClass;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using static GameManagement.Share.Extension.EnumExtension;
 using static GameManagement.Share.Extension.MessageEnumExtension;
 
@@ -26,8 +27,9 @@ namespace GameManagement.WebInterface.GameInformation
 		[Inject] IGameDiscountService GameDiscountService { get; set; }
 
 		[Inject] NotificationService Notice { get; set; }
+        [Inject] AuthenticationStateProvider AuthProvider { get; set; }
 
-		List<GameViewModel> ViewModels { get; set; }
+        List<GameViewModel> ViewModels { get; set; }
 		List<GameData> GameDatas { get; set; }
 		List<GameTypeData> GameTypeDatas { get; set; } = new();
 		List<GameCompanyData> CompanyDatas { get; set; } = new();
@@ -42,13 +44,18 @@ namespace GameManagement.WebInterface.GameInformation
 
 		bool loading;
 		bool createVisible;
-		string title;
+        bool isAdmin = false;
+
+        string title;
 
 		protected override async Task OnInitializedAsync()
 		{
 			try
 			{
-				width = ConfigTemplate.Width;
+                var authState = await AuthProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
+                isAdmin = user.IsInRole(UserRole.Admin.ToString());
+                width = ConfigTemplate.Width;
 				height = ConfigTemplate.Height;
 				await GetGameTypeDataAsync();
 				await GetGameCompanyDataAsync();
@@ -249,6 +256,87 @@ namespace GameManagement.WebInterface.GameInformation
 
 			}
 		}
+
+        private List<GameViewModel> TestUIGames = new()
+    {
+        new GameViewModel
+        {
+            Id = "1",
+            Name = "Bánh mì Bách Khoa",
+            Price = 50000,
+            Unit = "VNĐ",
+            CurrentSalePercent = 0,
+            CurrentPrice = "50,000 VNĐ",
+            IsFeatured = false,
+            Status = "Hoạt động",
+            SoldStatus = "Đang bán",
+            ReleaseStatus = "Đã ra mắt",
+            GameCompanyName = "Moba"
+        },
+
+        new GameViewModel
+        {
+            Id = "2",
+            Name = "007 First Light",
+            Price = 900000,
+            Unit = "VNĐ",
+            CurrentSalePercent = 15,
+            CurrentPrice = "765,000 VNĐ",
+            IsFeatured = true,
+            OrderFeatured = 1,
+            Status = "Hoạt động",
+            SoldStatus = "Đang bán",
+            ReleaseStatus = "Đã ra mắt",
+            GameCompanyName = "Tencent Game"
+        },
+
+        new GameViewModel
+        {
+            Id = "3",
+            Name = "God of War: Ragnarok",
+            Price = 700000,
+            Unit = "VNĐ",
+            CurrentSalePercent = 30,
+            CurrentPrice = "490,000 VNĐ",
+            IsFeatured = false,
+            Status = "Hoạt động",
+            SoldStatus = "Đang bán",
+            ReleaseStatus = "Đã ra mắt",
+            GameCompanyName = "Santa Monica"
+        },
+
+        new GameViewModel
+        {
+            Id = "4",
+            Name = "Mortal Kombat 1",
+            Price = 500000,
+            Unit = "VNĐ",
+            CurrentSalePercent = 0,
+            CurrentPrice = "500,000 VNĐ",
+            IsFeatured = true,
+            OrderFeatured = 2,
+            Status = "Hoạt động",
+            SoldStatus = "Đang bán",
+            ReleaseStatus = "Đã ra mắt",
+            GameCompanyName = "Netherrealm"
+        },
+
+        new GameViewModel
+        {
+            Id = "5",
+            Name = "Uncharted 4: A Thief's End",
+            Price = 1050000,
+            Unit = "VNĐ",
+            CurrentSalePercent = 40,
+            CurrentPrice = "630,000 VNĐ",
+            IsFeatured = true,
+            OrderFeatured = 3,
+            Status = "Hoạt động",
+            SoldStatus = "Đang bán",
+            ReleaseStatus = "Đã ra mắt",
+            GameCompanyName = "Naughty Dog"
+        }
+    };
 
     }
 }

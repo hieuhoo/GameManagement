@@ -137,4 +137,19 @@
         }
     </div>;
 
+    public static RenderFragment RenderTransactionTypeText(string type) => @<div>
+        @if (type == WalletTransactionType.VoucherRedeem.ToString())
+        {
+            <AntDesign.Text Copyable="false">@WalletTransactionType.VoucherRedeem.GetDescription()</AntDesign.Text>
+        }
+        else if (type == WalletTransactionType.PurchaseMoney.ToString())
+        {
+            <AntDesign.Text Copyable="false">@WalletTransactionType.PurchaseMoney.GetDescription()</AntDesign.Text>
+        }
+        else if (type == WalletTransactionType.PurchaseGame.ToString())
+        {
+            <AntDesign.Text Copyable="false">@WalletTransactionType.PurchaseGame.GetDescription()</AntDesign.Text>
+        }
+    </div>;
+
 }

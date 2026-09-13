@@ -78,6 +78,8 @@ builder.Services.AddScoped<IUserLockHistoryService, UserLockHistoryService>();
 builder.Services.AddScoped<IGameDiscountService, GameDiscountService>();
 builder.Services.AddScoped<IGameRedeemCodeService, GameRedeemCodeService>();
 builder.Services.AddScoped<IUserWalletService, UserWalletService>();
+builder.Services.AddScoped<IWalletTransactionHistoryService, WalletTransactionHistoryService>();
+
 
 
 
@@ -92,6 +94,8 @@ builder.Services.AddScoped<IUserLockHistoryRepository, UserLockHistoryRepository
 builder.Services.AddScoped<IGameDiscountRepository, GameDiscountRepository>();
 builder.Services.AddScoped<IGameRedeemCodeRepository, GameRedeemCodeRepository>();
 builder.Services.AddScoped<IUserWalletRepository, UserWalletRepository>();
+builder.Services.AddScoped<IWalletTransactionHistoryRepository, WalletTransactionHistoryRepository>();
+
 
 
 // cấu hình extension

@@ -67,7 +67,7 @@ namespace GameManagement.Service
                         Id = ObjectExtentions.GenerateGuid(),
                         CreateDate = DateTime.Now,
                         UserId = userId,
-                        Type = WalletTransactionType.Purchase.ToString(),
+                        Type = WalletTransactionType.PurchaseMoney.ToString(),
                         ReferenceId = ObjectExtentions.GenerateGuid(), // coi như đây là Id của giao dịch đó
                         Amount = money,
                         BalanceBefore = 0,
@@ -89,7 +89,7 @@ namespace GameManagement.Service
                         Id = ObjectExtentions.GenerateGuid(),
                         CreateDate = DateTime.Now,
                         UserId = userId,
-                        Type = WalletTransactionType.Purchase.ToString(),
+                        Type = WalletTransactionType.PurchaseMoney.ToString(),
                         ReferenceId = ObjectExtentions.GenerateGuid(), // coi như đây là Id của giao dịch đó
                         Amount = money,
                         BalanceBefore = balanceBefore,
@@ -225,6 +225,7 @@ namespace GameManagement.Service
                     Amount = amount,
                     BalanceBefore = balanceBefore,
                     BalanceAfter = balanceAfter,
+                    RedeemType = type // xử lý case mã tiền trước , nếu là mã game thì sẽ phải lưu vào bảng gamelibrary luôn
                 };
                 await _context.WalletTransactionHistory.AddAsync(history);
 

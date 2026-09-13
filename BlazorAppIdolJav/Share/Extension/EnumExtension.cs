@@ -169,40 +169,42 @@ namespace GameManagement.Share.Extension
 			PurchaseSuccess = 2,
 		}
 
-        public enum GenerateRedeemType
-        {
-            [Display(Name = "Tạo một mã")]
-            ByHand = 0,
-            [Display(Name = "Tạo nhiều mã tự động")]
-            Auto = 1,
-        }
+		public enum GenerateRedeemType
+		{
+			[Display(Name = "Tạo một mã")]
+			ByHand = 0,
+			[Display(Name = "Tạo nhiều mã tự động")]
+			Auto = 1,
+		}
 
-        public enum RedeemCodeStatus
-        {
-            [Display(Name = "Hiệu lực")]
-            Available = 0,
-            [Display(Name = "Đã sử dụng")]
-            Used = 1,
-            [Display(Name = "Khóa")]
-            Lock = 2,
-            [Display(Name = "Hết hạn")]
-            Expired = 3,
-        }
+		public enum RedeemCodeStatus
+		{
+			[Display(Name = "Hiệu lực")]
+			Available = 0,
+			[Display(Name = "Đã sử dụng")]
+			Used = 1,
+			[Display(Name = "Khóa")]
+			Lock = 2,
+			[Display(Name = "Hết hạn")]
+			Expired = 3,
+		}
 
 		public enum RedeemCodeType
-        {
-            [Display(Name = "Game trong thư viện")]
-            Game = 0,
-            [Display(Name = "Tiền trong ví")]
-            Money = 1,
-        }
+		{
+			[Display(Name = "Game trong thư viện")]
+			Game = 0,
+			[Display(Name = "Tiền trong ví")]
+			Money = 1,
+		}
 
 		public enum WalletTransactionType
-        {
-            [Display(Name = "Mã voucher redeem")]
-            VoucherRedeem = 0,
-            [Display(Name = "Thanh toán chuyển khoản (mock)")]
-            Purchase = 1,
-        }
-    }
+		{
+			[Display(Name = "Quy đổi voucher redeem")]
+			VoucherRedeem = 0,
+			[Display(Name = "Thanh toán nạp tiền (mock)")]
+			PurchaseMoney = 1,
+			[Display(Name = "Mua game")]
+			PurchaseGame = 2,
+		}
+	}
 }

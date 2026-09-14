@@ -114,29 +114,97 @@ namespace GameManagement.Share.ClassData
 			get;
 			set;
 		}
-        [DataMember(Order = 19)]
-        public virtual string CompanyName
-        {
-            get;
-            set;
-        }
-        [DataMember(Order = 20)]
-        public virtual int CurrentPrice
-        {
-            get;
-            set;
-        }
-        [DataMember(Order = 21)]
-        public virtual int DiscountPercent
-        {
-            get;
-            set;
-        }
-        [DataMember(Order = 22)]
-        public virtual DateTime DiscountEndDate
-        {
-            get;
-            set;
-        }
-    }
+		[DataMember(Order = 19)]
+		public virtual string CompanyName
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 20)]
+		public virtual int CurrentPrice
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 21)]
+		public virtual int DiscountPercent
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 22)]
+		public virtual DateTime DiscountEndDate
+		{
+			get;
+			set;
+		}
+		//về nhà làm ph này sau
+		[DataMember(Order = 23)]
+		public virtual string? MinOS
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 24)]
+		public virtual string? MinCPU
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 25)]
+		public virtual int? MinRAM
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 26)]
+		public virtual string? MinGPU
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 27)]
+		public virtual string DirectX
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 28)]
+		public virtual string? RecommendOS
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 29)]
+		public virtual string? RecommendCPU
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 30)]
+		public virtual int? RecommendRAM
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 31)]
+		public virtual string? RecommendGPU
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 32)]
+		public virtual int? StorageRequired
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 33)]
+		public virtual string? SystemNote
+		{
+			get;
+			set;
+		}
+
+	}
 }

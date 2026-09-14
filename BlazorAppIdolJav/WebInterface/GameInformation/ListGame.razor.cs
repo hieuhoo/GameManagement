@@ -13,6 +13,7 @@ using GameManagement.SpecialComponent;
 using GameManagement.SpecialComponent.ExtensionClass;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using System.Security.Claims;
 using static GameManagement.Share.Extension.EnumExtension;
 using static GameManagement.Share.Extension.MessageEnumExtension;
 
@@ -25,18 +26,19 @@ namespace GameManagement.WebInterface.GameInformation
 		[Inject] IGameCompanyService CompanyService { get; set; }
 		[Inject] IGameTypeService GameTypeService { get; set; }
 		[Inject] IGameDiscountService GameDiscountService { get; set; }
+		[Inject] IUserGameWishlistService WishlistService { get; set; }
 
 		[Inject] NotificationService Notice { get; set; }
-        [Inject] AuthenticationStateProvider AuthProvider { get; set; }
+		[Inject] AuthenticationStateProvider AuthProvider { get; set; }
 
-        List<GameViewModel> ViewModels { get; set; }
+		List<GameViewModel> ViewModels { get; set; } = new List<GameViewModel>();
 		List<GameData> GameDatas { get; set; }
 		List<GameTypeData> GameTypeDatas { get; set; } = new();
 		List<GameCompanyData> CompanyDatas { get; set; } = new();
 		Dictionary<string, DiscountInformationData> DiscountDict = new();
-        List<GameData> FeatureGameDatas { get; set; }
+		List<GameData> FeatureGameDatas { get; set; }
 
-        Table<GameViewModel> Table;
+		Table<GameViewModel> Table;
 		GameDetail gameDetailRef;
 		int width;
 		int height;
@@ -44,18 +46,20 @@ namespace GameManagement.WebInterface.GameInformation
 
 		bool loading;
 		bool createVisible;
-        bool isAdmin = false;
+		bool isAdmin = false;
 
-        string title;
+		string title;
+		string currentUserId;
 
 		protected override async Task OnInitializedAsync()
 		{
 			try
 			{
-                var authState = await AuthProvider.GetAuthenticationStateAsync();
-                var user = authState.User;
-                isAdmin = user.IsInRole(UserRole.Admin.ToString());
-                width = ConfigTemplate.Width;
+				var authState = await AuthProvider.GetAuthenticationStateAsync();
+				var user = authState.User;
+				isAdmin = user.IsInRole(UserRole.Admin.ToString());
+				currentUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+				width = ConfigTemplate.Width;
 				height = ConfigTemplate.Height;
 				await GetGameTypeDataAsync();
 				await GetGameCompanyDataAsync();
@@ -97,7 +101,7 @@ namespace GameManagement.WebInterface.GameInformation
 					{
 						game.CurrentSalePercent = currentPercent.Percent;
 					}
-					game.CurrentPrice = $"{(game.Price * (100 - game.CurrentSalePercent)/100):N0} {game.Unit}";
+					game.CurrentPrice = $"{(game.Price * (100 - game.CurrentSalePercent) / 100):N0} {game.Unit}";
 				}
 			}
 			catch (Exception)
@@ -237,7 +241,7 @@ namespace GameManagement.WebInterface.GameInformation
 			{
 				createVisible = true;
 				await gameDetailRef.LoadEditModelAsync(model);
-            }
+			}
 			catch
 			{
 
@@ -257,86 +261,55 @@ namespace GameManagement.WebInterface.GameInformation
 			}
 		}
 
-        private List<GameViewModel> TestUIGames = new()
-    {
-        new GameViewModel
-        {
-            Id = "1",
-            Name = "Bánh mì Bách Khoa",
-            Price = 50000,
-            Unit = "VNĐ",
-            CurrentSalePercent = 0,
-            CurrentPrice = "50,000 VNĐ",
-            IsFeatured = false,
-            Status = "Hoạt động",
-            SoldStatus = "Đang bán",
-            ReleaseStatus = "Đã ra mắt",
-            GameCompanyName = "Moba"
-        },
+		async Task AddOrRemoveGameWishlistAsync(string gameId)
+		{
+			try
+			{
+				// còn luồng check trong library làm sau
+				var existData = await WishlistService.GetAllWithFilterAsync(new WishlistSearch
+				{
+					UserId = currentUserId,
+					GameId = gameId
+				});
+				if (existData.Count == 0)
+				{
+					var newData = new UserGameWishlistData
+					{
+						Id = ObjectExtentions.GenerateGuid(),
+						UserId = currentUserId,
+						GameId = gameId,
+						CreateDate = DateTime.Now,
+					};
+					var isSuccess = await WishlistService.AddToWishlistAsync(newData);
+					if (isSuccess)
+					{
+						Notice.NotiSuccess("Thêm vào danh sách ưa thích thành công");
+					}
+					else
+					{
+						Notice.NotiError("Thêm thất bại , có lỗi xảy ra");
+					}
+				}
+				else
+				{
+					var deleteData = existData.FirstOrDefault() ?? new UserGameWishlistData();
+					var isComplete = await WishlistService.RemoveFromWishlistAsync(deleteData);
+					if (isComplete)
+					{
+						Notice.NotiSuccess("Xóa khỏi danh sách ưa thích thành công");
+					}
+					else
+					{
+						Notice.NotiError("vẫn chưa xóa đc khỏi danh sách");
+					}
+				}
+			}
+			catch
+			{
 
-        new GameViewModel
-        {
-            Id = "2",
-            Name = "007 First Light",
-            Price = 900000,
-            Unit = "VNĐ",
-            CurrentSalePercent = 15,
-            CurrentPrice = "765,000 VNĐ",
-            IsFeatured = true,
-            OrderFeatured = 1,
-            Status = "Hoạt động",
-            SoldStatus = "Đang bán",
-            ReleaseStatus = "Đã ra mắt",
-            GameCompanyName = "Tencent Game"
-        },
+			}
+		}
 
-        new GameViewModel
-        {
-            Id = "3",
-            Name = "God of War: Ragnarok",
-            Price = 700000,
-            Unit = "VNĐ",
-            CurrentSalePercent = 30,
-            CurrentPrice = "490,000 VNĐ",
-            IsFeatured = false,
-            Status = "Hoạt động",
-            SoldStatus = "Đang bán",
-            ReleaseStatus = "Đã ra mắt",
-            GameCompanyName = "Santa Monica"
-        },
 
-        new GameViewModel
-        {
-            Id = "4",
-            Name = "Mortal Kombat 1",
-            Price = 500000,
-            Unit = "VNĐ",
-            CurrentSalePercent = 0,
-            CurrentPrice = "500,000 VNĐ",
-            IsFeatured = true,
-            OrderFeatured = 2,
-            Status = "Hoạt động",
-            SoldStatus = "Đang bán",
-            ReleaseStatus = "Đã ra mắt",
-            GameCompanyName = "Netherrealm"
-        },
-
-        new GameViewModel
-        {
-            Id = "5",
-            Name = "Uncharted 4: A Thief's End",
-            Price = 1050000,
-            Unit = "VNĐ",
-            CurrentSalePercent = 40,
-            CurrentPrice = "630,000 VNĐ",
-            IsFeatured = true,
-            OrderFeatured = 3,
-            Status = "Hoạt động",
-            SoldStatus = "Đang bán",
-            ReleaseStatus = "Đã ra mắt",
-            GameCompanyName = "Naughty Dog"
-        }
-    };
-
-    }
+	}
 }

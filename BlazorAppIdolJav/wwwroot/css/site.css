@@ -466,10 +466,17 @@
     height: 100%;
 }
 
+.game-card-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
 .game-image {
     width: 100%;
     height: 220px;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
     .game-image img {
@@ -482,6 +489,7 @@
     margin-top: 12px;
     font-size: 18px;
     font-weight: 600;
+    min-height: 54px;
 }
 
 .game-review {
@@ -495,7 +503,7 @@
 }
 
 .game-price {
-    margin-top: 12px;
+    margin-top: auto;
 }
 
 .discount {
@@ -513,10 +521,10 @@
     font-size: 13px;
 }
 
-.current-price {
+.current-price-list {
     margin-top: 4px;
     color: #d4380d;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 700;
 }
 
@@ -536,7 +544,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 15px;
     color: #faad14;
 }
 
@@ -558,4 +565,3 @@
     font-size: 12px;
     color: #888;
 }
-

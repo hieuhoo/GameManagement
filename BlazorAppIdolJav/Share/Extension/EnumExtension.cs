@@ -206,5 +206,33 @@ namespace GameManagement.Share.Extension
 			[Display(Name = "Mua game")]
 			PurchaseGame = 2,
 		}
+
+		public enum WindowConfig
+		{
+			[Display(Name = "Window 10")]
+			Win10 = 0,
+			[Display(Name = "Window 11")]
+			Win11 = 1,
+			[Display(Name = "Window 12")]
+			Win12 = 2,
+		}
+
+		public enum CPUConfig
+		{
+			[Display(Name = "Intel core i5")]
+			IntelI5 = 0,
+			[Display(Name = "Intel core i7")]
+			IntelI7 = 1,
+			[Display(Name = "Intel core i9")]
+			IntelI9 = 2,
+			[Display(Name = "Intel core ultra")]
+			IntelUltra = 3,
+			[Display(Name = "AMD ryzen 5")]
+			Amd5 = 4,
+			[Display(Name = "AMD ryzen 7")]
+			Amd7 = 5,
+			[Display(Name = "AMD ryzen 9")]
+			Amd9 = 6,
+		}
 	}
 }

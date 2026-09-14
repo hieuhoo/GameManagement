@@ -95,176 +95,311 @@
                         </AntDesign.Row>
                     </AntDesign.Col>
                 </div>
-                <div class="wrap_content">
-                    <h3>Thông tin chi tiết</h3>
-                    <AntDesign.Row Gutter="16">
-                        <AntDesign.Col Span="12">
-                            <LabelFor For="() => EditModel.Name"></LabelFor>
-                            <Input Type="@InputType.Text" @bind-Value="@EditModel.Name" Disabled="@EditModel.ReadOnly">
-                            <ValidationMessage For="() => EditModel.Name"></ValidationMessage>
-                        </AntDesign.Col>
-                        <AntDesign.Col Span="12">
-                            <LabelFor For="() => EditModel.Country"></LabelFor>
-                            <Select TItemValue="string" TItem="SelectItem" EnableSearch
-                                    DataSource="NationalOptions"
-                                    LabelName="@nameof(SelectItem.Text)"
-                                    ValueName="@nameof(SelectItem.Value)"
-                                    AllowClear
-                                    @bind-Value="EditModel.Country" Disabled="EditModel.ReadOnly">
-                            </Select>
-                            <ValidationMessage For="() => EditModel.Country"></ValidationMessage>
-                        </AntDesign.Col>
-                        <AntDesign.Col Span="12">
-                            <LabelFor For="() => EditModel.GameCompanyId"></LabelFor>
-                            <Select TItemValue="string" TItem="GameCompanyData" EnableSearch
-                                    DataSource="CompanyDatas"
-                                    LabelName="@nameof(GameCompanyData.Name)"
-                                    ValueName="@nameof(GameCompanyData.Id)"
-                                    AllowClear
-                                    @bind-Value="EditModel.GameCompanyId" Disabled="EditModel.ReadOnly">
-                            </Select>
-                            <ValidationMessage For="() => EditModel.GameCompanyId"></ValidationMessage>
-                        </AntDesign.Col>
-                        <AntDesign.Col Span="12">
-                            <LabelFor FieldIdentifier="context.Field(nameof(EditModel.GameTypeId))"></LabelFor>
-                            <Select TItemValue="string" TItem="GameTypeData" EnableSearch
-                                    DataSource="GameTypeDatas"
-                                    Mode="SelectMode.Multiple"
-                                    AllowClear
-                                    LabelName="@nameof(GameTypeData.Name)"
-                                    ValueName="@nameof(GameTypeData.Id)"
-                                    @bind-Values="EditModel.GameTypeId" Disabled="EditModel.ReadOnly">
-                            </Select>
-                            <ValidationMessage For="() => EditModel.GameTypeId"></ValidationMessage>
-
-                        </AntDesign.Col>
-                        <AntDesign.Col Span="12">
-                            <LabelFor FieldIdentifier="context.Field(nameof(EditModel.ReleaseDate))"></LabelFor>
-                            <br>
-                            <DatePicker @bind-Value="@EditModel.ReleaseDate"
-                                        Disabled="@EditModel.ReadOnly"
-                                        Style="display:block"
-                                        ChangeOnClose>
-                            </DatePicker>
-                            <ValidationMessage For="() => EditModel.ReleaseDate"></ValidationMessage>
-                        </AntDesign.Col>
-                        <AntDesign.Col Span="12">
-                            <LabelFor For="() => EditModel.Status"></LabelFor>
-                            <Select TItemValue="string" TItem="SelectItem" EnableSearch
-                                    DataSource="GameStatusOptions"
-                                    LabelName="@nameof(SelectItem.Text)"
-                                    ValueName="@nameof(SelectItem.Value)"
-                                    OnSelectedItemChanged="@(item => CheckChangeStatus(item.Value))"
-                                    @bind-Value="EditModel.Status" Disabled="EditModel.ReadOnly">
-                            </Select>
-                            <ValidationMessage For="() => EditModel.Status"></ValidationMessage>
-                        </AntDesign.Col>
-                        <AntDesign.Col Span="12">
-                            <LabelFor For="() => EditModel.SoldStatus"></LabelFor>
-                            <Select TItemValue="string" TItem="SelectItem" EnableSearch
-                                    DataSource="GameSoldStatusOptions"
-                                    LabelName="@nameof(SelectItem.Text)"
-                                    ValueName="@nameof(SelectItem.Value)"
-                                    @bind-Value="EditModel.SoldStatus" Disabled="EditModel.ReadOnly">
-                            </Select>
-                            <ValidationMessage For="() => EditModel.SoldStatus"></ValidationMessage>
-                        </AntDesign.Col>
-                        <AntDesign.Col Span="12">
-                            <LabelFor For="() => EditModel.ReleaseStatus"></LabelFor>
-                            <Select TItemValue="string" TItem="SelectItem" EnableSearch
-                                    DataSource="GameReleaseStatusOptions"
-                                    LabelName="@nameof(SelectItem.Text)"
-                                    ValueName="@nameof(SelectItem.Value)"
-                                    @bind-Value="EditModel.ReleaseStatus" Disabled="EditModel.ReadOnly">
-                            </Select>
-                            <ValidationMessage For="() => EditModel.ReleaseStatus"></ValidationMessage>
-                        </AntDesign.Col>
-                        <AntDesign.Col Span="24">
-                            <Row Gutter="8" Align="RowAlign.Middle">
-                                <AntDesign.Col Span="16">
-                                    <LabelFor FieldIdentifier="context.Field(nameof(EditModel.Price))"></LabelFor>
-                                    <Input Type="@InputType.Number" @bind-Value="@EditModel.Price" Disabled="@EditModel.ReadOnly" Placeholder="">
-                                    <ValidationMessage For="() => EditModel.Price"></ValidationMessage>
+                <Tabs DefaultActiveKey="info">
+                    <TabPane Key="info" Tab="Thông tin chung">
+                        <div class="wrap_content">
+                            <h3>Thông tin chi tiết</h3>
+                            <AntDesign.Row Gutter="16">
+                                <AntDesign.Col Span="12">
+                                    <LabelFor For="() => EditModel.Name"></LabelFor>
+                                    <Input Type="@InputType.Text" @bind-Value="@EditModel.Name" Disabled="@EditModel.ReadOnly">
+                                    <ValidationMessage For="() => EditModel.Name"></ValidationMessage>
                                 </AntDesign.Col>
-                                <AntDesign.Col Span="8">
-                                    <LabelFor FieldIdentifier="context.Field(nameof(EditModel.Unit))"></LabelFor>
-                                    <SimpleSelect @bind-Value=@EditModel.Unit Disabled="EditModel.ReadOnly">
-                                        <SelectOptions>
-                                            @foreach (var item in EditModel.DataSource[nameof(EditModel.Unit)])
-                                            {
-                                                <SimpleSelectOption Value="@item.Key.ToString()" Label="@item.Value?.GetDisplay()" />
-                                            }
-                                        </SelectOptions>
-                                    </SimpleSelect>
+                                <AntDesign.Col Span="12">
+                                    <LabelFor For="() => EditModel.Country"></LabelFor>
+                                    <Select TItemValue="string" TItem="SelectItem" EnableSearch
+                                            DataSource="NationalOptions"
+                                            LabelName="@nameof(SelectItem.Text)"
+                                            ValueName="@nameof(SelectItem.Value)"
+                                            AllowClear
+                                            @bind-Value="EditModel.Country" Disabled="EditModel.ReadOnly">
+                                    </Select>
+                                    <ValidationMessage For="() => EditModel.Country"></ValidationMessage>
                                 </AntDesign.Col>
-                            </Row>
-                            <ValidationMessage For="() => EditModel.Unit"></ValidationMessage>
-                        </AntDesign.Col>
-                        <AntDesign.Col Span="12">
-                            <LabelFor For="() => EditModel.SystemSupport"></LabelFor>
-                            <Select TItemValue="string" TItem="SelectItem" EnableSearch
-                                    DataSource="PlatformOptions"
-                                    LabelName="@nameof(SelectItem.Text)"
-                                    ValueName="@nameof(SelectItem.Value)"
-                                    @bind-Value="EditModel.SystemSupport" Disabled="EditModel.ReadOnly">
-                            </Select>
-                            <ValidationMessage For="() => EditModel.SystemSupport"></ValidationMessage>
-                        </AntDesign.Col>
-                        <br />
-                        @if (EditModel.Status == GameActiveStatus.Active.ToString())
-                        {
-                            <AntDesign.Col Span="24">
-                                <AntDesign.Row Gutter="8">
-                                    <AntDesign.Col Span="12">
-                                        <Checkbox Checked="@EditModel.IsFeatured"
-                                                  CheckedChanged="OnChangeFeatured"
-                                                  Disabled="EditModel.ReadOnly || DisableCheckboxFeature()">
-                                            Game nổi bật
-                                        </Checkbox>
-                                        <Text Style="color:red;">
-                                            @if (TotalCurrentFeatureGame < 3)
-                                            {
-                                                <span>
-                                                    Đã có @TotalCurrentFeatureGame / 3 game nổi bật
-                                                </span>
-                                            }
-                                            else
-                                            {
-                                                <span>
-                                                    Đã đạt tối đa số game nổi bật
-                                                </span>
-                                            }
-                                        </Text>
+                                <AntDesign.Col Span="12">
+                                    <LabelFor For="() => EditModel.GameCompanyId"></LabelFor>
+                                    <Select TItemValue="string" TItem="GameCompanyData" EnableSearch
+                                            DataSource="CompanyDatas"
+                                            LabelName="@nameof(GameCompanyData.Name)"
+                                            ValueName="@nameof(GameCompanyData.Id)"
+                                            AllowClear
+                                            @bind-Value="EditModel.GameCompanyId" Disabled="EditModel.ReadOnly">
+                                    </Select>
+                                    <ValidationMessage For="() => EditModel.GameCompanyId"></ValidationMessage>
+                                </AntDesign.Col>
+                                <AntDesign.Col Span="12">
+                                    <LabelFor FieldIdentifier="context.Field(nameof(EditModel.GameTypeId))"></LabelFor>
+                                    <Select TItemValue="string" TItem="GameTypeData" EnableSearch
+                                            DataSource="GameTypeDatas"
+                                            Mode="SelectMode.Multiple"
+                                            AllowClear
+                                            LabelName="@nameof(GameTypeData.Name)"
+                                            ValueName="@nameof(GameTypeData.Id)"
+                                            @bind-Values="EditModel.GameTypeId" Disabled="EditModel.ReadOnly">
+                                    </Select>
+                                    <ValidationMessage For="() => EditModel.GameTypeId"></ValidationMessage>
+
+                                </AntDesign.Col>
+                                <AntDesign.Col Span="12">
+                                    <LabelFor FieldIdentifier="context.Field(nameof(EditModel.ReleaseDate))"></LabelFor>
+                                    <br>
+                                    <DatePicker @bind-Value="@EditModel.ReleaseDate"
+                                                Disabled="@EditModel.ReadOnly"
+                                                Style="display:block"
+                                                ChangeOnClose>
+                                    </DatePicker>
+                                    <ValidationMessage For="() => EditModel.ReleaseDate"></ValidationMessage>
+                                </AntDesign.Col>
+                                <AntDesign.Col Span="12">
+                                    <LabelFor For="() => EditModel.Status"></LabelFor>
+                                    <Select TItemValue="string" TItem="SelectItem" EnableSearch
+                                            DataSource="GameStatusOptions"
+                                            LabelName="@nameof(SelectItem.Text)"
+                                            ValueName="@nameof(SelectItem.Value)"
+                                            OnSelectedItemChanged="@(item => CheckChangeStatus(item.Value))"
+                                            @bind-Value="EditModel.Status" Disabled="EditModel.ReadOnly">
+                                    </Select>
+                                    <ValidationMessage For="() => EditModel.Status"></ValidationMessage>
+                                </AntDesign.Col>
+                                <AntDesign.Col Span="12">
+                                    <LabelFor For="() => EditModel.SoldStatus"></LabelFor>
+                                    <Select TItemValue="string" TItem="SelectItem" EnableSearch
+                                            DataSource="GameSoldStatusOptions"
+                                            LabelName="@nameof(SelectItem.Text)"
+                                            ValueName="@nameof(SelectItem.Value)"
+                                            @bind-Value="EditModel.SoldStatus" Disabled="EditModel.ReadOnly">
+                                    </Select>
+                                    <ValidationMessage For="() => EditModel.SoldStatus"></ValidationMessage>
+                                </AntDesign.Col>
+                                <AntDesign.Col Span="12">
+                                    <LabelFor For="() => EditModel.ReleaseStatus"></LabelFor>
+                                    <Select TItemValue="string" TItem="SelectItem" EnableSearch
+                                            DataSource="GameReleaseStatusOptions"
+                                            LabelName="@nameof(SelectItem.Text)"
+                                            ValueName="@nameof(SelectItem.Value)"
+                                            @bind-Value="EditModel.ReleaseStatus" Disabled="EditModel.ReadOnly">
+                                    </Select>
+                                    <ValidationMessage For="() => EditModel.ReleaseStatus"></ValidationMessage>
+                                </AntDesign.Col>
+                                <AntDesign.Col Span="24">
+                                    <Row Gutter="8" Align="RowAlign.Middle">
+                                        <AntDesign.Col Span="16">
+                                            <LabelFor FieldIdentifier="context.Field(nameof(EditModel.Price))"></LabelFor>
+                                            <Input Type="@InputType.Number" @bind-Value="@EditModel.Price" Disabled="@EditModel.ReadOnly" Placeholder="">
+                                            <ValidationMessage For="() => EditModel.Price"></ValidationMessage>
+                                        </AntDesign.Col>
+                                        <AntDesign.Col Span="8">
+                                            <LabelFor FieldIdentifier="context.Field(nameof(EditModel.Unit))"></LabelFor>
+                                            <SimpleSelect @bind-Value=@EditModel.Unit Disabled="EditModel.ReadOnly">
+                                                <SelectOptions>
+                                                    @foreach (var item in EditModel.DataSource[nameof(EditModel.Unit)])
+                                                    {
+                                                        <SimpleSelectOption Value="@item.Key.ToString()" Label="@item.Value?.GetDisplay()" />
+                                                    }
+                                                </SelectOptions>
+                                            </SimpleSelect>
+                                        </AntDesign.Col>
+                                    </Row>
+                                    <ValidationMessage For="() => EditModel.Unit"></ValidationMessage>
+                                </AntDesign.Col>
+                                <AntDesign.Col Span="12">
+                                    <LabelFor For="() => EditModel.SystemSupport"></LabelFor>
+                                    <Select TItemValue="string" TItem="SelectItem" EnableSearch
+                                            DataSource="PlatformOptions"
+                                            LabelName="@nameof(SelectItem.Text)"
+                                            ValueName="@nameof(SelectItem.Value)"
+                                            @bind-Value="EditModel.SystemSupport" Disabled="EditModel.ReadOnly">
+                                    </Select>
+                                    <ValidationMessage For="() => EditModel.SystemSupport"></ValidationMessage>
+                                </AntDesign.Col>
+                                <br />
+                                @if (EditModel.Status == GameActiveStatus.Active.ToString())
+                                {
+                                    <AntDesign.Col Span="24">
+                                        <AntDesign.Row Gutter="8">
+                                            <AntDesign.Col Span="12">
+                                                <Checkbox Checked="@EditModel.IsFeatured"
+                                                          CheckedChanged="OnChangeFeatured"
+                                                          Disabled="EditModel.ReadOnly || DisableCheckboxFeature()">
+                                                    Game nổi bật
+                                                </Checkbox>
+                                                <Text Style="color:red;">
+                                                    @if (TotalCurrentFeatureGame < 3)
+                                                    {
+                                                        <span>
+                                                            Đã có @TotalCurrentFeatureGame / 3 game nổi bật
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>
+                                                            Đã đạt tối đa số game nổi bật
+                                                        </span>
+                                                    }
+                                                </Text>
+                                            </AntDesign.Col>
+
+                                            <AntDesign.Col Span="12">
+                                                @if (EditModel.IsFeatured)
+                                                {
+                                                    <div class="featured-order">
+                                                        <span>Thứ tự nổi bật</span>
+
+                                                        <RadioGroup TValue="int?"
+                                                                    @bind-Value="EditModel.OrderFeatured">
+
+                                                            <Radio Disabled="@IsOrderDisabled(1)" Value="@((int?)1)">1</Radio>
+                                                            <Radio Disabled="@IsOrderDisabled(2)" Value="@((int?)2)">2</Radio>
+                                                            <Radio Disabled="@IsOrderDisabled(3)" Value="@((int?)3)">3</Radio>
+
+                                                        </RadioGroup>
+                                                    </div>
+                                                }
+                                                <ValidationMessage For="() => EditModel.OrderFeatured"></ValidationMessage>
+                                            </AntDesign.Col>
+                                        </AntDesign.Row>
                                     </AntDesign.Col>
+                                }
+                                <AntDesign.Col Span="24">
+                                    <LabelFor FieldIdentifier="context.Field(EditModel.Property.NameProperty(c => c.Description))"></LabelFor>
+                                    <TextArea @bind-Value="EditModel.Description" MinRows="4" Disabled="EditModel.ReadOnly"></TextArea>
+                                    <ValidationMessage For="() => EditModel.Description"></ValidationMessage>
+                                </AntDesign.Col>
+                            </AntDesign.Row>
+                        </div>
+                    </TabPane>
+                    <TabPane Key="configure" Tab="Cấu hình chi tiết">
+                        <div class="wrap_content">
+                            <h3>Tối thiểu</h3>
+                            <AntDesign.Row Gutter="16">
 
-                                    <AntDesign.Col Span="12">
-                                        @if (EditModel.IsFeatured)
-                                        {
-                                            <div class="featured-order">
-                                                <span>Thứ tự nổi bật</span>
+                                <AntDesign.Col Span="24">
+                                    <LabelFor For="() => EditModel.MinOS"></LabelFor>
+                                    <Select TItemValue="string" TItem="SelectItem" EnableSearch
+                                            DataSource="WindowOptions"
+                                            LabelName="@nameof(SelectItem.Text)"
+                                            ValueName="@nameof(SelectItem.Value)"
+                                            AllowClear
+                                            @bind-Value="EditModel.MinOS" Disabled="EditModel.ReadOnly">
+                                    </Select>
+                                    <ValidationMessage For="() => EditModel.MinOS"></ValidationMessage>
+                                </AntDesign.Col>
 
-                                                <RadioGroup TValue="int?"
-                                                            @bind-Value="EditModel.OrderFeatured">
+                       
+                                <AntDesign.Col Span="12">
+                                    <LabelFor For="() => EditModel.MinCPU"></LabelFor>
+                                    <Select TItemValue="string" TItem="SelectItem" EnableSearch
+                                            DataSource="CpuOptions"
+                                            LabelName="@nameof(SelectItem.Text)"
+                                            ValueName="@nameof(SelectItem.Value)"
+                                            AllowClear
+                                            @bind-Value="EditModel.MinCPU" Disabled="EditModel.ReadOnly">
+                                    </Select>
+                                    <ValidationMessage For="() => EditModel.MinCPU"></ValidationMessage>
+                                </AntDesign.Col>
 
-                                                    <Radio Disabled="@IsOrderDisabled(1)" Value="@((int?)1)">1</Radio>
-                                                    <Radio Disabled="@IsOrderDisabled(2)" Value="@((int?)2)">2</Radio>
-                                                    <Radio Disabled="@IsOrderDisabled(3)" Value="@((int?)3)">3</Radio>
+                                <AntDesign.Col Span="12">
+                                    <LabelFor For="() => EditModel.MinGPU"></LabelFor>
+                                    <Input Type="@InputType.Text" @bind-Value="@EditModel.MinGPU" Disabled="@EditModel.ReadOnly">
+                                    <ValidationMessage For="() => EditModel.MinGPU"></ValidationMessage>
+                                </AntDesign.Col>
 
-                                                </RadioGroup>
-                                            </div>
-                                        }
-                                        <ValidationMessage For="() => EditModel.OrderFeatured"></ValidationMessage>
-                                    </AntDesign.Col>
-                                </AntDesign.Row>
-                            </AntDesign.Col>
-                        }
-                        <AntDesign.Col Span="24">
-                            <LabelFor FieldIdentifier="context.Field(EditModel.Property.NameProperty(c => c.Description))"></LabelFor>
-                            <TextArea @bind-Value="EditModel.Description" MinRows="4" Disabled="EditModel.ReadOnly"></TextArea>
-                            <ValidationMessage For="() => EditModel.Description"></ValidationMessage>
-                        </AntDesign.Col>
-                    </AntDesign.Row>
-                </div>
+                                <AntDesign.Col Span="24">
+                                    <LabelFor FieldIdentifier="context.Field(EditModel.Property.NameProperty(c => c.MinRAM))">
+                                    </LabelFor>
+                                    <RadioGroup TValue="int?"
+                                                @bind-Value="EditModel.MinRAM"
+                                                Disabled="@EditModel.ReadOnly">
+
+                                        <Radio Value="@((int?)8)">8 </Radio>
+                                        <Radio Value="@((int?)16)">16 </Radio>
+                                        <Radio Value="@((int?)16)">32 </Radio>
+                                    </RadioGroup>
+
+                                    <ValidationMessage For="() => EditModel.MinRAM">
+                                    </ValidationMessage>
+                                </AntDesign.Col>
+                            </AntDesign.Row>
+                        </div>
+
+                        <div class="wrap_content">
+                            <h3>Đề xuất</h3>
+                            <AntDesign.Row Gutter="16">
+
+                                <AntDesign.Col Span="24">
+                                    <LabelFor For="() => EditModel.RecommendOS"></LabelFor>
+                                    <Select TItemValue="string" TItem="SelectItem" EnableSearch
+                                            DataSource="WindowOptions"
+                                            LabelName="@nameof(SelectItem.Text)"
+                                            ValueName="@nameof(SelectItem.Value)"
+                                            AllowClear
+                                            @bind-Value="EditModel.RecommendOS" Disabled="EditModel.ReadOnly">
+                                    </Select>
+                                    <ValidationMessage For="() => EditModel.RecommendOS"></ValidationMessage>
+                                </AntDesign.Col>
+
+                                <AntDesign.Col Span="12">
+                                    <LabelFor For="() => EditModel.RecommendCPU"></LabelFor>
+                                    <Select TItemValue="string" TItem="SelectItem" EnableSearch
+                                            DataSource="CpuOptions"
+                                            LabelName="@nameof(SelectItem.Text)"
+                                            ValueName="@nameof(SelectItem.Value)"
+                                            AllowClear
+                                            @bind-Value="EditModel.RecommendCPU" Disabled="EditModel.ReadOnly">
+                                    </Select>
+                                    <ValidationMessage For="() => EditModel.RecommendCPU"></ValidationMessage>
+                                </AntDesign.Col>
+
+                                <AntDesign.Col Span="12">
+                                    <LabelFor For="() => EditModel.RecommendGPU"></LabelFor>
+                                    <Input Type="@InputType.Text" @bind-Value="@EditModel.RecommendGPU" Disabled="@EditModel.ReadOnly">
+                                    <ValidationMessage For="() => EditModel.RecommendGPU"></ValidationMessage>
+                                </AntDesign.Col>
+
+                                <AntDesign.Col Span="24">
+                                    <LabelFor FieldIdentifier="context.Field(EditModel.Property.NameProperty(c => c.RecommendRAM))">
+                                    </LabelFor>
+                                    <RadioGroup TValue="int?"
+                                                @bind-Value="EditModel.RecommendRAM"
+                                                Disabled="@EditModel.ReadOnly">
+
+                                        <Radio Value="@((int?)8)">8 </Radio>
+                                        <Radio Value="@((int?)16)">16 </Radio>
+                                        <Radio Value="@((int?)32)">32 </Radio>
+                                    </RadioGroup>
+
+                                    <ValidationMessage For="() => EditModel.RecommendRAM">
+                                    </ValidationMessage>
+                                </AntDesign.Col>
+                            </AntDesign.Row>
+                        </div>
+
+                        <div class="wrap_content">
+                            <h3>Chung</h3>
+                            <AntDesign.Row Gutter="16">
+                                <AntDesign.Col Span="24">
+                                    <AntDesign.Row Gutter="8">
+                                        <AntDesign.Col Span="12">
+                                            <LabelFor For="() => EditModel.DirectX"></LabelFor>
+                                            <Input Type="@InputType.Text" @bind-Value="@EditModel.DirectX" Disabled="@EditModel.ReadOnly">
+                                            <ValidationMessage For="() => EditModel.DirectX"></ValidationMessage>
+                                        </AntDesign.Col>
+                                        <AntDesign.Col Span="12">
+                                            <LabelFor FieldIdentifier="context.Field(nameof(EditModel.StorageRequired))"></LabelFor>
+                                            <Input Type="@InputType.Number" @bind-Value="@EditModel.StorageRequired" Disabled="@EditModel.ReadOnly" Placeholder="">
+                                            <ValidationMessage For="() => EditModel.StorageRequired"></ValidationMessage>
+                                        </AntDesign.Col>
+                                    </AntDesign.Row>
+                                </AntDesign.Col>
+                                <AntDesign.Col Span="24">
+                                    <LabelFor FieldIdentifier="context.Field(EditModel.Property.NameProperty(c => c.SystemNote))"></LabelFor>
+                                    <TextArea @bind-Value="EditModel.SystemNote" MinRows="4" Disabled="EditModel.ReadOnly"></TextArea>
+                                    <ValidationMessage For="() => EditModel.SystemNote"></ValidationMessage>
+                                </AntDesign.Col>
+                            </AntDesign.Row>
+                        </div>
+                    </TabPane>
+                </Tabs>
             </Row>
         </EditForm>
     </AntDesign.Col>

@@ -133,8 +133,6 @@ namespace GameManagement.WebInterface.Setup
 					await CreateAsync();
 				}
 				await LoadingDiscountDataAsync();
-				EditModel = new GameDiscountEditModel();
-				EditModel.ReadOnly = true;
 			}
 			catch (Exception ex)
 			{
@@ -172,6 +170,8 @@ namespace GameManagement.WebInterface.Setup
 				if (isSucess)
 				{
 					NoticeService.NotiSuccess(OperationEnum.AddSuccessfully.GetDescription());
+					EditModel = new GameDiscountEditModel();
+					EditModel.ReadOnly = true;
 				}
 				else
 				{
@@ -203,6 +203,8 @@ namespace GameManagement.WebInterface.Setup
 				if (isSucess)
 				{
 					NoticeService.NotiSuccess(OperationEnum.UpdateSuccessfully.GetDescription());
+					EditModel = new GameDiscountEditModel();
+					EditModel.ReadOnly = true;
 				}
 				else
 				{

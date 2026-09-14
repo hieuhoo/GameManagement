@@ -2,6 +2,7 @@
 using AutoMapper;
 using GameManagement.Auth;
 using GameManagement.Auth.Models;
+using GameManagement.Components.State;
 using GameManagement.CoreConfig.Extensions;
 using GameManagement.Service.IService;
 using GameManagement.Services;
@@ -30,7 +31,9 @@ namespace GameManagement.Components.Layout
         [Inject] IUserOtpHistoryService OtpService { get; set; }
         [Inject] IUserPasswordHistoryService PasswordService { get; set; }
         [Inject] IUserLockHistoryService HistoryLockService { get; set; }
+        [Inject] IUserGameWishlistService WishlistService { get; set; }
 
+        [Inject] private WishlistState WishlistState { get; set; } = default!;
         [Inject] NavigationManager NavigationManager { get; set; } = default!;
         [Inject] NotificationService NoticeService { get; set; }
         [Inject] AuthenticationStateProvider AuthProvider { get; set; }
@@ -77,15 +80,36 @@ namespace GameManagement.Components.Layout
                 EditModel = new UserEditModel();
                 var authState = await AuthProvider.GetAuthenticationStateAsync();
                 var user = authState.User;
-                //userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 isLoggedIn = user.Identity?.IsAuthenticated ?? false;
                 currentUser = user.Identity?.Name;
                 isAdmin = user.IsInRole(UserRole.Admin.ToString());
+                WishlistState.OnChange += OnWishlistChanged;
+
+                if (!isAdmin)
+                {
+                    var listData = await WishlistService.GetAllWithFilterAsync(new WishlistSearch
+                    {
+                        UserId = userId
+                    });
+                    int count = listData.Count();
+                    WishlistState.SetCount(count);
+                }
             }
             catch (Exception ex)
             {
                 throw ex;
             }
+        }
+
+        void OnWishlistChanged()
+        {
+            InvokeAsync(StateHasChanged);
+        }
+
+        public void Dispose()
+        {
+            WishlistState.OnChange -= OnWishlistChanged;
         }
 
         public async Task ShowLoginModalAsync(string? redirectUrl = null)

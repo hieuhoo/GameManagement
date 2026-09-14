@@ -10,6 +10,7 @@ namespace GameManagement.Service.IService
 		Task<List<UserGameWishlistData>> GetAllWithFilterAsync(WishlistSearch search);
 		Task<bool> AddToWishlistAsync(UserGameWishlistData data);
 		Task<bool> RemoveFromWishlistAsync(UserGameWishlistData data);
+		Task<bool> CheckExistGameInWishlistAsync(string gameId, string userId);
 	}
 
 	[DataContract]

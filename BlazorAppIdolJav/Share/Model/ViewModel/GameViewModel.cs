@@ -22,6 +22,8 @@ namespace GameManagement.Share.Model.ViewModel
 
 		public int CurrentSalePercent { get; set; }
 		public string CurrentPrice { get; set; }
+		public bool RecentlyInWishlist { get; set; }
+		public bool IsPurchased { get; set; } // đang test khi nào xong thì bỏ true
 
-	}
+    }
 }

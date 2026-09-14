@@ -53,5 +53,17 @@ namespace GameManagement.Service
 				throw ex;
 			}
 		}
-	}
+
+        public async Task<bool> CheckExistGameInWishlistAsync(string gameId, string userId)
+        {
+			try
+			{
+				return await _repo.CheckExistGameInWishlistAsync(gameId, userId);
+            }
+			catch
+			{
+				return false;
+			}
+        }
+    }
 }

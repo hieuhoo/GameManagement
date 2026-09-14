@@ -9,5 +9,7 @@ namespace GameManagement.Repository.IRepository
 		Task<List<UserGameWishlist>> GetAllWithFilterAsync(IQueryable<UserGameWishlist> query, WishlistSearch search);
 		Task<bool> AddToWishlistAsync(UserGameWishlist data);
 		Task<bool> RemoveFromWishlistAsync(UserGameWishlist data);
-	}
+		Task<bool> CheckExistGameInWishlistAsync(string gameId, string userId);
+
+    }
 }

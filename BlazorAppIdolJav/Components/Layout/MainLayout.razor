@@ -33,6 +33,19 @@
                                     <MenuItem Key="wishList" RouterLink="/user/wishlist">
                                         <Icon Type="star" />
                                         Game ưa thích
+
+                                        @if (WishlistState.Count > 0)
+                                        {
+                                            <span class="wishlist-count">
+                                                @WishlistState.Count
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="wishlist-count">
+                                                0
+                                            </span>
+                                        }
                                     </MenuItem>
                                     <MenuItem Key="library" RouterLink="/user/library">
                                         <Icon Type="shop" />

@@ -238,17 +238,39 @@
                                     <!-- 3 nút -->
                                     <div class="game-actions">
 
-                                        <Button Color="Color.Green6">
-                                            Đánh giá
+                                        <Button Color="Color.Green6" OnClick="() => ViewDetailGameAsync(game.Id)">
+                                            Xem chi tiết
                                         </Button>
-
-                                        <Button Color="Color.Magenta2" OnClick="() => AddOrRemoveGameWishlistAsync(game.Id)">
-                                            ♡
-                                        </Button>
-
-                                        <Button Type="ButtonType.Primary">
-                                            Mua
-                                        </Button>
+                                        @if (game.RecentlyInWishlist)
+                                        {
+                                            <Tooltip Title="Xóa khỏi yêu thích">
+                                                <Button Color="Color.Orange5"
+                                                        OnClick="() => AddOrRemoveGameWishlistAsync(game.Id)">
+                                                    x
+                                                </Button>
+                                            </Tooltip>
+                                        }
+                                        else
+                                        {
+                                            <Tooltip Title="Thêm vào yêu thích">
+                                                <Button Color="Color.Magenta2"
+                                                        OnClick="() => AddOrRemoveGameWishlistAsync(game.Id)">
+                                                    ♡
+                                                </Button>
+                                            </Tooltip>
+                                        }
+                                        @if (game.IsPurchased)
+                                        {
+                                            <Button Disabled>
+                                                ✓ Đã mua
+                                            </Button>
+                                        }
+                                        else
+                                        {
+                                            <Button Type="ButtonType.Primary" OnClick="() => PurchaseGameNow(game)">
+                                                Mua ngay
+                                            </Button>
+                                        }
 
                                     </div>
 
@@ -278,3 +300,29 @@
 
     </GameDetail>
 </Drawer>
+
+<Modal Title="Xác nhận mua game"
+       @bind-Visible="isPurchaseModalVisible"
+       OnOk="ConfirmPurchaseAsync"
+       OkText="@confirmText"
+       CancelText="@cancelText">
+
+    @if (SelectedGame != null)
+    {
+        <div>
+            <h5>@SelectedGame.Name</h5>
+
+            <p>
+                Bạn có chắc chắn muốn mua game này không? Sau khi thanh toán hoàn tất, game sẽ được thêm vào thư viện ngay lập tức
+            </p>
+
+            <p>
+                Giá:
+                <strong>
+                    @SelectedGame.CurrentPrice
+                </strong>
+            </p>
+        </div>
+    }
+
+</Modal>

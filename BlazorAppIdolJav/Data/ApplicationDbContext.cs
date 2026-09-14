@@ -22,6 +22,7 @@ namespace GameManagement.Data
         public DbSet<GameRedeemCode> GameRedeemCode { get; set; }
         public DbSet<UserWallet> UserWallet { get; set; }
         public DbSet<WalletTransactionHistory> WalletTransactionHistory { get; set; }
+        public DbSet<UserGameWishlist> UserGameWishlist { get; set; }
 
     }
 }

@@ -70,11 +70,11 @@ namespace GameManagement.Share.Model.EditModel
 						);
 					}
 
-					if (EndDate.Value > StartDate.Value.AddDays(10))
+					if (EndDate.Value > StartDate.Value.AddDays(20))
 					{
 						Errors.AddExist(
 							nameProperty,
-							"Thời gian discount không được vượt quá 10 ngày"
+							"Thời gian discount không được vượt quá 20 ngày"
 						);
 					}
 				}
@@ -92,11 +92,11 @@ namespace GameManagement.Share.Model.EditModel
 						);
 					}
 
-					if (EndDate.Value > StartDate.Value.AddDays(10))
+					if (EndDate.Value > StartDate.Value.AddDays(20))
 					{
 						Errors.AddExist(
 							nameProperty,
-							"Thời gian discount không được vượt quá 10 ngày"
+							"Thời gian discount không được vượt quá 20 ngày"
 						);
 					}
 				}

@@ -153,7 +153,7 @@
 
             <GridRow Gutter="(16, 16)">
 
-                @foreach (var game in TestUIGames)
+                @foreach (var game in ViewModels)
                 {
                     <GridCol Xs="24"
                              Sm="12"
@@ -162,95 +162,97 @@
                              Xl="6">
 
                         <Card Class="game-card">
+                            <div class="game-card-content">
 
-                            <!-- Ảnh game -->
-                            <div class="game-image">
-                                <img src=""
-                                     alt="@game.Name" />
-                            </div>
-
-                            <!-- Thông tin -->
-                            <div class="game-info">
-
-                                <div class="game-name">
-                                    @game.Name
+                                <!-- Ảnh game -->
+                                <div class="game-image">
+                                    <img src=""
+                                         alt="@game.Name" />
                                 </div>
 
-                                <div class="game-review">
+                                <!-- Thông tin -->
+                                <div class="game-info">
 
-                                    <div class="review-info">
-                                        <div>
-                                            Tổng số đánh giá: <b>200</b>
-                                        </div>
-
-                                        <div>
-                                            Đánh giá tích cực: <b>90% (190)</b>
-                                        </div>
-
-                                        <div>
-                                            Đánh giá tiêu cực: <b>10% (10)</b>
-                                        </div>
+                                    <div class="game-name">
+                                        @game.Name
                                     </div>
 
-                                    <div class="review-average">
-                                        <div class="average-star">★</div>
+                                    <div class="game-review">
 
-                                        <div class="average-score">
-                                            4.5
+                                        <div class="review-info">
+                                            <div>
+                                                Tổng số đánh giá: <b>200</b>
+                                            </div>
+                                            @* // sau này lấy ở bảng gamereview *@
+                                            <div>
+                                                Đánh giá tích cực: <b>90%</b>
+                                            </div>
+
+                                            <div>
+                                                Đánh giá tiêu cực: <b>10%</b>
+                                            </div>
                                         </div>
 
-                                        <div class="average-max">
-                                            / 5
+                                        <div class="review-average">
+                                            <div class="average-star">★</div>
+
+                                            <div class="average-score">
+                                                4.5
+                                            </div>
+
+                                            <div class="average-max">
+                                                / 5
+                                            </div>
                                         </div>
+
                                     </div>
 
-                                </div>
+                                    <!-- Giá -->
+                                    <div class="game-price">
 
-                                <!-- Giá -->
-                                <div class="game-price">
+                                        @if (game.CurrentSalePercent > 0)
+                                        {
+                                            <div>
+                                                <span class="discount">
+                                                    -@game.CurrentSalePercent%
+                                                </span>
 
-                                    @if (game.CurrentSalePercent > 0)
-                                    {
-                                        <div>
-                                            <span class="discount">
-                                                -@game.CurrentSalePercent%
-                                            </span>
+                                                <span class="old-price">
+                                                    @game.DisplayPrice
+                                                </span>
+                                            </div>
 
-                                            <span class="old-price">
+                                            <div class="current-price-list">
+                                                @game.CurrentPrice
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="current-price-list">
                                                 @game.DisplayPrice
-                                            </span>
-                                        </div>
+                                            </div>
+                                        }
 
-                                        <div class="current-price">
-                                            @game.CurrentPrice
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div class="current-price">
-                                            @game.DisplayPrice
-                                        </div>
-                                    }
+                                    </div>
 
-                                </div>
+                                    <!-- 3 nút -->
+                                    <div class="game-actions">
 
-                                <!-- 3 nút -->
-                                <div class="game-actions">
+                                        <Button Color="Color.Green6">
+                                            Đánh giá
+                                        </Button>
 
-                                    <Button Color="Color.Green6">
-                                        Đánh giá
-                                    </Button>
+                                        <Button Color="Color.Magenta2" OnClick="() => AddOrRemoveGameWishlistAsync(game.Id)">
+                                            ♡
+                                        </Button>
 
-                                    <Button Color="Color.Magenta2">
-                                        ♡
-                                    </Button>
+                                        <Button Type="ButtonType.Primary">
+                                            Mua
+                                        </Button>
 
-                                    <Button Type="ButtonType.Primary">
-                                        Mua
-                                    </Button>
+                                    </div>
 
                                 </div>
-
                             </div>
 
                         </Card>
@@ -263,7 +265,7 @@
         </div>
 
     }
-    </AntDesign.Row>
+</AntDesign.Row>
 
 <Drawer Width="@width.ToString()" ZIndex="1000"
         Height="@height.ToString()"

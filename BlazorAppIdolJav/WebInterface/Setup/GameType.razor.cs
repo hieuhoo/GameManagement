@@ -127,7 +127,6 @@ namespace GameManagement.WebInterface.Setup
 					await CreateAsync();
 				}
 				await LoadingDataAsync();
-				CancelChange();
 			}
 			catch (Exception ex)
 			{
@@ -156,6 +155,7 @@ namespace GameManagement.WebInterface.Setup
 				if (isSucess)
 				{
 					NoticeService.NotiSuccess(OperationEnum.AddSuccessfully.GetDescription());
+					CancelChange();
 				}
 				else
 				{
@@ -187,6 +187,7 @@ namespace GameManagement.WebInterface.Setup
 				if (isSucess)
 				{
 					NoticeService.NotiSuccess(OperationEnum.UpdateSuccessfully.GetDescription());
+					CancelChange();
 				}
 				else
 				{

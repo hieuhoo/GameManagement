@@ -9,10 +9,11 @@ namespace GameManagement.Service.IService
 	{
 		Task<List<UserGameLibraryData>> GetAllWithFilterAsync(LibrarySearch search);
 		Task<bool> AddGameToLibraryAsync(UserGameLibraryData data);
-		
-	}
+		Task<bool> CheckExistGameInLibraryAsync(string gameId, string userId);
 
-	[DataContract]
+    }
+
+    [DataContract]
 	public class LibrarySearch
 	{
 		[DataMember(Order = 1)]

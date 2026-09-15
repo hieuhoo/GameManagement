@@ -1,0 +1,574 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác nhận mua game thành công</title>
+</head>
+
+<body style="
+    margin: 0;
+    padding: 0;
+    background-color: #1b1e21;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #d6d7d8;
+">
+
+    <table width="100%" cellpadding="0" cellspacing="0" border="0"
+           style="
+           background-color: #1b1e21;
+           padding: 30px 10px;
+       ">
+
+        <tr>
+            <td align="center">
+
+                <!-- Khung chính -->
+                <table width="100%"
+                       cellpadding="0"
+                       cellspacing="0"
+                       border="0"
+                       style="
+                       max-width: 560px;
+                       background-color: #1b1e21;
+                   ">
+
+                    <!-- Logo -->
+                    <tr>
+                        <td style="
+                        padding: 25px 0 25px 0;
+                    ">
+
+                            <div style="
+                            width: 64px;
+                            height: 64px;
+                            border-radius: 50%;
+                            background-color: #ffffff;
+                            color: #1b1e21;
+                            text-align: center;
+                            line-height: 64px;
+                            font-size: 24px;
+                            font-weight: bold;
+                        ">
+                                Mock
+                            </div>
+
+                        </td>
+                    </tr>
+
+
+                    <!-- Xin chào -->
+                    <tr>
+                        <td>
+
+                            <div style="
+                            font-size: 22px;
+                            font-weight: bold;
+                            color: #d6d7d8;
+                            margin-bottom: 22px;
+                        ">
+                                Xin chào {{FULLNAME}}
+                            </div>
+
+                        </td>
+                    </tr>
+
+
+                    <!-- Thông báo -->
+                    <tr>
+                        <td>
+
+                            <div style="
+                            font-size: 18px;
+                            line-height: 1.5;
+                            font-weight: bold;
+                            color: #ffffff;
+                            margin-bottom: 22px;
+                        ">
+                                Cảm ơn bạn đã mua game tại
+                                Game Management của Híu
+                            </div>
+
+
+                            <div style="
+                            font-size: 13px;
+                            line-height: 1.7;
+                            color: #c7c8ca;
+                            margin-bottom: 18px;
+                        ">
+                                Giao dịch của bạn đã được thực hiện thành công.
+                                Game bên dưới đã được thêm vào thư viện của bạn.
+                            </div>
+
+
+                            <div style="
+                            font-size: 13px;
+                            line-height: 1.7;
+                            color: #c7c8ca;
+                            margin-bottom: 28px;
+                        ">
+                                Bạn có thể truy cập thư viện để bắt đầu trải nghiệm
+                                game bất cứ lúc nào.
+                            </div>
+
+                        </td>
+                    </tr>
+
+
+                    <!-- Tiêu đề game -->
+                    <tr>
+                        <td style="
+                        padding-bottom: 8px;
+                        font-size: 11px;
+                        color: #67a4d8;
+                        text-transform: uppercase;
+                    ">
+                            Game đã mua
+                        </td>
+                    </tr>
+
+
+                    <!-- Game -->
+                    <tr>
+                        <td>
+
+                            <table width="100%"
+                                   cellpadding="0"
+                                   cellspacing="0"
+                                   border="0"
+                                   style="
+                                   background-color: #363b43;
+                                   margin-bottom: 8px;
+                               ">
+
+                                <tr>
+
+                                    <!-- Ảnh game -->
+                                    <td width="150"
+                                        style="
+                                        padding: 10px;
+                                    ">
+
+                                        <div style="
+                                        width: 130px;
+                                        height: 65px;
+                                        background-color: #22252a;
+                                        text-align: center;
+                                        line-height: 65px;
+                                        color: #777b80;
+                                        font-size: 11px;
+                                    ">
+                                            ẢNH GAME
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- Tên game -->
+                                    <td style="
+                                    padding: 10px 5px;
+                                    color: #ffffff;
+                                    font-size: 14px;
+                                    font-weight: bold;
+                                ">
+
+                                        {{GAMENAME}}
+
+                                    </td>
+
+
+                                    <!-- Giá -->
+                                    <td width="100"
+                                        align="right"
+                                        style="
+                                        padding: 10px;
+                                        color: #ffffff;
+                                        font-size: 12px;
+                                        font-weight: bold;
+                                    ">
+
+                                        {{PURCHASEPRICE}} VNĐ
+
+                                    </td>
+
+                                </tr>
+
+                            </table>
+
+                        </td>
+                    </tr>
+
+
+                    <!-- Thông tin giao dịch -->
+                    <tr>
+                        <td>
+
+                            <table width="100%"
+                                   cellpadding="0"
+                                   cellspacing="0"
+                                   border="0"
+                                   style="
+                                   background-color: #151719;
+                                   margin-bottom: 28px;
+                               ">
+
+                                <tr>
+
+                                    <!-- Thông tin bên trái -->
+                                    <td width="65%"
+                                        style="
+                                        padding: 14px 12px;
+                                        vertical-align: top;
+                                        border-right: 1px solid #25282b;
+                                    ">
+
+                                        <table width="100%"
+                                               cellpadding="0"
+                                               cellspacing="0"
+                                               border="0">
+
+
+                                            <!-- Tài khoản -->
+                                            <tr>
+
+                                                <td style="
+                                                font-size: 10px;
+                                                color: #8b8f94;
+                                                padding-bottom: 6px;
+                                            ">
+                                                    Tài khoản:
+                                                </td>
+
+                                                <td style="
+                                                font-size: 10px;
+                                                color: #ffffff;
+                                                font-weight: bold;
+                                                padding-bottom: 6px;
+                                            ">
+                                                    {{USERNAME}}
+                                                </td>
+
+                                            </tr>
+
+
+                                            <!-- Mã giao dịch -->
+                                            <tr>
+
+                                                <td style="
+                                                font-size: 10px;
+                                                color: #8b8f94;
+                                                padding-bottom: 6px;
+                                            ">
+                                                    Mã giao dịch:
+                                                </td>
+
+                                                <td style="
+                                                font-size: 10px;
+                                                color: #ffffff;
+                                                font-weight: bold;
+                                                padding-bottom: 6px;
+                                            ">
+                                                    {{TRANSACTIONID}}
+                                                </td>
+
+                                            </tr>
+
+
+                                            <!-- Ngày mua -->
+                                            <tr>
+
+                                                <td style="
+                                                font-size: 10px;
+                                                color: #8b8f94;
+                                                padding-bottom: 6px;
+                                            ">
+                                                    Ngày mua:
+                                                </td>
+
+                                                <td style="
+                                                font-size: 10px;
+                                                color: #ffffff;
+                                                font-weight: bold;
+                                                padding-bottom: 6px;
+                                            ">
+                                                    {{PURCHASEDATE}}
+                                                </td>
+
+                                            </tr>
+
+
+                                            <!-- Phương thức -->
+                                            <tr>
+
+                                                <td style="
+                                                font-size: 10px;
+                                                color: #8b8f94;
+                                            ">
+                                                    Phương thức:
+                                                </td>
+
+                                                <td style="
+                                                font-size: 10px;
+                                                color: #ffffff;
+                                                font-weight: bold;
+                                            ">
+                                                    Ví Game Management
+                                                </td>
+
+                                            </tr>
+
+                                        </table>
+
+                                    </td>
+
+
+                                    <!-- Tổng tiền -->
+                                    <td width="35%"
+                                        style="
+                                        padding: 14px 12px;
+                                        vertical-align: top;
+                                    ">
+
+                                        <div style="
+                                        font-size: 10px;
+                                        color: #8b8f94;
+                                        margin-bottom: 7px;
+                                    ">
+                                            Tổng tiền:
+                                        </div>
+
+
+                                        <div style="
+                                        font-size: 15px;
+                                        color: #ffffff;
+                                        font-weight: bold;
+                                    ">
+                                            {{PURCHASEPRICE}} VNĐ
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            </table>
+
+                        </td>
+                    </tr>
+
+
+                    <!-- Chi tiết giá -->
+                    <tr>
+                        <td style="
+                        padding-bottom: 30px;
+                    ">
+
+                            <table width="100%"
+                                   cellpadding="0"
+                                   cellspacing="0"
+                                   border="0"
+                                   style="
+                                   background-color: #202327;
+                               ">
+
+                                <!-- Header -->
+                                <tr>
+
+                                    <td colspan="2"
+                                        style="
+                                        padding: 14px 15px;
+                                        color: #ffffff;
+                                        font-size: 13px;
+                                        font-weight: bold;
+                                        border-bottom: 1px solid #30343a;
+                                    ">
+                                        Chi tiết thanh toán
+                                    </td>
+
+                                </tr>
+
+
+                                <!-- Giá gốc -->
+                                <tr>
+
+                                    <td style="
+                                    padding: 10px 15px;
+                                    color: #8f9499;
+                                    font-size: 12px;
+                                ">
+                                        Giá gốc
+                                    </td>
+
+                                    <td align="right"
+                                        style="
+                                        padding: 10px 15px;
+                                        color: #b5b8bb;
+                                        font-size: 12px;
+                                        text-decoration: line-through;
+                                    ">
+                                        {{ORIGINALPRICE}} VNĐ
+                                    </td>
+
+                                </tr>
+
+
+                                <!-- Giảm giá -->
+                                <tr>
+
+                                    <td style="
+                                    padding: 10px 15px;
+                                    color: #8f9499;
+                                    font-size: 12px;
+                                ">
+                                        Giảm giá
+                                    </td>
+
+                                    <td align="right"
+                                        style="
+                                        padding: 10px 15px;
+                                        color: #67c1f5;
+                                        font-size: 12px;
+                                        font-weight: bold;
+                                    ">
+                                        -{{DISCOUNTPERCENT}}%
+                                    </td>
+
+                                </tr>
+
+
+                                <!-- Thành tiền -->
+                                <tr>
+
+                                    <td style="
+                                    padding: 10px 15px 14px;
+                                    color: #ffffff;
+                                    font-size: 13px;
+                                    font-weight: bold;
+                                ">
+                                        Thành tiền
+                                    </td>
+
+                                    <td align="right"
+                                        style="
+                                        padding: 10px 15px 14px;
+                                        color: #ffffff;
+                                        font-size: 15px;
+                                        font-weight: bold;
+                                    ">
+                                        {{PURCHASEPRICE}} VNĐ
+                                    </td>
+
+                                </tr>
+
+                            </table>
+
+                        </td>
+                    </tr>
+
+
+                    <!-- Thông báo receipt -->
+                    <tr>
+                        <td style="
+                        font-size: 13px;
+                        line-height: 1.7;
+                        color: #c7c8ca;
+                        padding-bottom: 25px;
+                    ">
+
+                            Email này được gửi để xác nhận giao dịch mua game
+                            của bạn tại Game Management.
+
+                            <br><br>
+
+                            Bạn có thể lưu lại email này để làm thông tin tham khảo
+                            cho giao dịch của mình.
+
+                            <br><br>
+
+                            Nếu bạn gặp vấn đề với giao dịch hoặc cho rằng giao dịch
+                            này không phải do bạn thực hiện, vui lòng liên hệ với
+                            đội ngũ hỗ trợ Game Management.
+
+                        </td>
+                    </tr>
+
+
+                    <!-- Chữ ký -->
+                    <tr>
+                        <td style="
+                        border-left: 2px solid #67a4d8;
+                        padding: 14px 0 14px 25px;
+                        color: #ffffff;
+                        font-size: 12px;
+                        line-height: 1.6;
+                    ">
+
+                            Trân trọng,<br>
+                            <strong>Đội ngũ Game Management</strong>
+
+                        </td>
+                    </tr>
+
+
+                    <!-- Donate -->
+                    <tr>
+                        <td style="
+                        padding: 25px 0;
+                        color: #777c82;
+                        font-size: 11px;
+                        line-height: 1.7;
+                        border-top: 1px solid #30343a;
+                    ">
+
+                            Thấy Game Management hay ho?
+
+                            <br>
+
+                            Bạn có thể ủng hộ dev qua tài khoản
+                            <strong style="color: #b5b8bb;">
+                                BIDV 2153225524 Híu hay Ho
+                            </strong>
+                            ❤️
+
+                            <br><br>
+
+                            Sự ủng hộ của bạn là động lực để chúng mình
+                            tiếp tục phát triển và hoàn thiện hệ thống.
+
+                        </td>
+                    </tr>
+
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="
+                        padding: 20px 0 10px;
+                        border-top: 1px solid #30343a;
+                        color: #62666b;
+                        font-size: 10px;
+                        line-height: 1.6;
+                        text-align: center;
+                    ">
+
+                            Đây là email tự động từ
+                            <strong>Game Management</strong>.
+
+                            <br>
+
+                            Vui lòng không trả lời email này.
+
+                            <br><br>
+
+                            © 2026 Game Management
+
+                        </td>
+                    </tr>
+
+                </table>
+
+            </td>
+        </tr>
+
+    </table>
+
+</body>
+</html>

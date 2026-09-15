@@ -8,5 +8,7 @@ namespace GameManagement.Repository.IRepository
 		IQueryable<UserGameLibrary> GetQueryable();
 		Task<List<UserGameLibrary>> GetAllWithFilterAsync(IQueryable<UserGameLibrary> query, LibrarySearch search);
 		Task<bool> AddGameToLibraryAsync(UserGameLibrary data);
-	}
+        Task<bool> CheckExistGameInLibraryAsync(string gameId, string userId);
+
+    }
 }

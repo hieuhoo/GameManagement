@@ -48,7 +48,11 @@ namespace GameManagement.Service
 						message = await BuildRegisterSuccessMailAsync(data);
 						break;
 
-					default:
+                    case MailType.PurchaseSuccess:
+                        message = await BuildPurchaseReceiptMailAsync(data);
+                        break;
+
+                    default:
 						throw new ArgumentOutOfRangeException(
 							nameof(type),
 							type,
@@ -192,5 +196,63 @@ namespace GameManagement.Service
 				return new MimeMessage();
 			}
 		}
-	}
+
+        async Task<MimeMessage> BuildPurchaseReceiptMailAsync(object data)
+        {
+            try
+            {
+                if (data is not PurchaseGameReceiptData receiptData)
+                {
+                    throw new ArgumentException(
+                        "Invalid data for receipt mail.",
+                        nameof(data)
+                    );
+                }
+
+                var message = new MimeMessage();
+
+                message.From.Add(
+                    new MailboxAddress(
+                        "Thông báo nhận bill receipt (test)",
+                        senderEmail
+                    )
+                );
+
+                message.To.Add(
+                    MailboxAddress.Parse(receiptData.Email)
+                );
+
+				message.Subject = "Đây là receipt mua game (test version)";
+
+                var templatePath = Path.Combine(
+                    _environment.ContentRootPath,
+                    "Templates",
+                    "GamePurchaseReceipt.html"
+                );
+
+                var html = await File.ReadAllTextAsync(templatePath);
+
+                html = html
+                    .Replace("{{FULLNAME}}", receiptData.FullName)
+                    .Replace("{{USERNAME}}", receiptData.UserName)
+                    .Replace("{{GAMENAME}}", receiptData.GameName)
+                    .Replace("{{TRANSACTIONID}}", receiptData.TransactionId)
+                    .Replace("{{PURCHASEDATE}}", receiptData.PurchaseDate)
+                    .Replace("{{ORIGINALPRICE}}", receiptData.OriginalPrice)
+                    .Replace("{{DISCOUNTPERCENT}}", receiptData.DiscountPercent)
+                    .Replace("{{PURCHASEPRICE}}", receiptData.PurchasePrice);
+
+                message.Body = new TextPart("html")
+                {
+                    Text = html
+                };
+
+                return message;
+            }
+            catch
+            {
+                return new MimeMessage();
+            }
+        }
+    }
 }

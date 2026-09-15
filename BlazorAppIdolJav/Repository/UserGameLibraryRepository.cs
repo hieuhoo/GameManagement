@@ -46,5 +46,15 @@ namespace GameManagement.Repository
 				throw;
 			}
 		}
-	}
+
+        public async Task<bool> CheckExistGameInLibraryAsync(string gameId, string userId)
+        {
+            var query = _context.UserGameLibrary
+                    .Where(x => x.GameId == gameId && x.UserId == userId);
+
+            var result = await query.AnyAsync();
+
+            return result;
+        }
+    }
 }

@@ -3,7 +3,7 @@
 @using GameManagement.Share.Extension
 @using GameManagement.Share.Model.ViewModel;
 @using GameManagement.SpecialComponent;
-@using static GameManagement.Share.Extension.MessageEnumExtension
+@using static GameManagement.Share.Extension.EnumExtension
 
 
 <Row Gutter="8">
@@ -65,11 +65,77 @@
                     </Template>
                 </Column>
 
-                <Column @bind-Field="context.Amount"
+                <Column @bind-Field="context.PurchaseGamePrice"
                         Title="Giá"
-                        Width="100">
+                        Width="190">
                     <Template>
-                        @context.Amount.ToString("N0")
+                        @if (context.Type == WalletTransactionType.PurchaseGame.ToString())
+                        {
+                            <div style="
+                                display: flex;
+                                flex-direction: row;
+                                align-items: center;
+                                gap: 8px;
+                                height: 50px;
+                                white-space: nowrap;
+                                ">
+
+                                @if (context.PercentDiscount > 0)
+                                {
+                                    <div style="
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        width: 48px;
+                                        height: 28px;
+                                        flex-shrink: 0;
+                                        background-color: #75a900;
+                                        color: #ffffff;
+                                        font-size: 12px;
+                                        font-weight: 700;
+                                        line-height: 1;
+                                        ">
+                                        -@context.PercentDiscount%
+                                    </div>
+                                }
+
+                                <div style="
+                                    display: flex;
+                                    flex-direction: column;
+                                    justify-content: center;
+                                    align-items: flex-start;
+                                    line-height: 16px;
+                                    ">
+
+                                    @if (context.PercentDiscount > 0)
+                                    {
+                                        <span style="
+                                            color: #8b929a;
+                                            font-size: 11px;
+                                            text-decoration: line-through;
+                                            line-height: 15px;
+                                            ">
+                                            @context.OriginalGamePrice.ToString("N0")đ
+                                        </span>
+                                    }
+
+                                    <span style="
+                                        color: #8bcf00;
+                                        font-size: 12px;
+                                        font-weight: 600;
+                                        line-height: 15px;
+                                        ">
+                                        @context.PurchaseGamePrice.ToString("N0")đ
+                                    </span>
+
+                                </div>
+
+                            </div>
+                        }
+                        else
+                        {
+                            <span style="color: #000000d9;">@context.Amount</span>
+                        }
                     </Template>
                 </Column>
 

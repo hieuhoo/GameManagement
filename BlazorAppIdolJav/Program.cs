@@ -81,6 +81,8 @@ builder.Services.AddScoped<IGameRedeemCodeService, GameRedeemCodeService>();
 builder.Services.AddScoped<IUserWalletService, UserWalletService>();
 builder.Services.AddScoped<IWalletTransactionHistoryService, WalletTransactionHistoryService>();
 builder.Services.AddScoped<IUserGameWishlistService, UserGameWishlistService>();
+builder.Services.AddScoped<IPurchaseService, PurchaseService>();
+builder.Services.AddScoped<IUserGameLibraryService, UserGameLibraryService>();
 
 
 //cấu hình repo vào đây
@@ -96,6 +98,7 @@ builder.Services.AddScoped<IGameRedeemCodeRepository, GameRedeemCodeRepository>(
 builder.Services.AddScoped<IUserWalletRepository, UserWalletRepository>();
 builder.Services.AddScoped<IWalletTransactionHistoryRepository, WalletTransactionHistoryRepository>();
 builder.Services.AddScoped<IUserGameWishlistRepository, UserGameWishlistRepository>();
+builder.Services.AddScoped<IUserGameLibraryRepository, UserGameLibraryRepository>();
 
 builder.Services.AddScoped<WishlistState>();
 // cấu hình extension

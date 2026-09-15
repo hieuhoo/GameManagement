@@ -3,6 +3,7 @@ using AntDesign.TableModels;
 using AutoMapper;
 using GameManagement.Service.IService;
 using GameManagement.Share.ClassData;
+using GameManagement.Share.ClassDB;
 using GameManagement.Share.Extension;
 using GameManagement.Share.Model.ViewModel;
 using GameManagement.SpecialComponent.ExtensionClass;
@@ -16,7 +17,7 @@ namespace GameManagement.WebInterface.User
 	public partial class UserTransactionHistory : ComponentBase
 	{
 		[Inject] IMapper Mapper { get; set; }
-		[Inject] IUserService UserService { get; set; }
+		[Inject] IGameService GameService { get; set; }
 		[Inject] IWalletTransactionHistoryService TransactionHistoryService { get; set; }
 
 		[Inject] NotificationService NoticeService { get; set; }
@@ -24,7 +25,7 @@ namespace GameManagement.WebInterface.User
 		List<WalletTransactionHistoryViewModel> ViewModels { get; set; } = new();
 		Table<WalletTransactionHistoryViewModel> table;
 		InputWatcher inputWatcher;
-
+		Dictionary<string, string> Dictgame = new Dictionary<string, string>();
 		bool loading;
 		string currentUserId;
 		string displayName;
@@ -37,6 +38,7 @@ namespace GameManagement.WebInterface.User
 				var user = authState.User;
 				currentUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 				displayName = user.Identity?.Name ?? "";
+				await LoadGameDataAsync();
 				await LoadHistoryDataAsync();
 			}
 			catch (Exception)
@@ -61,13 +63,35 @@ namespace GameManagement.WebInterface.User
 					item.Stt = stt++;
 					if (item.Type == WalletTransactionType.PurchaseGame.ToString())
 					{
-						item.ChangeMoney = $"- {item.Amount.ToString("N0")}"; 
+						item.ChangeMoney = $"{item.Amount.ToString("N0")}";
+                        if (item.ReferenceId != null &&
+								Dictgame.TryGetValue(item.ReferenceId, out var name))
+                        {
+                            item.ItemName = name;
+                        }
 					}
 					else
 					{
 						item.ChangeMoney = $"+ {item.Amount.ToString("N0")}"; 
 					}
-				}
+					item.Amount = Math.Abs(item.Amount);
+                }
+			}
+			catch
+			{
+
+			}
+		}
+
+		async Task LoadGameDataAsync()
+		{
+			try
+			{
+				var result = await GameService.GetAllWithFilterAsync(new GameSearch
+				{
+
+				}) ?? new List<GameData>();
+				Dictgame = result.ToDictionary(c => c.Id, c => c.Name);
 			}
 			catch
 			{

@@ -4,6 +4,6 @@ namespace GameManagement.Service.IService
 {
 	public interface IPurchaseService
 	{
-		Task<PurchaseGameResultData> ProcessPurchaseTransactionAsync(string userId, string gameId, decimal price);
+		Task<PurchaseGameResultData> ProcessPurchaseTransactionAsync(PaymentGameInforData data);
 	}
 }

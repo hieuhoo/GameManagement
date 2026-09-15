@@ -46,5 +46,17 @@ namespace GameManagement.Service
 				throw ex;
 			}
 		}
-	}
+
+        public async Task<bool> CheckExistGameInLibraryAsync(string gameId, string userId)
+        {
+            try
+            {
+                return await _repo.CheckExistGameInLibraryAsync(gameId, userId);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+    }
 }

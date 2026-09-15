@@ -23,10 +23,7 @@ namespace GameManagement.Service
             _mapper = mapper;
         }
 
-		async Task<PurchaseGameResultData> ProcessPurchaseTransactionAsync( // truyền vào object vì là mua game : % , giá, giá gốc
-			string userId,
-			string gameId,
-			decimal purchasePrice)
+		public async Task<PurchaseGameResultData> ProcessPurchaseTransactionAsync(PaymentGameInforData data)
 		{
 			// khi pass qua bước check số dư sẽ gọi vào hàm này xử lý
 			await using var transaction =
@@ -38,19 +35,19 @@ namespace GameManagement.Service
 				// cần lấy dữ liệu game
 				// 1. Update wallet
 				var wallet = await _context.UserWallet
-					.FirstOrDefaultAsync(x => x.UserId == userId);
+					.FirstOrDefaultAsync(x => x.UserId == data.UserId);
 				// còn 1 case nếu nhỡ 2 người cùng thao tác chưa check
 				var balanceBefore = wallet.Balance;
 
-				wallet.Balance -= purchasePrice;
+				wallet.Balance -= data.CurrentPrice;
 				wallet.UpdatedDate = now;
 
 				// 2. Add library
 				var item = new UserGameLibrary
 				{
 					Id = ObjectExtentions.GenerateGuid(),
-					UserId = userId,
-					GameId = gameId,
+					UserId = data.UserId,
+					GameId = data.GameId,
 					AcquireType = "Purchase", // hiện tại gán mặc định
 					CreateDate = now
 				};
@@ -62,28 +59,56 @@ namespace GameManagement.Service
 				var history = new WalletTransactionHistory
 				{
 					Id = ObjectExtentions.GenerateGuid(),
-					UserId = userId,
-					Amount = -purchasePrice,
+					UserId = data.UserId,
+					Amount = -data.CurrentPrice,
 					BalanceBefore = balanceBefore,
 					BalanceAfter = wallet.Balance,
 					Type = WalletTransactionType.PurchaseGame.ToString(),
-					ReferenceId = library.Id,
-					CreateDate = now
-				};
+					CreateDate = now,
+                    PercentDiscount = data.PercentSale,
+					OriginalGamePrice = data.OriginalPrice,
+					PurchaseGamePrice = data.CurrentPrice,
+                    ReferenceId = data.GameId, // hiện tại gán như này để nhận biết là game nào
+					RedeemType = null // do đấy là purchase game ko phải dùng mã redeem
+                };
 
-				await _context.WalletTransactionHistories
+				await _context.WalletTransactionHistory
 					.AddAsync(history);
 
+                // 4. Remove from wishlist
+                var wishlistItem = await _context.UserGameWishlist
+                    .FirstOrDefaultAsync(x =>
+                        x.UserId == data.UserId &&
+                        x.GameId == data.GameId);
 
-				await _context.SaveChangesAsync();
+                if (wishlistItem != null)
+                {
+                    _context.UserGameWishlist.Remove(wishlistItem);
+                }
+
+                await _context.SaveChangesAsync();
 
 				await transaction.CommitAsync();
+				return new PurchaseGameResultData
+				{
+					IsSuccess = true,
+					TransactionId = item.Id,
+					PurchaseDate = now.ToString(),
+					DiscountPercent = data.PercentSale.ToString(),
+					OriginalPrice = data.OriginalPrice.ToString(),
+					PurchasePrice = data.CurrentPrice.ToString(),
+					FullName = data.FullName,
+					GameName = data.GameName
+				};
 			}
 			catch
 			{
 				await transaction.RollbackAsync();
-				throw;
-			}
+                return new PurchaseGameResultData
+                {
+                    IsSuccess = false
+                };
+            }
 		}
-	}
+    }
 }

@@ -96,9 +96,9 @@ namespace GameManagement.Components.Layout
                     WishlistState.SetCount(count);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+
             }
         }
 

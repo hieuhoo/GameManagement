@@ -29,6 +29,10 @@ namespace GameManagement.WebInterface.GameInformation
         [Inject] IGameDiscountService GameDiscountService { get; set; }
         [Inject] IUserGameWishlistService WishlistService { get; set; }
         [Inject] IUserWalletService WalletService { get; set; }
+        [Inject] IPurchaseService PurchaseService { get; set; }
+        [Inject] IUserGameLibraryService LibraryService { get; set; }
+        [Inject] IEmailService MailService { get; set; }
+
 
         [Inject] NotificationService Notice { get; set; }
         [Inject] AuthenticationStateProvider AuthProvider { get; set; }
@@ -56,6 +60,7 @@ namespace GameManagement.WebInterface.GameInformation
         string currentUserId;
         string confirmText = "Thanh toán";
         string cancelText = "Hủy";
+        string userName;
 
         protected override async Task OnInitializedAsync()
         {
@@ -64,6 +69,7 @@ namespace GameManagement.WebInterface.GameInformation
                 var authState = await AuthProvider.GetAuthenticationStateAsync();
                 var user = authState.User;
                 isAdmin = user.IsInRole(UserRole.Admin.ToString());
+                userName = user.Identity.Name;
                 currentUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 width = ConfigTemplate.Width;
                 height = ConfigTemplate.Height;
@@ -109,6 +115,7 @@ namespace GameManagement.WebInterface.GameInformation
                     }
                     game.CurrentPrice = $"{(game.Price * (100 - game.CurrentSalePercent) / 100):N0} {game.Unit}";
                     game.RecentlyInWishlist = await IsGameInWishlist(game.Id, currentUserId);
+                    game.IsPurchased = await IsGameInLibrary(game.Id, currentUserId);
                 }
                 int total = ViewModels.Where(c => c.RecentlyInWishlist == true).ToList().Count();
                 WishlistState.SetCount(total);
@@ -274,7 +281,14 @@ namespace GameManagement.WebInterface.GameInformation
         {
             try
             {
-                // còn luồng check trong library làm sau
+                // luồng check trong library
+                var isOwned = await IsGameInLibrary(gameId, currentUserId);
+                if (isOwned)
+                {
+                    Notice.NotiWarning("Bạn đã mua game này nên không thể thêm vào wishlist");
+                    return;
+                }
+                // nếu chưa có ms tiếp tục
                 var existData = await WishlistService.GetAllWithFilterAsync(new WishlistSearch
                 {
                     UserId = currentUserId,
@@ -369,7 +383,41 @@ namespace GameManagement.WebInterface.GameInformation
                     Notice.NotiWarning("Số dư tài khoản ví của bạn ko đủ thanh toán , vui lòng nạp thêm để tiếp tục");
                     return;
                 }
-                Notice.NotiWarning("Đã pass check số dư , Đang làm chưa hoàn thiện");
+                var result = await PurchaseService.ProcessPurchaseTransactionAsync(new PaymentGameInforData
+                {
+                    UserId = currentUserId,
+                    GameId = SelectedGame.Id,
+                    PercentSale = SelectedGame.CurrentSalePercent,
+                    OriginalPrice = SelectedGame.Price,
+                    CurrentPrice = currentPrice,
+                    GameName = SelectedGame.Name,
+                    FullName = userName
+                });
+                if (!result.IsSuccess)
+                {
+                    Notice.NotiError("Có lỗi xảy ra rồi , tất cả bị rollback");
+                    return;
+                }
+
+                //phần gửi mail 
+                await MailService.SendTemplateMailAsync(
+                      MailType.PurchaseSuccess,
+                      new PurchaseGameReceiptData
+                      {
+                         FullName = result.FullName ?? "",
+                         GameName = result.GameName ?? "",
+                         UserName = result.FullName ?? "",
+                         TransactionId = result.TransactionId ?? "",
+                         PurchaseDate = result.PurchaseDate ?? "",
+                         OriginalPrice = result.OriginalPrice ?? "",
+                         DiscountPercent = result.DiscountPercent ?? "",
+                         PurchasePrice = result.PurchasePrice ?? "",
+                         Email = "hieuhooepu@gmail.com" // test mail này nhé
+                      }
+                );
+
+                Notice.NotiSuccess("Mua game thành công ,vui lòng kiểm tra trong thư viện");
+                await LoadDataAsync();
             }
             catch
             {
@@ -377,5 +425,17 @@ namespace GameManagement.WebInterface.GameInformation
             }
         }
 
+        async Task<bool> IsGameInLibrary(string gameId, string userId)
+        {
+            try
+            {
+                var isExist = await LibraryService.CheckExistGameInLibraryAsync(gameId, userId);
+                return isExist;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

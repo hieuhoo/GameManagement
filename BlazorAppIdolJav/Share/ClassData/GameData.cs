@@ -1,4 +1,6 @@
-﻿using System.Runtime.Serialization;
+﻿using GameManagement.CoreConfig.Extensions;
+using GameManagement.SpecialComponent.ExtensionClass;
+using System.Runtime.Serialization;
 
 namespace GameManagement.Share.ClassData
 {
@@ -206,5 +208,18 @@ namespace GameManagement.Share.ClassData
 			set;
 		}
 
+		[DataMember(Order = 34)]
+
+		public virtual string ImagePathView
+		{
+			get
+			{
+				if (ImagePath.IsNullOrEmpty())
+					return string.Empty;
+
+				return $"{GlobalVariant.UploadFolderResource}/{ImagePath.Replace("\\", "/")}";
+			}
+			set { }
+		}
 	}
 }

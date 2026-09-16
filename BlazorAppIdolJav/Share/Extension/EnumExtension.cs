@@ -234,5 +234,13 @@ namespace GameManagement.Share.Extension
 			[Display(Name = "AMD ryzen 9")]
 			Amd9 = 6,
 		}
+
+		public enum MethodPurchase
+		{
+			[Display(Name = "Ví game")]
+			Wallet = 0,
+			[Display(Name = "Thẻ ngân hàng")]
+			Banking = 1,
+		}
 	}
 }

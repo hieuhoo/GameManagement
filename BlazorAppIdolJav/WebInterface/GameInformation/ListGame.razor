@@ -5,7 +5,7 @@
 @using GameManagement.Share.Model.ViewModel;
 @using GameManagement.SpecialComponent;
 @using Microsoft.AspNetCore.Components.Routing
-@using static GameManagement.Share.Extension.MessageEnumExtension
+@using static GameManagement.Share.Extension.EnumExtension
 
 
 <AntDesign.Row Gutter="8">
@@ -163,10 +163,9 @@
 
                         <Card Class="game-card">
                             <div class="game-card-content">
-
                                 <!-- Ảnh game -->
                                 <div class="game-image">
-                                    <img src=""
+                                    <img src="@($"{NavManager.BaseUri}{game.ImagePathView}")"
                                          alt="@game.Name" />
                                 </div>
 
@@ -322,6 +321,25 @@
                     @SelectedGame.CurrentPrice
                 </strong>
             </p>
+
+            <div style="margin-top: 16px;">
+                <div style="margin-bottom: 8px;">
+                    <strong>Phương thức thanh toán</strong>
+                </div>
+
+                <RadioGroup TValue="string"
+                            @bind-Value="PaymentMethod">
+
+                    <Radio Value="@MethodPurchase.Wallet.ToString()">
+                        @MethodPurchase.Wallet.GetDescription()
+                    </Radio>
+
+                    <Radio Value="@MethodPurchase.Banking.ToString()">
+                       @MethodPurchase.Banking.GetDescription()
+                    </Radio>
+
+                </RadioGroup>
+            </div>
         </div>
     }
 

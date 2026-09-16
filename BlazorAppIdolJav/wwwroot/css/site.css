@@ -389,6 +389,9 @@
     position: relative;
     overflow: hidden;
     cursor: pointer;
+    transform: translateY(0) scale(1) translateZ(0);
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
+    will-change: transform;
 }
 
 .game-image {
@@ -421,9 +424,9 @@
         overflow: hidden;
     }
 
-.steam-game-card:hover .game-description-overlay {
-    opacity: 1;
-    visibility: visible;
+.steam-game-card:hover {
+    transform: translateY(-8px) scale(1.015) translateZ(0);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12), 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 
 .wallet-page {
@@ -488,9 +491,14 @@
 
 .game-name {
     margin-top: 12px;
+    min-height: 48px;
     font-size: 18px;
     font-weight: 600;
-    min-height: 54px;
+    line-height: 24px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .game-review {
@@ -498,21 +506,30 @@
     justify-content: space-between;
     align-items: center;
     margin-top: 10px;
+    min-height: 66px;
     font-size: 13px;
     line-height: 22px;
     color: #666;
 }
 
-.game-price {
-    margin-top: auto;
+
+.game-price-history {
+    margin-top: 12px;
+    min-height: 58px;
+    text-align : right;
 }
 
+    .game-price-history > div {
+        min-height: 24px;
+    }
+
 .discount {
+    display: inline-block;
     background: #fff1f0;
     color: #f5222d;
-    padding: 3px 6px;
     border-radius: 4px;
     font-size: 12px;
+    line-height: 18px;
     margin-right: 8px;
 }
 
@@ -581,3 +598,181 @@
     font-size: 12px;
     font-weight: 600;
 }
+/*css cho màn wishlist*/
+
+.wishlist-page {
+    padding: 24px 32px;
+    background: #f5f7fa;
+    min-height: 100%;
+}
+
+.wishlist-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+    .wishlist-header h2 {
+        margin: 0;
+        font-size: 26px;
+        font-weight: 600;
+    }
+
+.wishlist-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* CARD */
+
+.wishlist-game-card {
+    width: 100%;
+    border: none !important;
+    border-radius: 0 !important;
+    overflow: hidden;
+    background-color: #3b4b5b !important;
+    color: #d6d7d8;
+    margin-bottom: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .wishlist-game-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+    }
+
+    .wishlist-game-card .ant-card-body {
+        padding: 0 !important;
+        background-color: #3b4b5b !important;
+    }
+
+.wishlist-game-content {
+    display: flex;
+    min-height: 150px;
+    background-color: #3b4b5b;
+}
+
+/* IMAGE */
+
+.wishlist-game-image {
+    width: 260px;
+    min-width: 260px;
+    height: 150px;
+    overflow: hidden;
+}
+
+    .wishlist-game-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+/* INFO */
+
+.wishlist-game-info {
+    flex: 1;
+    padding: 18px 22px;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.wishlist-game-name {
+    color: #ffffff;
+}
+
+.wishlist-game-meta {
+    color: #a5aeb8;
+}
+
+.wishlist-game-review {
+    color: #66c0f4;
+}
+
+    .wishlist-game-review .review-count {
+        color: #999;
+        font-size: 12px;
+    }
+
+/* PRICE */
+
+.wishlist-game-actions {
+    width: 360px;
+    min-width: 360px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.wishlist-purchase-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.wishlist-price {
+    text-align: right;
+}
+
+.wishlist-sale {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.wishlist-discount {
+    background: #fff1f0;
+    color: #f5222d;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.wishlist-old-price {
+    color: #999;
+    text-decoration: line-through;
+    font-size: 13px;
+}
+
+.wishlist-current-price {
+    margin-top: 5px;
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* Dòng metadata */
+.wishlist-meta-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 4px;
+    margin-top: 14px;
+    color: #8f98a3;
+    font-size: 12px;
+}
+
+/* BUTTON */
+
+.wishlist-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wishlist-remove {
+    color: #8f98a3;
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+    .wishlist-remove:hover {
+        color: #ffffff;
+    }

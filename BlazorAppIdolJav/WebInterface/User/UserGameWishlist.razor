@@ -1,15 +1,119 @@
 ﻿@page "/user/wishlist"
 @using AntDesign
-@using GameManagement.CoreConfig.Extensions;
-@using GameManagement.Share.Extension
-@using GameManagement.Share.Model.ViewModel;
-@using GameManagement.SpecialComponent;
-@using Microsoft.AspNetCore.Components.Routing
 @using static GameManagement.Share.Extension.MessageEnumExtension
- test
+<div class="wishlist-page">
 
-<AntDesign.Row Gutter="8">
-  
-</AntDesign.Row>
+    <div class="wishlist-header">
+        <h2>Danh sách yêu thích</h2>
+
+        <div class="wishlist-count">
+            @ViewModels.Count game
+        </div>
+    </div>
+
+    <div class="wishlist-list">
+
+        @foreach (var game in ViewModels)
+        {
+            <Card Class="wishlist-game-card">
+
+                <div class="wishlist-game-content">
+
+                    <!-- Ảnh -->
+                    <div class="wishlist-game-image">
+                        <img src="@($"{NavManager.BaseUri}{game.ImagePathView}")"
+                             alt="@game.Name" />
+                    </div>
+
+                    <!-- Thông tin -->
+                    <div class="wishlist-game-info">
+
+                        <div class="wishlist-game-name">
+                            @game.Name
+                        </div>
+
+                        <div class="wishlist-game-meta">
+
+                            @if (!string.IsNullOrEmpty(game.GameCompanyName))
+                            {
+                                <span>@game.GameCompanyName</span>
+                            }
+                            <span>
+                                @game.ReleaseDate.ToString("dd/MM/yyyy")
+                            </span>
+
+                        </div>
+
+                        <div class="wishlist-game-review">
+                            <span>★</span>
+                            <b>4.5</b>
+                            <span class="review-count">
+                                (200 đánh giá)
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <!-- Giá + action -->
+                    <div class="wishlist-game-actions">
+
+                        <!-- Giá + Mua ngay -->
+                        <div class="wishlist-purchase-row">
+
+                            <div class="wishlist-price">
+                                @if (game.CurrentSalePercent > 0)
+                                {
+                                    <div class="wishlist-sale">
+                                        <span class="wishlist-discount">
+                                            -@game.CurrentSalePercent%
+                                        </span>
+
+                                        <span class="wishlist-old-price">
+                                            @game.DisplayPrice
+                                        </span>
+                                    </div>
+
+                                    <div class="wishlist-current-price">
+                                        @game.CurrentPrice
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="wishlist-current-price">
+                                        @game.DisplayPrice
+                                    </div>
+                                }
+                            </div>
+
+                            <Button Type="ButtonType.Primary" Color="Color.Green6">
+                                   
+                                Mua ngay
+                            </Button>
+
+                        </div>
+
+                        <!-- Thông tin wishlist -->
+                        <div class="wishlist-meta-actions">
+
+                            <span>
+                                Thêm vào wishlist lúc @game.DateAddedWishlist.ToString("dd/MM/yyyy")
+                            </span>
+
+                            <span class="wishlist-remove">
+                                (Xóa)
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </Card>
+        }
+
+    </div>
+
+</div>
 
 

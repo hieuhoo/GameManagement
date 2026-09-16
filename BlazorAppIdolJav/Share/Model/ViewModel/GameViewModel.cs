@@ -24,6 +24,10 @@ namespace GameManagement.Share.Model.ViewModel
 		public string CurrentPrice { get; set; }
 		public bool RecentlyInWishlist { get; set; }
 		public bool IsPurchased { get; set; } // đang test khi nào xong thì bỏ true
+		public string ImagePath { get; set; }
+		public string ImagePathView { get; set; }
+		public DateTime ReleaseDate { get; set; }
+		public DateTime DateAddedWishlist { get; set; }
 
-    }
+	}
 }

@@ -1,78 +1,79 @@
-﻿using GameManagement.Share.Model.ViewModel;
+﻿using AutoMapper;
+using GameManagement.Service;
+using GameManagement.Service.IService;
+using GameManagement.Share.ClassData;
+using GameManagement.Share.Model.ViewModel;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using System.Security.Claims;
 
 namespace GameManagement.WebInterface.User
 {
-	public partial class UserGameWishlist : ComponentBase
-	{
-		[Inject] NavigationManager NavManager { get; set; }
-		public List<GameViewModel> ViewModels { get; set; } = new();
+    public partial class UserGameWishlist : ComponentBase
+    {
+        [Inject] NavigationManager NavManager { get; set; }
+        [Inject] AuthenticationStateProvider AuthProvider { get; set; }
+        [Inject] IUserGameWishlistService WishlistService { get; set; }
+        [Inject] IGameService GameService { get; set; }
+        [Inject] IMapper Mapper { get; set; }
 
-		protected override async Task OnInitializedAsync()
-		{
-			LoadMockWishlist();
+        public List<GameViewModel> ViewModels { get; set; } = new();
+        List<GameData> GameDatas { get; set; } = new();
+        List<GameData> WishlistGameDatas { get; set; } = new();
 
-			await base.OnInitializedAsync();
-		}
+        string currentUserId;
 
-		private void LoadMockWishlist()
-		{
-			ViewModels = new List<GameViewModel>
-	{
-		new()
-		{
-			Id = "1",
-			Name = "God of War Ragnarök",
-			ImagePathView = "Upload/GameURL/952fda00bf7742eaa8002d5006278a15.jpg",
-			GameCompanyName = "Santa Monica Studio",
-			ReleaseDate = new DateTime(2022, 11, 9),
-			Price = 850000,
-			CurrentPrice = 595000.ToString(),
-			CurrentSalePercent = 30,
-			DateAddedWishlist = new DateTime(2022, 11, 9),
-		},
+        protected override async Task OnInitializedAsync()
+        {
+            try
+            {
+                var authState = await AuthProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
+                currentUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                await GetAllGameAsync();
+                await GetWishlistGameDataAsync();
+            }
+            catch
+            {
 
-		new()
-		{
-			Id = "2",
-			Name = "Black Myth: Wukong",
-			ImagePathView = "Upload/GameURL/78897aada6e04eecbe2b5a6a1e13cfb1.jpg",
-			GameCompanyName = "Game Science",
-			ReleaseDate = new DateTime(2024, 8, 20),
-			Price = 1290000,
-			CurrentPrice = 1290000.ToString(),
-			CurrentSalePercent = 0,
-			DateAddedWishlist = new DateTime(2022, 11, 9),
+            }
+        }
 
-		},
+        async Task GetWishlistGameDataAsync()
+        {
+            try
+            {
+                var data = await WishlistService.GetAllWithFilterAsync(new WishlistSearch
+                {
+                    UserId = currentUserId
+                }) ?? new List<UserGameWishlistData>();
+                var listGameIds = data.Select(c => c.GameId).ToHashSet(); 
 
-		new()
-		{
-			Id = "3",
-			Name = "Uncharted 4: A Thief's End",
-			ImagePathView = "Upload/GameURL/952fda00bf7742eaa8002d5006278a15.jpg",
-			GameCompanyName = "Naughty Dog",
-			ReleaseDate = new DateTime(2016, 5, 10),
-			Price = 1000000,
-			CurrentPrice = 700000.ToString(),
-			CurrentSalePercent = 30,
-			DateAddedWishlist = new DateTime(2022, 11, 9),
-		},
+                WishlistGameDatas = GameDatas
+                    .Where(x => listGameIds.Contains(x.Id))
+                    .ToList(); //list cac game wlist
+                ViewModels = Mapper.Map<List<GameViewModel>>(WishlistGameDatas);
+                Console.Write(ViewModels);
+            }
+            catch
+            {
 
-		new()
-		{
-			Id = "4",
-			Name = "Red Dead Redemption 2",
-			ImagePathView = "Upload/GameURL/78897aada6e04eecbe2b5a6a1e13cfb1.jpg",
-			GameCompanyName = "Rockstar Games",
-			ReleaseDate = new DateTime(2018, 10, 26),
-			Price = 1500000,
-			CurrentPrice = 1125000.ToString(),
-			CurrentSalePercent = 25,
-			DateAddedWishlist = new DateTime(2022, 11, 9),
+            }
+        }
 
-		}
-	};
-		}
-	}
+        async Task GetAllGameAsync()
+        {
+            try
+            {
+                GameDatas = await GameService.GetAllWithFilterAsync(new GameSearch
+                {
+
+                }) ?? new List<GameData>();
+            }
+            catch
+            {
+
+            }
+        }
+    }
 }

@@ -69,7 +69,8 @@ namespace GameManagement.Share.Model.EditModel
 		public string Unit { get; set; }
 
 		[Display(Name = "Mô tả")]
-		public string Description { get; set; }
+        [Required]
+        public string Description { get; set; }
 
 		[Display(Name = "Nền tảng hỗ trợ")]
 		[Required]

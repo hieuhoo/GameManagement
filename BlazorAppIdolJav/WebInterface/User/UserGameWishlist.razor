@@ -1,5 +1,6 @@
 ﻿@page "/user/wishlist"
 @using AntDesign
+@using static GameManagement.Share.Extension.EnumExtension
 @using static GameManagement.Share.Extension.MessageEnumExtension
 <div class="wishlist-page">
 
@@ -29,27 +30,39 @@
                     <div class="wishlist-game-info">
 
                         <div class="wishlist-game-name">
-                            @game.Name
+                            <h3 style="color:white;">@game.Name</h3>
                         </div>
 
                         <div class="wishlist-game-meta">
 
                             @if (!string.IsNullOrEmpty(game.GameCompanyName))
                             {
-                                <span>@game.GameCompanyName</span>
+                                <span>Hãng: @game.GameCompanyName</span>
                             }
+                            <br />
                             <span>
-                                @game.ReleaseDate.ToString("dd/MM/yyyy")
+                               Ngày phát hành: @game.ReleaseDate.ToString("dd/MM/yyyy")
                             </span>
 
                         </div>
+                        <div class="wishlist-game-platform">
+                            @if (game.SystemSupport == PlatformSystem.Window.ToString())
+                            {
+                                <Icon Type="windows" Theme="IconThemeType.Fill" />
+                            }
+                            else
+                            {
+                                <Icon Type="apple" Theme="IconThemeType.Fill" />
+                            }
+                        </div>
 
-                        <div class="wishlist-game-review">
-                            <span>★</span>
-                            <b>4.5</b>
-                            <span class="review-count">
-                                (200 đánh giá)
-                            </span>
+                        <div class="wishlist-game-tags">
+                            @foreach (var type in game.TypeNames)
+                            {
+                                <Tag>
+                                    @type
+                                </Tag>
+                            }
                         </div>
 
                     </div>
@@ -85,7 +98,7 @@
                                 }
                             </div>
 
-                            <Button Type="ButtonType.Primary" Color="Color.Green6">
+                            <Button Type="ButtonType.Primary" Color="Color.Green6" OnClick="BuyGameAsync">
                                    
                                 Mua ngay
                             </Button>
@@ -99,9 +112,11 @@
                                 Thêm vào wishlist lúc @game.DateAddedWishlist.ToString("dd/MM/yyyy")
                             </span>
 
-                            <span class="wishlist-remove">
+                            <Button Class="wishlist-remove"
+                                    Type="ButtonType.Text"
+                                    OnClick="() => RemoveGameAsync(game.Id)">
                                 (Xóa)
-                            </span>
+                            </Button>
 
                         </div>
 

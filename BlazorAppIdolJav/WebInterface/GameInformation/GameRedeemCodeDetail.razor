@@ -163,13 +163,16 @@
                 <AntDesign.Col Span="24">
                     <AntDesign.Row Gutter="16">
                         <AntDesign.Col Span="12">
+                            Ngày hết hạn : <span style="color:red;">@EditModel.ExpiredDate.GetFormatDateWithMinute()</span>
+                        </AntDesign.Col>
+                        <AntDesign.Col Span="12">
+                            Thời gian còn lại : <span style="color:red;">@EditModel.RemainingTime</span>
+                        </AntDesign.Col>
+                        <AntDesign.Col Span="24">
                             <div style="display:flex; align-items:center; gap:6px;">
                                 <span>Trạng thái:</span>
                                 @CommonTemplate.RenderReedemStatusText(EditModel.Status)
                             </div>
-                        </AntDesign.Col>
-                        <AntDesign.Col Span="12">
-                            Ngày hết hạn : <span style="color:red;">@EditModel.ExpiredDate.GetFormatBasicDate()</span>
                         </AntDesign.Col>
                     </AntDesign.Row>
                 </AntDesign.Col>
@@ -178,7 +181,7 @@
             {
                 <div class="wrap_content">
                     <AntDesign.Col Span="24">
-                        Người sử dụng : <span style="color:red;">@EditModel.RedeemedBy</span>
+                        Người sử dụng : <span style="color:red;">@EditModel.RedeemedName</span>
                     </AntDesign.Col>
                     <AntDesign.Col Span="24">
                         Ngày sử dụng : <span style="color:red;">@EditModel.RedeemedDate.ToString()</span>

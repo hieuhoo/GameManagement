@@ -28,6 +28,13 @@ namespace GameManagement.Share.Model.ViewModel
 		public string ImagePathView { get; set; }
 		public DateTime ReleaseDate { get; set; }
 		public DateTime DateAddedWishlist { get; set; }
+		public string SystemSupport { get; set; }
+		public string GameTypeId { get; set; }
+		public List<string> TypeIds { get; set; } = new List<string>();
+		public List<string> TypeNames { get; set; } = new List<string>();
+		public int TotalSold { get; set; }
 
+		public int? TotalRevenue { get; set; }
+		//public double AverageStar { get; set; } = 3;
 	}
 }

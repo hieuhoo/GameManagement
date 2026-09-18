@@ -33,51 +33,80 @@
                    OnRowClick="OnRowClick"
                    @ref="Table">
 
-                <Column @bind-Field="context.Stt"
+                <PropertyColumn Property="context => context.Stt"
                         Title="STT" Fixed="ColumnFixPlacement.Left"
                         Width="60">
-                </Column>
+                </PropertyColumn>
 
-                <Column @bind-Field="context.Name"
+                <PropertyColumn Property="context => context.Name"
                         Title="Tên game" Fixed="ColumnFixPlacement.Left"
                         Width="200">
-                </Column>
+                </PropertyColumn>
 
-                <Column @bind-Field="context.GameCompanyName"
+                <PropertyColumn Property="context => context.GameCompanyName"
                         Title="Hãng game"
                         Width="150">
-                </Column>
+                </PropertyColumn>
 
-                <Column @bind-Field="context.Status"
+                <PropertyColumn Property="context => context.Status"
                         Title="Trạng thái"
                         Width="120">
                     <Template>
                         @CommonTemplate.RenderGameStatusText(context.Status)
                     </Template>
-                </Column>
+                </PropertyColumn>
 
-                <Column @bind-Field="context.SoldStatus"
-                        Title="Trạng thái bán"
-                        Width="120">
-                    <Template>
-                        @CommonTemplate.RenderGameSoldStatusText(context.SoldStatus)
-                    </Template>
-                </Column>
-
-                <Column @bind-Field="context.ReleaseStatus"
+                <PropertyColumn Property="context => context.ReleaseStatus"
                         Title="Trạng thái phát hành"
                         Width="150">
                     <Template>
                         @CommonTemplate.RenderGameReleaseStatusText(context.ReleaseStatus)
                     </Template>
-                </Column>
+                </PropertyColumn>
 
-                <Column Field="@context.DisplayPrice"
+                <PropertyColumn Property="context => context.SoldStatus"
+                        Title="Trạng thái bán"
+                        Width="120">
+                    <Template>
+                        @CommonTemplate.RenderGameSoldStatusText(context.SoldStatus)
+                    </Template>
+                </PropertyColumn>
+
+                <PropertyColumn Property="context => context.TotalSold"
+                        Title="Số lượng đã bán"
+                        Width="100">
+                    <Template>
+                        <div class="sale-count-cell">
+                            <span>@context.TotalSold</span>
+
+                            <AntDesign.Tooltip Title="Xem lịch sử bán">
+                                <span class="sale-history-icon">
+                                    <Icon Type="clock-circle"
+                                          Theme="IconThemeType.TwoTone" OnClick="() => ViewHistoryAsync(context.Name, context.Id)" />
+                                </span>
+                            </AntDesign.Tooltip>
+                        </div>
+                    </Template>
+                </PropertyColumn>
+
+                <PropertyColumn Property="context => context.TotalRevenue"
+                        Width="130" Format="N0">
+                    <TitleTemplate>
+                        <Tooltip Title="Sẽ được tính theo tổng số tiền thực nhận khi bán , ko phải tính theo giá gốc">
+                            <span>
+                                Tổng doanh thu
+                                <Icon Type="info-circle" />
+                            </span>
+                        </Tooltip>
+                    </TitleTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn Property="context => context.DisplayPrice"
                         Title="Giá gốc"
                         Width="130">
-                </Column>
+                </PropertyColumn>
 
-                <Column Field="@context.CurrentSalePercent"
+                <PropertyColumn Property="context => context.CurrentSalePercent"
                         Width="140">
                     <TitleTemplate>
                         <Tooltip Title="Sẽ căn cứ theo giảm giá theo thời gian bên thiết lập, nếu không có mặc định là 0">
@@ -87,9 +116,9 @@
                             </span>
                         </Tooltip>
                     </TitleTemplate>
-                </Column>
+                </PropertyColumn>
 
-                <Column Field="@context.CurrentPrice"
+                <PropertyColumn Property="context => context.CurrentPrice"
                         Width="130">
                     <TitleTemplate>
                         <Tooltip Title="Giá hiện tại = Giá gốc * (100 - N%)/100">
@@ -99,9 +128,9 @@
                             </span>
                         </Tooltip>
                     </TitleTemplate>
-                </Column>
+                </PropertyColumn>
 
-                <Column @bind-Field="context.IsFeatured"
+                <PropertyColumn Property="context => context.IsFeatured"
                         Title="Game nổi bật"
                         Width="130">
                     <Template>
@@ -116,10 +145,10 @@
                             }
                         </Badge>
                     </Template>
-                </Column>
+                </PropertyColumn>
 
                 <ActionColumn Title="Thao tác"
-                              Width="130">
+                              Width="130" Fixed="ColumnFixPlacement.Right">
                     <Space Size="SpaceSize.Small">
                         <SpaceItem>
                             <Tooltip Title="Chi tiết">
@@ -152,7 +181,6 @@
         <div class="game-page">
 
             <GridRow Gutter="(16, 16)">
-
                 @foreach (var game in ViewModels)
                 {
                     <GridCol Xs="24"
@@ -182,7 +210,7 @@
                                             <div>
                                                 Tổng số đánh giá: <b>200</b>
                                             </div>
-                                            @* // sau này lấy ở bảng gamereview *@
+
                                             <div>
                                                 Đánh giá tích cực: <b>90%</b>
                                             </div>
@@ -193,15 +221,53 @@
                                         </div>
 
                                         <div class="review-average">
-                                            <div class="average-star">★</div>
 
-                                            <div class="average-score">
-                                                4.5
+                                            <div class="average-star">
+                                                <span class="star active">★</span>
+                                                <span class="star active">★</span>
+                                                <span class="star active">★</span>
+                                                <span class="star active">★</span>
+                                                <span class="star half">
+                                                    <span class="star-half-gray">★</span>
+                                                    <span class="star-half-yellow">★</span>
+                                                </span>
                                             </div>
 
-                                            <div class="average-max">
-                                                / 5
+                                            @* <div class="average-star">
+                                                @for (int i = 1; i <= 5; i++)
+                                                {
+                                                    if (i <= Math.Floor(game.AverageStar))
+                                                    {
+                                                        <span class="star active">★</span>
+                                                    }
+                                                    else if (i == Math.Ceiling(game.AverageStar) &&
+                                                             game.AverageStar % 1 != 0)
+                                                    {
+                                                        <span class="star half">
+                                                            <span class="star-half-yellow">★</span>
+                                                            <span class="star-half-gray">★</span>
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="star">★</span>
+                                                    }
+                                                }
+                                            </div> *@
+
+                                            <div class="average-score-line">
+                                                <span class="average-score">4.5</span>
+                                                <span class="average-max">/ 5</span>
                                             </div>
+
+                                            @if (game.IsPurchased)
+                                            {
+                                                <Button Type="ButtonType.Link"
+                                                        Class="vote-button" OnClick="() => OpenVoteFormAsync(currentUserId, game.Id)">
+                                                    Đánh giá
+                                                </Button>
+                                            }
+
                                         </div>
 
                                     </div>
@@ -231,19 +297,18 @@
                                                 @game.DisplayPrice
                                             </div>
                                         }
-
                                     </div>
 
                                     <!-- 3 nút -->
                                     <div class="game-actions">
 
-                                        <Button Color="Color.Green6" OnClick="() => ViewDetailGameAsync(game.Id)">
+                                        <Button Color="Color.Green6" OnClick="() => ViewDetailGameAsync(game.Id)" Class="detail-button">
                                             Xem chi tiết
                                         </Button>
                                         @if (game.RecentlyInWishlist)
                                         {
                                             <Tooltip Title="Xóa khỏi yêu thích">
-                                                <Button Color="Color.Orange5"
+                                                <Button Color="Color.Orange5" Class="wishlist-button"
                                                         OnClick="() => AddOrRemoveGameWishlistAsync(game.Id)">
                                                     x
                                                 </Button>
@@ -252,7 +317,7 @@
                                         else
                                         {
                                             <Tooltip Title="Thêm vào yêu thích">
-                                                <Button Color="Color.Magenta2"
+                                                <Button Color="Color.Magenta2" Class="wishlist-button"
                                                         OnClick="() => AddOrRemoveGameWishlistAsync(game.Id)">
                                                     ♡
                                                 </Button>
@@ -260,7 +325,7 @@
                                         }
                                         @if (game.IsPurchased)
                                         {
-                                            <Button Disabled>
+                                            <Button Disabled Class="purchased-button">
                                                 ✓ Đã mua
                                             </Button>
                                         }
@@ -335,7 +400,7 @@
                     </Radio>
 
                     <Radio Value="@MethodPurchase.Banking.ToString()">
-                       @MethodPurchase.Banking.GetDescription()
+                        @MethodPurchase.Banking.GetDescription()
                     </Radio>
 
                 </RadioGroup>
@@ -344,3 +409,5 @@
     }
 
 </Modal>
+
+<TransactionHistoryDetail @ref="transactionDetailRef"></TransactionHistoryDetail>

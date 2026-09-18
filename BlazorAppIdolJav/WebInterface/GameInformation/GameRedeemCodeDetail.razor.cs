@@ -19,6 +19,8 @@ namespace GameManagement.WebInterface.GameInformation
 		[Inject] IMapper Mapper { get; set; }
 		[Inject] IGameRedeemCodeService RedeemService { get; set; }
 		[Inject] IGameService GameService { get; set; }
+		[Inject] IUserService UserService { get; set; }
+
 
 		[Inject] NotificationService NoticeService { get; set; }
 		[Parameter] public EventCallback ReloadData { get; set; }
@@ -69,7 +71,26 @@ namespace GameManagement.WebInterface.GameInformation
 		{
 			try
 			{
+				var user = await UserService.GetAllWithFilterAsync(new UserSearch
+				{
+					Role = UserRole.Normal.ToString()
+				}) ?? new List<UserData>();
+				var userDict = user.ToDictionary(x => x.Id, x => x.UserName);
 				EditModel = Mapper.Map<GameRedeemCodeEditModel>(model);
+				if (EditModel.RedeemedBy != null && userDict.TryGetValue(EditModel.RedeemedBy, out var name))
+				{
+					EditModel.RedeemedName = name;
+				}
+				var remaining = EditModel.ExpiredDate - DateTime.Now;
+
+				if (remaining.TotalSeconds <= 0)
+				{
+					EditModel.RemainingTime = "Đã hết hạn";
+				}
+				else
+				{
+					EditModel.RemainingTime = 	$"{remaining.Days} ngày {remaining.Hours} giờ";
+				}
 				EditModel.ReadOnly = true;
 				redeemVisible = true;
 			}

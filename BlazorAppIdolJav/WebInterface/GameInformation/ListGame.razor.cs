@@ -32,7 +32,8 @@ namespace GameManagement.WebInterface.GameInformation
 		[Inject] IPurchaseService PurchaseService { get; set; }
 		[Inject] IUserGameLibraryService LibraryService { get; set; }
 		[Inject] IEmailService MailService { get; set; }
-
+		[Inject] IWalletTransactionHistoryService HistoryService { get; set; }
+		[Inject] IUserService UserService { get; set; }
 
 		[Inject] NotificationService Notice { get; set; }
 		[Inject] AuthenticationStateProvider AuthProvider { get; set; }
@@ -47,6 +48,8 @@ namespace GameManagement.WebInterface.GameInformation
 		GameViewModel SelectedGame { get; set; } = new();
 		Table<GameViewModel> Table;
 		GameDetail gameDetailRef;
+		TransactionHistoryDetail transactionDetailRef = new TransactionHistoryDetail();
+		Dictionary<string, string> DictUser = new();
 		int width;
 		int height;
 		int totalFeature;
@@ -74,6 +77,7 @@ namespace GameManagement.WebInterface.GameInformation
 				currentUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 				width = ConfigTemplate.Width;
 				height = ConfigTemplate.Height;
+				await LoadListUserAsync();
 				await GetGameTypeDataAsync();
 				await GetGameCompanyDataAsync();
 				await LoadDataAsync();
@@ -117,6 +121,8 @@ namespace GameManagement.WebInterface.GameInformation
 					game.CurrentPrice = $"{(game.Price * (100 - game.CurrentSalePercent) / 100):N0} {game.Unit}";
 					game.RecentlyInWishlist = await IsGameInWishlist(game.Id, currentUserId);
 					game.IsPurchased = await IsGameInLibrary(game.Id, currentUserId);
+					game.TotalSold = (await HistoryService.GetTotalGameRevenue(game.Id)).TotalSold;
+					game.TotalRevenue = (await HistoryService.GetTotalGameRevenue(game.Id)).TotalRevenue;
 				}
 				int total = ViewModels.Where(c => c.RecentlyInWishlist == true).ToList().Count();
 				WishlistState.SetCount(total);
@@ -448,6 +454,39 @@ namespace GameManagement.WebInterface.GameInformation
 			{
 				return false;
 			}
+		}
+
+		async Task ViewHistoryAsync(string name, string id)
+		{
+			try
+			{
+				await transactionDetailRef.OpenDetailAsync(name, id, DictUser);
+			}
+			catch
+			{
+
+			}
+		}
+
+		async Task LoadListUserAsync()
+		{
+			try
+			{
+				var result = await UserService.GetAllWithFilterAsync(new UserSearch
+				{
+					Role = UserRole.Normal.ToString(),	
+				}) ?? new List<UserData>();
+				DictUser = result.ToDictionary(x => x.Id, x => x.UserName);
+			}
+			catch
+			{
+
+			}
+		}
+
+		async Task OpenVoteFormAsync(string userId, string gameId)
+		{
+			Notice.NotiWarning("Chưa làm");
 		}
 	}
 }

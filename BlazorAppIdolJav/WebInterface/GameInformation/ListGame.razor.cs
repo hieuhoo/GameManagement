@@ -12,6 +12,7 @@ using GameManagement.Share.Model.EditModel;
 using GameManagement.Share.Model.ViewModel;
 using GameManagement.SpecialComponent;
 using GameManagement.SpecialComponent.ExtensionClass;
+using GameManagement.WebInterface.User;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
@@ -49,6 +50,8 @@ namespace GameManagement.WebInterface.GameInformation
 		Table<GameViewModel> Table;
 		GameDetail gameDetailRef;
 		TransactionHistoryDetail transactionDetailRef = new TransactionHistoryDetail();
+		GameReview reviewRef = new GameReview();
+
 		Dictionary<string, string> DictUser = new();
 		int width;
 		int height;
@@ -484,9 +487,16 @@ namespace GameManagement.WebInterface.GameInformation
 			}
 		}
 
-		async Task OpenVoteFormAsync(string userId, string gameId)
+		async Task OpenVoteFormAsync(string userId, string gameId, string name)
 		{
-			Notice.NotiWarning("Chưa làm");
+			try
+			{
+				await reviewRef.OpenReviewFormAsync(userId, gameId, name);
+			}
+			catch
+			{
+
+			}
 		}
 	}
 }

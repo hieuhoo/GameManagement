@@ -4,6 +4,7 @@
 @using GameManagement.Share.Extension
 @using GameManagement.Share.Model.ViewModel;
 @using GameManagement.SpecialComponent;
+@using GameManagement.WebInterface.User
 @using Microsoft.AspNetCore.Components.Routing
 @using static GameManagement.Share.Extension.EnumExtension
 
@@ -263,7 +264,7 @@
                                             @if (game.IsPurchased)
                                             {
                                                 <Button Type="ButtonType.Link"
-                                                        Class="vote-button" OnClick="() => OpenVoteFormAsync(currentUserId, game.Id)">
+                                                        Class="vote-button" OnClick="() => OpenVoteFormAsync(currentUserId, game.Id, game.Name)">
                                                     Đánh giá
                                                 </Button>
                                             }
@@ -411,3 +412,5 @@
 </Modal>
 
 <TransactionHistoryDetail @ref="transactionDetailRef"></TransactionHistoryDetail>
+
+<GameReview @ref="reviewRef"></GameReview>

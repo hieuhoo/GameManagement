@@ -7,5 +7,6 @@ namespace GameManagement.Repository.IRepository
 	{
 		IQueryable<WalletTransactionHistory> GetQueryable();
 		Task<List<WalletTransactionHistory>> GetAllWithFilterAsync(IQueryable<WalletTransactionHistory> query, TransactionHistorySearch search);
+		Task <(int TotalSold, int? TotalRevenue)> GetTotalGameRevenue(string gameId);
 	}
 }

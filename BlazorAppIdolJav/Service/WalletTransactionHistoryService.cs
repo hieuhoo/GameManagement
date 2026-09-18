@@ -30,5 +30,18 @@ namespace GameManagement.Service
 				throw ex;
 			}
 		}
+
+		public async Task<(int TotalSold, int? TotalRevenue)> GetTotalGameRevenue(string gameId)
+		{
+			try
+			{
+				var result = await _repo.GetTotalGameRevenue(gameId);
+				return result;
+			}
+			catch
+			{
+				return (0, 0);
+			}
+		}
 	}
 }

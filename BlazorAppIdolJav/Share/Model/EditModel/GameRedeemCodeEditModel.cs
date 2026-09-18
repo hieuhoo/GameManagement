@@ -47,7 +47,7 @@ namespace GameManagement.Share.Model.EditModel
 		public string? GameId { get; set; }
 		public string? GameName { get; set; }
 		public string RedeemedName { get; set; } // tên người sử dụng
-
+		public string RemainingTime { get; set; }
 		public GameRedeemCodeEditModel()
 		{
 			InputFields.Add<GameRedeemCodeEditModel>(c => c.Value);

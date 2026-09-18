@@ -15,8 +15,10 @@
 		public int TotalMoney { get; set; }
 		public string ChangeMoney { get; set; } // gán số thay đổi tiền = + hoặc - giá trị amounts
 		public int PercentDiscount { get; set; }
-        public int OriginalGamePrice { get; set; }
-        public int PurchaseGamePrice { get; set; }
+		public int OriginalGamePrice { get; set; }
+		public int PurchaseGamePrice { get; set; }
+		public string UserId { get; set; }
+		public string AccountName { get; set; }
 
-    }
+	}
 }

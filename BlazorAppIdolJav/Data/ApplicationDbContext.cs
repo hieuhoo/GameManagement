@@ -24,6 +24,8 @@ namespace GameManagement.Data
         public DbSet<WalletTransactionHistory> WalletTransactionHistory { get; set; }
         public DbSet<UserGameWishlist> UserGameWishlist { get; set; }
         public DbSet<UserGameLibrary> UserGameLibrary { get; set; }
+        public DbSet<UserGameReview> UserGameReview { get; set; }
+
 
     }
 }

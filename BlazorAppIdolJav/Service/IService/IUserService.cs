@@ -58,6 +58,10 @@ namespace GameManagement.Service.IService
 			{
 				filter = filter.Where(x => x.Email == Email);
 			}
+			if (Role.IsNotNullOrEmpty())
+			{
+				filter = filter.Where(x => x.Role == Role);
+			}
 			return filter;
 		}
 	}

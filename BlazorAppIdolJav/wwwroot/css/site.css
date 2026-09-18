@@ -501,7 +501,7 @@
     overflow: hidden;
 }
 
-.game-review {
+/*.game-review {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -510,13 +510,21 @@
     font-size: 13px;
     line-height: 22px;
     color: #666;
-}
+}*/
 
+.game-review {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    min-height: 90px;
+}
 
 .game-price-history {
     margin-top: 12px;
     min-height: 58px;
-    text-align : right;
+    text-align: right;
 }
 
     .game-price-history > div {
@@ -547,33 +555,120 @@
 }
 
 .game-actions {
-    display: grid;
-    grid-template-columns: 1fr 45px 1fr;
+    display: flex;
+    align-items: center;
     gap: 8px;
-    margin-top: 16px;
+    width: 100%;
+    min-width: 0;
+    margin-top: auto;
 }
+
+    /* Xem chi tiết */
+    .game-actions .detail-button {
+        flex: 1 1 auto;
+        min-width: 0;
+        padding-left: 8px;
+        padding-right: 8px;
+        white-space: nowrap;
+        font-size: 14px;
+    }
+
+    /* Wishlist */
+    .game-actions .wishlist-button {
+        flex: 0 0 42px;
+        min-width: 42px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* Đã mua */
+    .game-actions .purchased-button {
+        flex: 0 1 auto;
+        min-width: 0;
+        white-space: nowrap;
+    }
 
 .review-info {
     flex: 1;
+    min-width: 0;
+    color: #888;
+    font-size: 14px;
+    line-height: 26px;
 }
 
+    .review-info div {
+        white-space: nowrap;
+    }
+
+    .review-info b {
+        color: #555;
+    }
+
 .review-average {
-    min-width: 70px;
+    flex: 0 0 75px;
+    width: 75px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: #faad14;
+    text-align: center;
 }
 
 .average-star {
     font-size: 22px;
     line-height: 1;
-    margin-right: 5px;
+    display: flex;
+    align-items: center;
+    gap: 1px;
+}
+
+    .average-star > .star {
+        color: #d9d9d9;
+    }
+
+        .average-star > .star.active {
+            color: #faad14;
+        }
+
+        /* Ngôi sao 0.5 */
+        .average-star > .star.half {
+            position: relative;
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            color: transparent;
+        }
+
+.star-half-gray,
+.star-half-yellow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 22px;
+    height: 22px;
+    font-size: 22px;
+    line-height: 22px;
+}
+
+.star-half-gray {
+    color: #d9d9d9;
+}
+
+.star-half-yellow {
+    color: #faad14;
+    clip-path: inset(0 50% 0 0);
+}
+
+.average-score-line {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    margin-top: 4px;
 }
 
 .average-score {
     font-size: 20px;
-    line-height: 1;
+    line-height: 22px;
     font-weight: 700;
     color: #333;
 }
@@ -582,6 +677,20 @@
     margin-left: 2px;
     font-size: 12px;
     color: #888;
+}
+
+.vote-button {
+    margin-top: 5px !important;
+    padding: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    font-size: 13px;
+    line-height: 18px;
+    color: #1890ff !important;
+}
+
+.vote-button:hover {
+    color: darkgray;
 }
 
 .wishlist-count {
@@ -622,7 +731,7 @@
 .wishlist-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
 }
 
 /* CARD */
@@ -650,16 +759,17 @@
 
 .wishlist-game-content {
     display: flex;
-    min-height: 150px;
+    align-items: stretch;
     background-color: #3b4b5b;
+    min-height: 210px;
 }
 
 /* IMAGE */
 
 .wishlist-game-image {
-    width: 260px;
-    min-width: 260px;
-    height: 150px;
+    width: 293px;
+    min-width: 293px;
+    align-self: stretch;
     overflow: hidden;
 }
 
@@ -669,22 +779,25 @@
         object-fit: cover;
         display: block;
     }
-
 /* INFO */
 
 .wishlist-game-info {
     flex: 1;
-    padding: 18px 22px;
+    padding: 20px 25px;
     display: flex;
     flex-direction: column;
+    min-width: 0;
 }
 
 
 .wishlist-game-name {
-    color: #ffffff;
+    margin-bottom: 10px;
 }
 
 .wishlist-game-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     color: #a5aeb8;
 }
 
@@ -731,13 +844,14 @@
     color: #f5222d;
     padding: 3px 6px;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: 600;
 }
 
 .wishlist-old-price {
-    color: #999;
+    color: white;
     text-decoration: line-through;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .wishlist-current-price {
@@ -766,13 +880,66 @@
     gap: 8px;
 }
 
-.wishlist-remove {
-    color: #8f98a3;
-    font-size: 12px;
-    cursor: pointer;
-    text-decoration: underline;
+.wishlist-remove.ant-btn {
+    padding: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #8f98a3 !important;
+    font-size: 12px !important;
+    line-height: 18px !important;
 }
 
-    .wishlist-remove:hover {
-        color: #ffffff;
+    .wishlist-remove.ant-btn > span {
+        text-decoration: underline !important;
+        text-underline-offset: 2px;
+    }
+
+    .wishlist-remove.ant-btn:hover {
+        color: #fff !important;
+        background: transparent !important;
+    }
+
+.wishlist-game-platform {
+    margin-top: 20px;
+    color: #fff;
+    font-size: 18px;
+}
+
+.wishlist-game-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 8px;
+}
+
+    .wishlist-game-tags .ant-tag {
+        margin: 0;
+        padding: 1px 6px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #8f98a3;
+        font-size: 11px;
+        line-height: 18px;
+    }
+
+.sale-count-cell {
+    display: flex;
+    align-items: center;
+/*    justify-content: center;*/
+    gap: 6px;
+}
+
+.sale-history-icon {
+/*    display: inline-flex;
+    align-items: center;*/
+    cursor: pointer;
+    color: #1890ff;
+    font-size: 15px;
+}
+
+    .sale-history-icon:hover {
+        color: #40a9ff;
     }

@@ -295,6 +295,7 @@
                                             AllowClear
                                             @bind-Value="EditModel.MinCPU" Disabled="EditModel.ReadOnly">
                                     </Select>
+                                    <Input Type="@InputType.Text" @bind-Value="@EditModel.MinCPU" Disabled="@EditModel.ReadOnly">
                                     <ValidationMessage For="() => EditModel.MinCPU"></ValidationMessage>
                                 </AntDesign.Col>
 

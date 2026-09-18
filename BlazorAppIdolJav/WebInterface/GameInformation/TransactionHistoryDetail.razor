@@ -1,0 +1,46 @@
+﻿@using AntDesign
+@using GameManagement.Share.Extension
+@using GameManagement.Share.Model.ViewModel
+
+<Modal Width="900" ZIndex="1000"
+       Visible="@transactionVisible"
+       Title="@titleHistory"
+       OnCancel="CloseHistoryForm"
+       Footer="@null"
+       MaskClosable="false">
+
+       <AntDesign.Col Span="24">
+            <Table TItem="WalletTransactionHistoryViewModel"
+                   DataSource="ViewModels"
+                   ScrollY="calc(100vh - 260px)"
+                   ScrollBarWidth="@DefaultTableConfig.ScrollBarWidth"
+                   Loading="loading"
+                   @ref="Table">
+
+            <PropertyColumn Property="x => x.Stt"
+                            Title="STT"
+                            Width="60" />
+
+            <PropertyColumn Property="x => x.CreateDate.GetFormatDateWithMinute()"
+                            Title="Ngày giao dịch"
+                            Width="140" />
+
+            <PropertyColumn Property="x => x.AccountName"
+                            Title="Tên user"
+                            Width="120" />
+
+            <PropertyColumn Property="x => x.OriginalGamePrice"
+                            Title="Giá gốc"
+                            Width="110" Format="N0"/>
+
+            <PropertyColumn Property="x => x.PercentDiscount"
+                            Title="% giảm"
+                            Width="90" />
+
+            <PropertyColumn Property="x => x.PurchaseGamePrice"
+                            Title="Giá thanh toán"
+                            Width="140" Format="N0" />
+
+            </Table>
+        </AntDesign.Col>
+</Modal>

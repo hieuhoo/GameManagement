@@ -1,0 +1,140 @@
+﻿@using AntDesign
+@using GameManagement.SpecialComponent
+@using GameManagement.SpecialComponent.ExtensionClass
+@using Microsoft.AspNetCore.Components.Forms
+
+<Modal Title="@titleForm"
+       @bind-Visible="isReviewVisible"
+       OnCancel="CloseReviewModal"
+       Footer="@null">
+
+    <EditForm Model="EditModel" Context="context">
+        <DataAnnotationsValidator />
+
+        <InputWatcher @ref="inputWatcher"></InputWatcher>
+
+        <AntDesign.Row Gutter="(16, 16)">
+            @if (EditModel.ReadOnly)
+            {
+                <AntDesign.Col Span="10">
+                    <Button Type="ButtonType.Primary"
+                            OnClick="EditReview">
+                        <Icon Type="edit" Theme="IconThemeType.Outline" />
+                        Chỉnh sửa
+                    </Button>
+                </AntDesign.Col>
+
+                <AntDesign.Col Span="14">
+                    @if (EditModel.StarNumber >= 3)
+                    {
+                        <span style="color:#09ef3f;font-size:15px;">Bạn đang đánh giá game này tích cực</span>
+                    }
+                    else
+                    {
+                        <span style="color:red;font-size:15px;">Bạn đang đánh giá game này tiêu cực</span>
+                    }
+                </AntDesign.Col>
+            }
+            <!-- Rating -->
+            <AntDesign.Col Span="24">
+                <LabelFor FieldIdentifier="context.Field(nameof(EditModel.StarNumber))"></LabelFor>
+                <div style="text-align: center;">
+                    <Rate Value="@EditModel.StarNumber" Disabled="EditModel.ReadOnly"
+                          Tooltips="@(new[] {
+                              "Tệ như nyc",
+                              "Hơi chán",
+                              "Tạm được",
+                              "Tuyệt như eimi fukada",
+                              "Peak vcl"
+                              })"
+                          ValueChanged="v => OnStarChanged(v)" />
+                </div>
+                <ValidationMessage For="() => EditModel.StarNumber"></ValidationMessage>
+            </AntDesign.Col>
+
+            <AntDesign.Col Span="24">
+                <LabelFor FieldIdentifier="context.Field(nameof(EditModel.IsRecommend))"></LabelFor>
+                <AntDesign.Col Span="24">
+                    <Row Justify="RowJustify.Start" Gutter="(24, 0)">
+                        <Col>
+                        <Button Type="@(EditModel.IsRecommend == true
+                                                                                                                                                                                                                                                                            ? ButtonType.Primary
+                                                                                                                                                                                                                                                                            : ButtonType.Default)"
+                                OnClick="() => EditModel.IsRecommend = true" Disabled="EditModel.ReadOnly">
+
+                            <Icon Type="like" Theme="IconThemeType.Outline" />
+                            Đương's nhiên
+                        </Button>
+                    </Col>
+
+                    <Col>
+                    <Button Type="@(EditModel.IsRecommend == false
+                                                                                                                                                                                                                                        ? ButtonType.Primary
+                                                                                                                                                                                                                                        : ButtonType.Default)"
+                            OnClick="() => EditModel.IsRecommend = false" Disabled="EditModel.ReadOnly">
+
+                        <Icon Type="dislike" Theme="IconThemeType.Outline" />
+                        Đéooo
+                    </Button>
+                </Col>
+            </Row>
+        </AntDesign.Col>
+    </AntDesign.Col>
+
+    <AntDesign.Col Span="24">
+        <LabelFor FieldIdentifier="context.Field(nameof(EditModel.IsAnonymous))"></LabelFor>
+        <AntDesign.Col Span="24">
+            <Row Justify="RowJustify.Start" Gutter="(24, 0)">
+
+                <RadioGroup @bind-Value="EditModel.IsAnonymous"
+                            Disabled="EditModel.ReadOnly">
+
+                    <Radio Value="true">
+                        Có
+                    </Radio>
+
+                    <Radio Value="false">
+                        Không
+                    </Radio>
+
+                </RadioGroup>
+            </Row>
+        </AntDesign.Col>
+
+        <ValidationMessage For="() => EditModel.IsAnonymous"></ValidationMessage>
+    </AntDesign.Col>
+
+    <!-- Comment -->
+    <AntDesign.Col Span="24">
+        <LabelFor For="() => EditModel.Comment"></LabelFor>
+        <TextArea @bind-Value="EditModel.Comment"
+                  Placeholder="Nhập bình luận của bạn..." Disabled="EditModel.ReadOnly"
+                  Rows="5" />
+        <ValidationMessage For="() => EditModel.Comment"></ValidationMessage>
+    </AntDesign.Col>
+
+    <!-- Buttons -->
+    <AntDesign.Col Span="24">
+        <AntDesign.Row Justify="RowJustify.End" Gutter="8">
+
+            <AntDesign.Col>
+                <Button Type="ButtonType.Primary" Disabled="EditModel.ReadOnly"
+                        OnClick="SubmitReviewAsync">
+                    Đánh giá
+                </Button>
+            </AntDesign.Col>
+            <AntDesign.Col>
+                <Button OnClick="CloseReviewModal">
+                    Hủy
+                </Button>
+            </AntDesign.Col>
+
+
+        </AntDesign.Row>
+    </AntDesign.Col>
+
+</AntDesign.Row>
+
+</EditForm>
+
+</Modal>

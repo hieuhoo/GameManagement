@@ -25,7 +25,8 @@ namespace GameManagement.Data
         public DbSet<UserGameWishlist> UserGameWishlist { get; set; }
         public DbSet<UserGameLibrary> UserGameLibrary { get; set; }
         public DbSet<UserGameReview> UserGameReview { get; set; }
-
+        public DbSet<UserGameReviewHistory> UserGameReviewHistory { get; set; }
+        public DbSet<UserGameReviewReaction> UserGameReviewReaction { get; set; }
 
     }
 }

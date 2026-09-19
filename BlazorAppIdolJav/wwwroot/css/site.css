@@ -463,6 +463,8 @@
 /*xem thử menuitem ng-form dùng thường*/
 .game-page {
     padding: 24px;
+    width: 100%;
+    box-sizing:border-box;
 }
 
 .game-card {

@@ -242,5 +242,24 @@ namespace GameManagement.Share.Extension
 			[Display(Name = "Thẻ ngân hàng")]
 			Banking = 1,
 		}
+
+		public enum TypeReaction
+		{
+			[Display(Name = "Thích")]
+			Like = 0,
+			[Display(Name = "Thả tim")]
+			Heart = 1,
+		}
+
+		public enum ReviewFilter 
+		{
+			[Display(Name = "Tất cả")]
+			All = 0,
+			[Display(Name = "Tích cực")]
+			Positive = 1,	
+			[Display(Name = "Tiêu cực")]
+			Negative = 2,	
+		}
+
 	}
 }

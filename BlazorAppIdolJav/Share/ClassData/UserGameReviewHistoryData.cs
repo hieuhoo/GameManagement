@@ -2,7 +2,7 @@
 
 namespace GameManagement.Share.ClassData
 {
-	public class UserGameReviewData
+	public class UserGameReviewHistoryData
 	{
 		[DataMember(Order = 1)]
 		public virtual String Id
@@ -29,49 +29,43 @@ namespace GameManagement.Share.ClassData
 			set;
 		}
 		[DataMember(Order = 5)]
-		public virtual decimal StarNumber
+		public virtual string ReviewId
 		{
 			get;
 			set;
 		}
 		[DataMember(Order = 6)]
-		public virtual string Comment
+		public virtual string PrevComment
 		{
 			get;
 			set;
 		}
 		[DataMember(Order = 7)]
-		public virtual DateTime UpdatedDate
+		public virtual string CurrentComment
 		{
 			get;
 			set;
 		}
 		[DataMember(Order = 8)]
-		public virtual bool? IsRecommend
+		public virtual decimal PrevStarNumber
 		{
 			get;
 			set;
 		}
 		[DataMember(Order = 9)]
-		public virtual bool IsHidden
+		public virtual decimal CurrentStarNumber
 		{
 			get;
 			set;
 		}
 		[DataMember(Order = 10)]
-		public virtual int LikeCount
+		public virtual int PrevIsRecommend
 		{
 			get;
 			set;
 		}
 		[DataMember(Order = 11)]
-		public virtual int HeartCount
-		{
-			get;
-			set;
-		}
-		[DataMember(Order = 12)]
-		public virtual bool IsAnonymous
+		public virtual int CurrentIsRecommend
 		{
 			get;
 			set;

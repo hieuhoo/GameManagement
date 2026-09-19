@@ -15,6 +15,7 @@ namespace GameManagement.WebInterface.User
 		[Inject] NotificationService NoticeService { get; set; }
 		[Inject] IMapper Mapper { get; set; }
 		[Inject] IUserGameReviewService ReviewService { get; set; }
+		[Parameter] public EventCallback ReloadData { get; set; }
 		UserGameReviewEditModel EditModel { get; set; } = new UserGameReviewEditModel();
 		InputWatcher inputWatcher { get; set; }
 
@@ -73,6 +74,7 @@ namespace GameManagement.WebInterface.User
 				{
 					await UpdateReviewAsync();
 				}
+				await ReloadData.InvokeAsync();
 			}
 			catch
 			{
@@ -84,7 +86,29 @@ namespace GameManagement.WebInterface.User
 		{
 			try
 			{
-				// chưa làm
+				var errorMessageStore = EditModel.ValidateAll();
+				if (!inputWatcher.Validate() || errorMessageStore?.Any() == true)
+				{
+					if (errorMessageStore.Any())
+					{
+						inputWatcher.NotifyFieldChanged(errorMessageStore.First().Key, errorMessageStore);
+					}
+					NoticeService.NotiWarning(TypeAlert.InvalidData.GetDescription());
+					return;
+				}
+				EditModel.UpdatedDate = DateTime.Now;
+				var data = Mapper.Map<UserGameReviewData>(EditModel);
+				var isUpdate = await ReviewService.UpdateReviewAsync(data);
+				if (isUpdate)
+				{
+					NoticeService.NotiSuccess("Thay đổi đánh giá thành công");
+					isReviewVisible = false;
+					EditModel = new();
+				}
+				else
+				{
+					NoticeService.NotiError("Có lỗi xảy ra rồi đoán xem dcm lỗi gì");
+				}
 			}
 			catch
 			{
@@ -106,6 +130,20 @@ namespace GameManagement.WebInterface.User
 				currentUser = userId;
 				currentGame = gameId;
 				titleForm = $"Đánh giá game : {name}";
+				var data = (await ReviewService.GetAllWithFilterAsync(new ReviewSearch
+				{
+					UserId = userId,
+					GameId = gameId,
+				})).FirstOrDefault();
+				if (data != null)
+				{
+					EditModel = Mapper.Map<UserGameReviewEditModel>(data);
+					EditModel.ReadOnly = true;
+				}
+				else
+				{
+					EditModel = new();
+				}
 				await InvokeAsync(StateHasChanged);
 			}
 			catch
@@ -117,6 +155,11 @@ namespace GameManagement.WebInterface.User
 		void OnStarChanged(decimal value)
 		{
 			EditModel.StarNumber = value;
+		}
+
+		void EditReview()
+		{
+			EditModel.ReadOnly = false;
 		}
 	}
 }

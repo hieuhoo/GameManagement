@@ -46,14 +46,32 @@ namespace GameManagement.Share.ClassData
 			get;
 			set;
 		}
-		//[DataMember(Order = 8)]
-		//public virtual bool IsPositive
-		//{
-		//	get;
-		//	set;
-		//}
 		[DataMember(Order = 8)]
 		public virtual bool? IsRecommend
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 9)]
+		public virtual bool IsHidden
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 10)]
+		public virtual int LikeCount
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 11)]
+		public virtual int HeartCount
+		{
+			get;
+			set;
+		}
+		[DataMember(Order = 12)]
+		public virtual bool IsAnonymous
 		{
 			get;
 			set;

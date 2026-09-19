@@ -8,9 +8,12 @@
 		public DateTime CreateDate { get; set; }
 		public decimal StarNumber { get; set; }
 		public string Comment { get; set; }
-		//public bool IsPositive { get; set; }
+		public bool IsHidden { get; set; } // ẩn hay ko do admin, mặc định tạo hidden =false;
 		public bool? IsRecommend { get; set; }
 
 		public DateTime UpdatedDate { get; set; }
+		public int LikeCount { get; set; }
+		public int HeartCount { get; set; }
+		public bool IsAnonymous { get; set; }
 	}
 }

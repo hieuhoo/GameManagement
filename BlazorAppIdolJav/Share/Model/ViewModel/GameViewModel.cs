@@ -35,6 +35,9 @@ namespace GameManagement.Share.Model.ViewModel
 		public int TotalSold { get; set; }
 
 		public int? TotalRevenue { get; set; }
-		//public double AverageStar { get; set; } = 3;
+		public decimal AverageStar { get; set; } // số sao trung bình tính theo số review
+		public int TotalReview { get; set; } // tổng số đánh giá
+		public decimal PositivePercent { get; set; } //tích cực	
+		public decimal NegativePercent	{ get; set; } // tiêu cực
 	}
 }

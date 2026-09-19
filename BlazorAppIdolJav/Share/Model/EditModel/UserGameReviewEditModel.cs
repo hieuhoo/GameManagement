@@ -28,11 +28,17 @@ namespace GameManagement.Share.Model.EditModel
 		[Display(Name = "Bạn có đề xuất không?")]
 		public bool? IsRecommend { get; set; }
 
+		public bool IsHidden { get; set; }
+		public int LikeCount { get; set; } // tổng số like comment
+		public int HeartCount { get; set; } // tổng số tym comment
+		[Display(Name = "Bình luận dưới dạng ẩn danh ?")]
+		[Required]
+		public bool IsAnonymous { get; set; }
 
 		public UserGameReviewEditModel()
 		{
 			InputFields.Add<UserGameReviewEditModel>(c => c.StarNumber);
-		
+
 		}
 
 		public override Dictionary<string, List<string>> Validate(string nameProperty)

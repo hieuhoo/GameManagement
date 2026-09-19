@@ -182,7 +182,7 @@
         <div class="game-page">
 
             <GridRow Gutter="(16, 16)">
-                @foreach (var game in ViewModels)
+                @foreach (var game in PagedGames)
                 {
                     <GridCol Xs="24"
                              Sm="12"
@@ -209,32 +209,21 @@
 
                                         <div class="review-info">
                                             <div>
-                                                Tổng số đánh giá: <b>200</b>
+                                                Tổng số đánh giá: <b>@game.TotalReview</b>
                                             </div>
 
                                             <div>
-                                                Đánh giá tích cực: <b>90%</b>
+                                                Đánh giá tích cực: <b>@game.PositivePercent.ToString("0.#")%</b>
                                             </div>
 
                                             <div>
-                                                Đánh giá tiêu cực: <b>10%</b>
+                                                Đánh giá tiêu cực: <b>@game.NegativePercent.ToString("0.#")%</b>
                                             </div>
                                         </div>
 
                                         <div class="review-average">
 
                                             <div class="average-star">
-                                                <span class="star active">★</span>
-                                                <span class="star active">★</span>
-                                                <span class="star active">★</span>
-                                                <span class="star active">★</span>
-                                                <span class="star half">
-                                                    <span class="star-half-gray">★</span>
-                                                    <span class="star-half-yellow">★</span>
-                                                </span>
-                                            </div>
-
-                                            @* <div class="average-star">
                                                 @for (int i = 1; i <= 5; i++)
                                                 {
                                                     if (i <= Math.Floor(game.AverageStar))
@@ -245,8 +234,8 @@
                                                              game.AverageStar % 1 != 0)
                                                     {
                                                         <span class="star half">
-                                                            <span class="star-half-yellow">★</span>
                                                             <span class="star-half-gray">★</span>
+                                                            <span class="star-half-yellow">★</span>
                                                         </span>
                                                     }
                                                     else
@@ -254,10 +243,10 @@
                                                         <span class="star">★</span>
                                                     }
                                                 }
-                                            </div> *@
+                                            </div>
 
                                             <div class="average-score-line">
-                                                <span class="average-score">4.5</span>
+                                                <span class="average-score">@game.AverageStar</span>
                                                 <span class="average-max">/ 5</span>
                                             </div>
 
@@ -265,7 +254,7 @@
                                             {
                                                 <Button Type="ButtonType.Link"
                                                         Class="vote-button" OnClick="() => OpenVoteFormAsync(currentUserId, game.Id, game.Name)">
-                                                    Đánh giá
+                                                    Đánh giá ngay
                                                 </Button>
                                             }
 
@@ -303,8 +292,8 @@
                                     <!-- 3 nút -->
                                     <div class="game-actions">
 
-                                        <Button Color="Color.Green6" OnClick="() => ViewDetailGameAsync(game.Id)" Class="detail-button">
-                                            Xem chi tiết
+                                        <Button Color="Color.Green6" OnClick="() => ViewOtherCommentAsync(game.Id, game.Name)" Class="detail-button">
+                                            Xem các đánh giá
                                         </Button>
                                         @if (game.RecentlyInWishlist)
                                         {
@@ -348,6 +337,15 @@
                 }
 
             </GridRow>
+            <br />
+            <AntDesign.Row Justify="RowJustify.Center">
+                <AntDesign.Col>
+                    <Pagination Current="@currentPage"
+                                PageSize="@pageSize"
+                                Total="@ViewModels.Count"
+                                OnChange="OnPageChanged" />
+                </AntDesign.Col>
+            </AntDesign.Row>
 
         </div>
 
@@ -413,4 +411,6 @@
 
 <TransactionHistoryDetail @ref="transactionDetailRef"></TransactionHistoryDetail>
 
-<GameReview @ref="reviewRef"></GameReview>
+<GameReview @ref="reviewRef" ReloadData="LoadDataAsync"></GameReview>
+
+<OtherPeopleReview @ref="otherReviewRef"></OtherPeopleReview>

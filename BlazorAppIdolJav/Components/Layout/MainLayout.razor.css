@@ -118,7 +118,6 @@ article.content {
            hoặc bị table kéo theo
         */
         flex: 0 0 250px;
-        height: 100vh;
         position: sticky;
         top: 0;
         overflow-x: hidden;

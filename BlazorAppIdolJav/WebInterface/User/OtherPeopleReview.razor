@@ -1,0 +1,403 @@
+﻿@using AntDesign
+@using static GameManagement.Share.Extension.EnumExtension;
+@using GameManagement.CoreConfig.Extensions;
+
+<Modal Title="@reviewModalTitle"
+       @bind-Visible="isShowCommentVisible"
+       Width="900"
+       Footer="@null">
+
+    <div class="review-modal-body">
+
+        @if (reviewLoading)
+        {
+            <AntDesign.Row Justify="RowJustify.Center">
+                <AntDesign.Col>
+                    <Spin />
+                </AntDesign.Col>
+            </AntDesign.Row>
+        }
+        else
+        {
+            <!-- =========================
+                 REVIEW SUMMARY
+                 ========================= -->
+            <AntDesign.Row Gutter="(24, 16)"
+                           Align="RowAlign.Middle">
+
+                <!-- Average -->
+                <AntDesign.Col Xs="24" Md="12">
+
+                    <div class="review-summary">
+
+                        <div class="review-summary-title">
+                            Đánh giá trung bình của người chơi
+                        </div>
+
+                        <div class="review-summary-average">
+
+                            <div class="average-star">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    if (i <= Math.Floor(reviewStatisticData.AverageStarNumber))
+                                    {
+                                        <span class="star active">
+                                            ★
+                                        </span>
+                                    }
+                                    else if (i == Math.Ceiling(reviewStatisticData.AverageStarNumber)
+                                             && reviewStatisticData.AverageStarNumber % 1 != 0)
+                                    {
+                                        <span class="star half">
+
+                                            <span class="star-half-gray">
+                                                ★
+                                            </span>
+
+                                            <span class="star-half-yellow">
+                                                ★
+                                            </span>
+
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="star">
+                                            ★
+                                        </span>
+                                    }
+                                }
+                            </div>
+
+                            <div class="average-score-line">
+
+                                <span class="average-score">
+                                    @reviewStatisticData.AverageStarNumber.ToString("0.#")
+                                </span>
+
+                                <span class="average-max">
+                                    / 5
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="review-total">
+                            <b>@reviewStatisticData.Total</b> đánh giá
+                        </div>
+
+                    </div>
+
+                </AntDesign.Col>
+
+
+                <!-- Positive / Negative -->
+                <AntDesign.Col Xs="24" Md="12">
+
+                    <AntDesign.Row Gutter="(8, 12)">
+
+                        <AntDesign.Col Span="24">
+
+                            <AntDesign.Row Justify="RowJustify.SpaceBetween">
+
+                                <AntDesign.Col>
+                                    <span>
+                                        Đánh giá tích cực
+                                    </span>
+                                </AntDesign.Col>
+
+                                <AntDesign.Col>
+                                    <b>
+                                       @reviewStatisticData.QuantityPositive (@reviewStatisticData.PositivePercent.ToString("0.#")%)
+                                    </b>
+                                </AntDesign.Col>
+
+                            </AntDesign.Row>
+
+                        </AntDesign.Col>
+
+                        <AntDesign.Col Span="24">
+
+                            <AntDesign.Row Justify="RowJustify.SpaceBetween">
+
+                                <AntDesign.Col>
+                                    <span>
+                                        Đánh giá tiêu cực
+                                    </span>
+                                </AntDesign.Col>
+
+                                <AntDesign.Col>
+                                    <b>
+                                       @reviewStatisticData.QuantityNegative (@reviewStatisticData.NegativePercent.ToString("0.#")%)
+                                    </b>
+                                </AntDesign.Col>
+
+                            </AntDesign.Row>
+
+                        </AntDesign.Col>
+
+                    </AntDesign.Row>
+
+                </AntDesign.Col>
+
+            </AntDesign.Row>
+
+
+            <Divider />
+
+
+            <!-- =========================
+                 FILTER
+                 ========================= -->
+            <AntDesign.Row Justify="RowJustify.SpaceBetween"
+                           Align="RowAlign.Middle"
+                           Gutter="(16, 16)">
+
+                <AntDesign.Col>
+
+                    <RadioGroup TValue="string" @bind-Value="CurrentFilter"
+                                OnChange="OnFilterChanged">
+
+                        <Radio Value="ReviewFilter.All.ToString()">
+                            @ReviewFilter.All.GetDescription()
+                        </Radio>
+
+                        <Radio Value="ReviewFilter.Positive.ToString()">
+                            @ReviewFilter.Positive.GetDescription()
+
+                        </Radio>
+
+                        <Radio Value="ReviewFilter.Negative.ToString()">
+                            @ReviewFilter.Negative.GetDescription()
+                        </Radio>
+
+                    </RadioGroup>
+
+                </AntDesign.Col>
+
+                <AntDesign.Col>
+
+                    <span class="review-count">
+                        @totalReviews đánh giá
+                    </span>
+
+                </AntDesign.Col>
+
+            </AntDesign.Row>
+
+
+            <Divider />
+
+
+            <!-- =========================
+                 REVIEW LIST
+                 ========================= -->
+            @if (!PagedReviews.Any())
+            {
+                <Empty />
+            }
+            else
+            {
+                @foreach (var review in PagedReviews)
+                {
+                    <Card Class="review-item-card">
+
+                        <!-- USER -->
+                        <AntDesign.Row Justify="RowJustify.SpaceBetween"
+                                       Align="RowAlign.Middle">
+
+                            <AntDesign.Col>
+
+                                <Space Align="SpaceAlign.Center">
+                                    @* //case ẩn danh *@
+                                    <Avatar> 
+                                        @GetUserInitial(review.UserName, review.IsAnonymous)
+                                    </Avatar>
+
+                                    <div>
+
+                                        <div class="review-user-name">
+                                            <b>
+                                                @review.UserName
+                                            </b>
+                                        </div>
+
+                                        <div class="review-date">
+                                            @review.CreateDate
+                                        </div>
+
+                                    </div>
+
+                                </Space>
+
+                            </AntDesign.Col>
+
+
+                            <!-- Edit own review -->
+                            @if (review.UserId == currentUserId)
+                            {
+                                <AntDesign.Col>
+
+                                    <Button Type="ButtonType.Link">
+                                        <Icon Type="edit"
+                                              Theme="IconThemeType.Outline" />
+                                        Chỉnh sửa bình luận của bạn
+
+                                    </Button>
+
+                                </AntDesign.Col>
+                            }
+
+                        </AntDesign.Row>
+
+                        <Divider />
+
+                        <!-- RATING -->
+                        <AntDesign.Row Align="RowAlign.Middle"
+                                       Gutter="(12, 8)">
+
+                            <AntDesign.Col>
+                                <div class="average-star">
+
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <span class="star
+                                            @(i <= review.StarNumber
+                                                ? "active"
+                                                : "")">
+                                            ★
+                                        </span>
+                                    }
+
+                                </div>
+
+                            </AntDesign.Col>
+
+
+                            <AntDesign.Col>
+
+                                <span class="review-score">
+                                    <b>
+                                        @review.StarNumber.ToString("0.#")
+                                    </b>
+                                    / 5
+                                </span>
+
+                            </AntDesign.Col>
+
+
+                            <!-- Recommend -->
+                            <AntDesign.Col>
+
+                                @if (review.IsRecommend)
+                                {
+                                    <Tag>
+
+                                        <Icon Type="like"
+                                              Theme="IconThemeType.Outline" />
+                                        Đề xuất
+                                    </Tag>
+                                }
+                                else
+                                {
+                                    <Tag>
+                                        <Icon Type="dislike"
+                                              Theme="IconThemeType.Outline" />
+                                        Không đề xuất
+                                    </Tag>
+                                }
+                            </AntDesign.Col>
+
+                        </AntDesign.Row>
+
+
+                        <!-- COMMENT -->
+                        <div class="review-comment">
+                            @review.Comment
+                        </div>
+
+
+                        <!-- LIKE / HEART -->
+                        <AntDesign.Row Gutter="(8, 8)"
+                                       Align="RowAlign.Middle"
+                                       Style="margin-top: 12px;">
+
+                            <!-- LIKE -->
+                            <AntDesign.Col>
+
+                                <Button Type="ButtonType.Link"
+                                        OnClick="() => ChangeReactReviewAsync(
+                                                                                review.Id,
+                                                                                TypeReaction.Like.ToString())">
+
+                                <Icon Type="like"
+                                      Theme="@(review.MyReaction
+                                              == TypeReaction.Like.ToString()
+                                              ? IconThemeType.Fill
+                                              : IconThemeType.Outline)"
+                                          Style="@(review.MyReaction == TypeReaction.Like.ToString()
+                                                                                      ? "color: #f3f704;"
+                                                                                      : "")" />
+                                    <span>
+                                        @review.LikeCount
+                                    </span>
+
+                                </Button>
+
+                            </AntDesign.Col>
+
+
+                            <!-- HEART -->
+                            <AntDesign.Col>
+
+                                <Button Type="ButtonType.Link"
+                                        OnClick="() => ChangeReactReviewAsync(
+                                                                                review.Id,
+                                                                                TypeReaction.Heart.ToString())">
+                                    <Icon Type="heart"
+                                          Theme="@(review.MyReaction
+                                              == TypeReaction.Heart.ToString()
+                                              ? IconThemeType.Fill
+                                              : IconThemeType.Outline)"
+                                          Style="@(review.MyReaction == TypeReaction.Heart.ToString()
+                                                                                      ? "color: #ef1c1c;"
+                                                                                      : "")" />
+
+                                    <span>
+                                        @review.HeartCount
+                                    </span>
+
+                                </Button>
+
+                            </AntDesign.Col>
+
+                        </AntDesign.Row>
+
+                    </Card>
+                }
+
+
+                <!-- =========================
+                     PAGINATION
+                     ========================= -->
+                <AntDesign.Row Justify="RowJustify.Center"
+                               Style="margin-top: 20px;">
+
+                    <AntDesign.Col>
+
+                        <Pagination Current="@currentPage"
+                                    PageSize="@pageSize"
+                                    Total="@totalReviews"
+                                    OnChange="OnPageChanged" />
+
+                    </AntDesign.Col>
+
+                </AntDesign.Row>
+            }
+
+        }
+
+    </div>
+
+</Modal>

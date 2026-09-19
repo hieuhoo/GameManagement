@@ -20,7 +20,7 @@
             <MenuItem Key="account">
                 <NavLink href="/danh-sach-tai-khoan">
                     <Icon Type="user" />
-                    <span>Danh sách tài khoản</span>
+                    <span>Quản lý tài khoản</span>
                 </NavLink>
             </MenuItem>
         }
@@ -30,7 +30,7 @@
             <MenuItem Key="setup">
                 <NavLink href="/danh-sach-ma-nap">
                     <Icon Type="gift" />
-                    <span>Danh sách mã nạp</span>
+                    <span>Quản lý mã nạp</span>
                 </NavLink>
             </MenuItem>
         }
@@ -38,20 +38,34 @@
         <MenuItem Key="game">
             <NavLink href="/danh-sach-game">
                 <Icon Type="appstore" />
-                <span>Danh sách Game</span>
+                @if (IsAdmin)
+                {
+                    <span>Quản lý Game</span>
+                }
+                else
+                {
+                    <span>Danh sách Game</span>
+                }
             </NavLink>
         </MenuItem>
+        if (IsAdmin)
+        {
+            <MenuItem Key="comment">
+                <NavLink href="/">
+                    <Icon Type="comment" />
+                    <span>Quản lý bình luận</span>
+                </NavLink>
+            </MenuItem>
+        }
         if (IsAdmin)
         {
             <MenuItem Key="setup">
                 <NavLink href="/thiet-lap-chung">
                     <Icon Type="setting" />
-                    <span>Thiết lập</span>
+                    <span>Thiết lập chung</span>
                 </NavLink>
             </MenuItem>
         }
-
-       
     }
 
 </Menu>

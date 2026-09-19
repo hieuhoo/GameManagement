@@ -35,6 +35,8 @@ namespace GameManagement.WebInterface.GameInformation
 		[Inject] IEmailService MailService { get; set; }
 		[Inject] IWalletTransactionHistoryService HistoryService { get; set; }
 		[Inject] IUserService UserService { get; set; }
+		[Inject] IUserGameReviewService ReviewService { get; set; }
+
 
 		[Inject] NotificationService Notice { get; set; }
 		[Inject] AuthenticationStateProvider AuthProvider { get; set; }
@@ -47,15 +49,20 @@ namespace GameManagement.WebInterface.GameInformation
 		Dictionary<string, DiscountInformationData> DiscountDict = new();
 		List<GameData> FeatureGameDatas { get; set; }
 		GameViewModel SelectedGame { get; set; } = new();
+		IEnumerable<GameViewModel> PagedGames { get; set; } = Enumerable.Empty<GameViewModel>();
 		Table<GameViewModel> Table;
 		GameDetail gameDetailRef;
 		TransactionHistoryDetail transactionDetailRef = new TransactionHistoryDetail();
 		GameReview reviewRef = new GameReview();
-
+		OtherPeopleReview otherReviewRef = new OtherPeopleReview();
 		Dictionary<string, string> DictUser = new();
+
 		int width;
 		int height;
 		int totalFeature;
+		int currentPage = 1;
+		int pageSize = 8;
+		int TotalItems;
 
 		bool loading;
 		bool createVisible;
@@ -108,6 +115,7 @@ namespace GameManagement.WebInterface.GameInformation
 				int stt = 1;
 				foreach (var game in ViewModels)
 				{
+					var statistic = await ReviewService.GetStatisticAboutGameAsync(game.Id);
 					game.Stt = stt++;
 
 					if (game.GameCompanyId != null &&
@@ -126,7 +134,15 @@ namespace GameManagement.WebInterface.GameInformation
 					game.IsPurchased = await IsGameInLibrary(game.Id, currentUserId);
 					game.TotalSold = (await HistoryService.GetTotalGameRevenue(game.Id)).TotalSold;
 					game.TotalRevenue = (await HistoryService.GetTotalGameRevenue(game.Id)).TotalRevenue;
+					game.TotalReview = statistic.Total;
+					game.PositivePercent = statistic.PositivePercent;
+					game.NegativePercent = statistic.NegativePercent;
+					game.AverageStar = statistic.AverageStarNumber;
 				}
+				PagedGames = ViewModels
+									.Skip((currentPage - 1) * pageSize)
+									.Take(pageSize);
+
 				int total = ViewModels.Where(c => c.RecentlyInWishlist == true).ToList().Count();
 				WishlistState.SetCount(total);
 			}
@@ -358,13 +374,14 @@ namespace GameManagement.WebInterface.GameInformation
 			}
 		}
 
-		async Task ViewDetailGameAsync(string gameId)
+		async Task ViewOtherCommentAsync(string gameId, string gameName)
 		{
 			try
 			{
 				// mở ra màn xem các đánh giá của reviewer khác
-				Notice.NotiWarning("Bận , sẽ làm func này sau");
-				return;
+				await otherReviewRef.OpenReviewFormAsync(gameId, gameName, currentUserId);
+				//Notice.NotiWarning("Bận , sẽ làm func này sau");
+				//return;
 			}
 			catch
 			{
@@ -477,7 +494,7 @@ namespace GameManagement.WebInterface.GameInformation
 			{
 				var result = await UserService.GetAllWithFilterAsync(new UserSearch
 				{
-					Role = UserRole.Normal.ToString(),	
+					Role = UserRole.Normal.ToString(),
 				}) ?? new List<UserData>();
 				DictUser = result.ToDictionary(x => x.Id, x => x.UserName);
 			}
@@ -497,6 +514,20 @@ namespace GameManagement.WebInterface.GameInformation
 			{
 
 			}
+		}
+
+		Task OnPageChanged(PaginationEventArgs args)
+		{
+			currentPage = args.Page;
+
+			PagedGames = ViewModels
+				.Skip((currentPage - 1) * pageSize)
+				.Take(pageSize)
+				.ToList();
+
+			StateHasChanged();
+
+			return Task.CompletedTask;
 		}
 	}
 }

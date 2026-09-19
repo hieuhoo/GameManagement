@@ -85,6 +85,8 @@ builder.Services.AddScoped<IPurchaseService, PurchaseService>();
 builder.Services.AddScoped<IUserGameLibraryService, UserGameLibraryService>();
 builder.Services.AddScoped<IUserGameReviewService, UserGameReviewService>();
 builder.Services.AddScoped<IUserGameReviewHistoryService, UserGameReviewHistoryService>();
+builder.Services.AddScoped<IUserGameReviewReactionService, UserGameReviewReactionService>();
+
 
 
 //cấu hình repo vào đây
@@ -102,6 +104,8 @@ builder.Services.AddScoped<IWalletTransactionHistoryRepository, WalletTransactio
 builder.Services.AddScoped<IUserGameWishlistRepository, UserGameWishlistRepository>();
 builder.Services.AddScoped<IUserGameLibraryRepository, UserGameLibraryRepository>();
 builder.Services.AddScoped<IUserGameReviewRepository, UserGameReviewRepository>();
+builder.Services.AddScoped<IUserGameReviewReactionRepository, UserGameReviewReactionRepository>();
+
 
 
 builder.Services.AddScoped<WishlistState>();

@@ -31,7 +31,9 @@ namespace GameManagement.Share.Model.EditModel
 		public bool IsHidden { get; set; }
 		public int LikeCount { get; set; } // tổng số like comment
 		public int HeartCount { get; set; } // tổng số tym comment
-		[Display(Name = "Bình luận dưới dạng ẩn danh ?")]
+        public int FunnyCount { get; set; } // tổng số like comment
+
+        [Display(Name = "Bình luận dưới dạng ẩn danh ?")]
 		[Required]
 		public bool IsAnonymous { get; set; }
 

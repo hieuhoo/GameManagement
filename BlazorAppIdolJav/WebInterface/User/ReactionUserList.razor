@@ -1,0 +1,41 @@
+﻿@using AntDesign
+
+<div style="min-width: 180px; padding: 4px 0;">
+    @if (ReactionUsers.Any())
+    {
+        @foreach (var user in DisplayUsers)
+        {
+            <div style="
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 5px 0;">
+
+                <Avatar>
+                    @GetUserInitial(user.UserName, user.IsAnonymous)
+                </Avatar>
+
+                <span>
+                    @(user.IsAnonymous
+                        ? "Người dùng ẩn danh"
+                        : user.UserName)
+                </span>
+            </div>
+        }
+
+        @if (RemainingCount > 0)
+        {
+            <div style="
+                padding-top: 5px;
+                font-size: 13px;
+                color: #666;">
+
+                ... và @RemainingCount người khác
+            </div>
+        }
+    }
+    else
+    {
+        <div>@EmptyText</div>
+    }
+</div>

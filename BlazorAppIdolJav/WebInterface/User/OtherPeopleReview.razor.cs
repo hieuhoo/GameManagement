@@ -11,170 +11,188 @@ using static GameManagement.Share.Extension.EnumExtension;
 
 namespace GameManagement.WebInterface.User
 {
-	public partial class OtherPeopleReview : ComponentBase
-	{
-		[Inject] NavigationManager NavManager { get; set; }
-		[Inject] NotificationService Notice { get; set; }
-		[Inject] IUserGameReviewService ReviewService { get; set; }
-		[Inject] IUserGameReviewReactionService ReactionService { get; set; }
+    public partial class OtherPeopleReview : ComponentBase
+    {
+        [Parameter] public Dictionary<string, string> DictUser { get; set; }
+        [Inject] NavigationManager NavManager { get; set; }
+        [Inject] NotificationService Notice { get; set; }
+        [Inject] IUserGameReviewService ReviewService { get; set; }
+        [Inject] IUserGameReviewReactionService ReactionService { get; set; }
 
-		[Inject] IGameService GameService { get; set; }
-		[Inject] IMapper Mapper { get; set; }
+        [Inject] IGameService GameService { get; set; }
+        [Inject] IMapper Mapper { get; set; }
 
-		List<UserGameReviewViewModel> ViewModels = new();
-		IEnumerable<UserGameReviewViewModel> PagedReviews { get; set; } = Enumerable.Empty<UserGameReviewViewModel>();
+        List<UserGameReviewViewModel> ViewModels = new();
+        IEnumerable<UserGameReviewViewModel> PagedReviews { get; set; } = Enumerable.Empty<UserGameReviewViewModel>();
 
-		StatisticReviewGameData reviewStatisticData = new();
+        StatisticReviewGameData reviewStatisticData = new();
+        GameReview reviewRef = new GameReview();
 
-		bool isShowCommentVisible;
-		bool reviewLoading;
-		bool? displayPositiveComment;
-		int currentPage;
-		int pageSize = 4;
-		int totalReviews;
-		string reviewModalTitle = string.Empty;
-		string currentGameId = string.Empty;
+        bool isShowCommentVisible;
+        bool reviewLoading;
+        bool? displayPositiveComment;
+        int currentPage;
+        int pageSize = 4;
+        int totalReviews;
+        string reviewModalTitle = string.Empty;
+        string currentGameId = string.Empty;
 
-		string currentUserId = string.Empty;
+        string currentUserId = string.Empty;
 
-		string CurrentFilter = ReviewFilter.All.ToString();
+        string CurrentFilter = ReviewFilter.All.ToString();
+        string NameOfGame = string.Empty;
+        protected override async Task OnInitializedAsync()
+        {
 
-		protected override async Task OnInitializedAsync()
-		{
-
-		}
-
-
-		private async Task LoadGameReviewsAsync()
-		{
-			try
-			{
-				reviewLoading = true;
-				reviewStatisticData = await ReviewService.GetStatisticAboutGameAsync(currentGameId);
-				var data = (await ReviewService.GetAllWithFilterAsync(new ReviewSearch
-				{
-					GameId = currentGameId,
-					IsPositiveComment = displayPositiveComment
-				}) ?? Enumerable.Empty<UserGameReviewData>())
-					.OrderByDescending(c => c.StarNumber)
-					.ToList();
-				ViewModels = Mapper.Map<List<UserGameReviewViewModel>>(data);
-				foreach (var item in ViewModels)
-				{
-					item.MyReaction = await ReactionService.CheckDisplayMyReactionAsync(currentUserId, item.Id);
-				}
-				PagedReviews = ViewModels
-									.Skip((currentPage - 1) * pageSize)
-									.Take(pageSize);
-				totalReviews = ViewModels.Count;
-			}
-			catch
-			{
-
-			}
-			finally
-			{
-				reviewLoading = false;
-			}
-		}
+        }
 
 
-		Task OnPageChanged(
-			PaginationEventArgs args)
-		{
-			currentPage = args.Page;
+        private async Task LoadGameReviewsAsync()
+        {
+            try
+            {
+                reviewLoading = true;
+                reviewStatisticData = await ReviewService.GetStatisticAboutGameAsync(currentGameId);
+                var data = (await ReviewService.GetAllWithFilterAsync(new ReviewSearch
+                {
+                    GameId = currentGameId,
+                    IsPositiveComment = displayPositiveComment
+                }) ?? Enumerable.Empty<UserGameReviewData>())
+                    .OrderByDescending(c => c.StarNumber)
+                    .ToList();
+                ViewModels = Mapper.Map<List<UserGameReviewViewModel>>(data);
+                foreach (var item in ViewModels)
+                {
+                    item.MyReaction = await ReactionService.CheckDisplayMyReactionAsync(currentUserId, item.Id);
+                    if (item.UserId != null && DictUser.TryGetValue(item.UserId, out var name))
+                    {
+                        item.UserName = name;
+                    }
+                    item.ReactInfos = await ReactionService.GetListUsersReactAsync(item.Id);
+                }
+                PagedReviews = ViewModels
+                                    .Skip((currentPage - 1) * pageSize)
+                                    .Take(pageSize);
+                totalReviews = ViewModels.Count;
+            }
+            catch
+            {
 
-			PagedReviews = ViewModels
-			.Skip((currentPage - 1) * pageSize)
-			.Take(pageSize)
-			.ToList();
-
-			StateHasChanged();
-
-			return Task.CompletedTask;
-		}
-
-
-		async Task OnFilterChanged(string value)
-		{
-			try
-			{
-				CurrentFilter = value;
-				displayPositiveComment = null;
-				if (value == ReviewFilter.Positive.ToString())
-				{
-					displayPositiveComment = true;
-				}
-				if (value == ReviewFilter.Negative.ToString())
-				{
-					displayPositiveComment = false;
-				}
-				currentPage = 1;
-				await LoadGameReviewsAsync();
-			}
-			catch
-			{
-
-			}
-		}
-
-
-		async Task ChangeReactReviewAsync(
-			string reviewId,
-			string type)
-		{
-			try
-			{
-				var success = await ReactionService.ChangeReactionAsync(
-											reviewId,
-											currentUserId,
-											type);
-				if (!success)
-				{
-					Notice.NotiError("Có lỗi rồi, dm đoán đi cưng");
-				}
-				await LoadGameReviewsAsync();
-			}
-			catch
-			{
-
-			}
-		}
+            }
+            finally
+            {
+                reviewLoading = false;
+            }
+        }
 
 
-		public async Task OpenReviewFormAsync(string gameId, string gameName, string currentUser)
-		{
-			reviewModalTitle = $"Danh sách đánh giá game: {gameName}";
-			currentGameId = gameId;
-			currentUserId = currentUser;
-			await LoadGameReviewsAsync();
-			isShowCommentVisible = true;
+        Task OnPageChanged(
+            PaginationEventArgs args)
+        {
+            currentPage = args.Page;
 
-			await InvokeAsync(StateHasChanged);
-		}
+            PagedReviews = ViewModels
+            .Skip((currentPage - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
 
+            StateHasChanged();
 
-		//async Task EditReview(
-		//	GameReviewViewModel review)
-		//{
-		//	// Load review vào EditModel
-		//	// rồi mở Review Form Modal
-
-		//	IsReviewFormVisible = true;
-
-		//	await InvokeAsync(StateHasChanged);
-		//}
+            return Task.CompletedTask;
+        }
 
 
-		string GetUserInitial(string? userName, bool anonymous)
-		{
-			if (string.IsNullOrWhiteSpace(userName))
-				return "?";
-			var stringResult = anonymous == true ? "Người dùng ẩn danh" : userName
-																			.Trim()
-																			.Substring(0, 1)
-																			.ToUpper();
-			return stringResult;
-		}
-	}
+        async Task OnFilterChanged(string value)
+        {
+            try
+            {
+                CurrentFilter = value;
+                displayPositiveComment = null;
+                if (value == ReviewFilter.Positive.ToString())
+                {
+                    displayPositiveComment = true;
+                }
+                if (value == ReviewFilter.Negative.ToString())
+                {
+                    displayPositiveComment = false;
+                }
+                currentPage = 1;
+                await LoadGameReviewsAsync();
+            }
+            catch
+            {
+
+            }
+        }
+
+
+        async Task ChangeReactReviewAsync(
+            string reviewId,
+            string type)
+        {
+            try
+            {
+                var success = await ReactionService.ChangeReactionAsync(
+                                            reviewId,
+                                            currentUserId,
+                                            type);
+                if (!success)
+                {
+                    Notice.NotiError("Có lỗi rồi, dm đoán đi cưng");
+                }
+                await LoadGameReviewsAsync();
+            }
+            catch
+            {
+
+            }
+        }
+
+
+        public async Task OpenReviewFormAsync(string gameId, string gameName, string currentUser)
+        {
+            try
+            {
+                NameOfGame = gameName;
+                reviewModalTitle = $"Danh sách đánh giá game: {gameName}";
+                currentGameId = gameId;
+                currentUserId = currentUser;
+                await LoadGameReviewsAsync();
+                isShowCommentVisible = true;
+
+                await InvokeAsync(StateHasChanged);
+            }
+            catch
+            {
+
+            }
+        }
+
+
+        async Task EditYourReviewAsync(string userId, string gameId)
+        {
+            try
+            {
+                await reviewRef.OpenReviewFormAsync(userId, gameId, NameOfGame);
+            }
+            catch
+            {
+
+            }
+        }
+
+
+        string GetUserInitial(string? userName, bool anonymous)
+        {
+            if (string.IsNullOrWhiteSpace(userName))
+            {
+                userName = "?";
+            }
+            var stringResult = anonymous == true ? "?" : userName
+                                                                            .Trim()
+                                                                            .Substring(0, 1)
+                                                                            .ToUpper();
+            return stringResult;
+        }
+    }
 }

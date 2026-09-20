@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using GameManagement.Share.ClassData;
+using System.ComponentModel.DataAnnotations;
 
 namespace GameManagement.Share.Model.ViewModel
 {
@@ -22,5 +23,11 @@ namespace GameManagement.Share.Model.ViewModel
 		public int HeartCount { get; set; } // tổng số tym comment
 		public string UserName { get; set; }
 		public string MyReaction { get; set; }
-	}
+        public int FunnyCount { get; set; } // tổng số haha comment
+
+        public List<ReactionPersonInfoData> ReactInfos { get; set; } = new List<ReactionPersonInfoData>();
+		public int Stt {  get; set; }
+		public string GameName { get; set; }
+		public int TotalReaction {  get; set; }
+    }
 }

@@ -3,6 +3,7 @@ using GameManagement.CoreConfig.Extensions;
 using GameManagement.Data;
 using GameManagement.Repository.IRepository;
 using GameManagement.Service.IService;
+using GameManagement.Share.ClassData;
 using GameManagement.Share.ClassDB;
 using Microsoft.EntityFrameworkCore;
 using static GameManagement.Share.Extension.EnumExtension;
@@ -58,54 +59,39 @@ namespace GameManagement.Service
 					await _context.UserGameReviewReaction
 						.AddAsync(reaction);
 
-					if (type == TypeReaction.Like.ToString())
-					{
-						review.LikeCount++;
-					}
-					else
-					{
-						review.HeartCount++;
-					}
-				}
+                    // +1 reaction mới
+                    ChangeReactionCount(review, type, 1);
+                }
 
-				// CASE 2: Đã reaction
-				else
-				{
-					// 2.1. Bấm lại đúng reaction hiện tại
-					// => remove reaction
-					if (existReac.ReactionType == type)
-					{
-						if (type == TypeReaction.Like.ToString())
-						{
-							review.LikeCount = Math.Max(0, review.LikeCount - 1);
-						}
-						else
-						{
-							review.HeartCount = Math.Max(0, review.HeartCount - 1);
-						}
+                // CASE 2: Đã reaction
+                else
+                {
+                    // Bấm lại reaction hiện tại
+                    if (existReac.ReactionType == type)
+                    {
+                        // -1 reaction cũ
+                        ChangeReactionCount(review, type, -1);
 
-						_context.UserGameReviewReaction
-							.Remove(existReac);
-					}
+                        _context.UserGameReviewReaction.Remove(existReac);
+                    }
+                    else
+                    {
+                        // -1 reaction cũ
+                        ChangeReactionCount(
+                            review,
+                            existReac.ReactionType,
+                            -1);
 
-					// 2.2. Đổi từ Like -> Heart
-					//     hoặc Heart -> Like
-					else
-					{
-						if (existReac.ReactionType == TypeReaction.Like.ToString())
-						{
-							review.LikeCount = Math.Max(0, review.LikeCount - 1);
-							review.HeartCount++;
-						}
-						else
-						{
-							review.HeartCount = Math.Max(0, review.HeartCount - 1);
-							review.LikeCount++;
-						}
+                        // +1 reaction mới
+                        ChangeReactionCount(
+                            review,
+                            type,
+                            1);
 
-						existReac.ReactionType = type;
-					}
-				}
+                        // Update loại reaction
+                        existReac.ReactionType = type;
+                    }
+                }
 				review.UpdatedDate = DateTime.Now;
 				await _context.SaveChangesAsync();
 
@@ -141,5 +127,37 @@ namespace GameManagement.Service
 				return string.Empty;
 			}
 		}
-	}
+
+        public async Task<List<ReactionPersonInfoData>> GetListUsersReactAsync(string reviewId)
+        {
+			try
+			{
+				var result = await _repo.GetListUsersReactAsync(reviewId);
+				return result;
+            }
+			catch
+			{
+				return new List<ReactionPersonInfoData>();
+			}
+        }
+
+        void ChangeReactionCount(
+				UserGameReview review,
+				string reactionType,
+				int amount)
+        {
+            if (reactionType == TypeReaction.Like.ToString())
+            {
+                review.LikeCount = Math.Max(0, review.LikeCount + amount);
+            }
+            else if (reactionType == TypeReaction.Heart.ToString())
+            {
+                review.HeartCount = Math.Max(0, review.HeartCount + amount);
+            }
+            else if (reactionType == TypeReaction.Funny.ToString())
+            {
+                review.FunnyCount = Math.Max(0, review.FunnyCount + amount);
+            }
+        }
+    }
 }

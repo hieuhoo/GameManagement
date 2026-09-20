@@ -109,7 +109,7 @@
 
                                 <AntDesign.Col>
                                     <b>
-                                       @reviewStatisticData.QuantityPositive (@reviewStatisticData.PositivePercent.ToString("0.#")%)
+                                        @reviewStatisticData.QuantityPositive (@reviewStatisticData.PositivePercent.ToString("0.#")%)
                                     </b>
                                 </AntDesign.Col>
 
@@ -129,7 +129,7 @@
 
                                 <AntDesign.Col>
                                     <b>
-                                       @reviewStatisticData.QuantityNegative (@reviewStatisticData.NegativePercent.ToString("0.#")%)
+                                        @reviewStatisticData.QuantityNegative (@reviewStatisticData.NegativePercent.ToString("0.#")%)
                                     </b>
                                 </AntDesign.Col>
 
@@ -211,7 +211,7 @@
 
                                 <Space Align="SpaceAlign.Center">
                                     @* //case ẩn danh *@
-                                    <Avatar> 
+                                    <Avatar>
                                         @GetUserInitial(review.UserName, review.IsAnonymous)
                                     </Avatar>
 
@@ -219,7 +219,7 @@
 
                                         <div class="review-user-name">
                                             <b>
-                                                @review.UserName
+                                                @(review.IsAnonymous ? "Người dùng ẩn danh" : review.UserName)
                                             </b>
                                         </div>
 
@@ -239,7 +239,7 @@
                             {
                                 <AntDesign.Col>
 
-                                    <Button Type="ButtonType.Link">
+                                    <Button Type="ButtonType.Link" OnClick="() => EditYourReviewAsync(review.UserId, review.GameId)">
                                         <Icon Type="edit"
                                               Theme="IconThemeType.Outline" />
                                         Chỉnh sửa bình luận của bạn
@@ -325,51 +325,92 @@
 
                             <!-- LIKE -->
                             <AntDesign.Col>
+                                <Popover Trigger="@(new[] { Trigger.Hover })"
+                                         Placement="Placement.Top">
 
-                                <Button Type="ButtonType.Link"
-                                        OnClick="() => ChangeReactReviewAsync(
-                                                                                review.Id,
-                                                                                TypeReaction.Like.ToString())">
+                                    <ChildContent>
+                                        <Button Type="ButtonType.Link"
+                                                OnClick="() => ChangeReactReviewAsync(review.Id, TypeReaction.Like.ToString())">
+                                                <Icon Type="like"
+                                                      Theme="@(review.MyReaction == TypeReaction.Like.ToString()
+                                                                        ? IconThemeType.Fill
+                                                                        : IconThemeType.Outline)"
+                                                  Style="@(review.MyReaction == TypeReaction.Like.ToString()  ? "color: dodgerblue;" : "")" />
 
-                                <Icon Type="like"
-                                      Theme="@(review.MyReaction
-                                              == TypeReaction.Like.ToString()
-                                              ? IconThemeType.Fill
-                                              : IconThemeType.Outline)"
-                                          Style="@(review.MyReaction == TypeReaction.Like.ToString()
-                                                                                      ? "color: #f3f704;"
-                                                                                      : "")" />
-                                    <span>
-                                        @review.LikeCount
-                                    </span>
-
-                                </Button>
-
+                                            <span>
+                                                @review.LikeCount
+                                            </span>
+                                        </Button>
+                                    </ChildContent>
+                                    <ContentTemplate>
+                                        <ReactionUserList ReactionUsers="@(review.ReactInfos
+                                                          .Where(c => c.ReactionType == TypeReaction.Like.ToString()))"
+                                                          EmptyText="Chưa có lượt thích nào" />
+                                    </ContentTemplate>
+                                </Popover>
                             </AntDesign.Col>
-
 
                             <!-- HEART -->
                             <AntDesign.Col>
+                                <Popover Trigger="@(new[] { Trigger.Hover })"
+                                         Placement="Placement.Top">
 
-                                <Button Type="ButtonType.Link"
-                                        OnClick="() => ChangeReactReviewAsync(
-                                                                                review.Id,
-                                                                                TypeReaction.Heart.ToString())">
-                                    <Icon Type="heart"
-                                          Theme="@(review.MyReaction
-                                              == TypeReaction.Heart.ToString()
-                                              ? IconThemeType.Fill
-                                              : IconThemeType.Outline)"
-                                          Style="@(review.MyReaction == TypeReaction.Heart.ToString()
-                                                                                      ? "color: #ef1c1c;"
-                                                                                      : "")" />
+                                    <ChildContent>
+                                        <Button Type="ButtonType.Link"
+                                                OnClick="() => ChangeReactReviewAsync(  review.Id, TypeReaction.Heart.ToString())">
+                                                  <Icon Type="heart"
+                                                          Theme="@(review.MyReaction == TypeReaction.Heart.ToString()
+                                                                        ? IconThemeType.Fill
+                                                                        : IconThemeType.Outline)"
+                                                  Style="@(review.MyReaction == TypeReaction.Heart.ToString() ? "color: #ef1c1c;"  : "")" />
 
-                                    <span>
-                                        @review.HeartCount
-                                    </span>
+                                            <span>
+                                                @review.HeartCount
+                                            </span>
 
-                                </Button>
+                                        </Button>
+                                    </ChildContent>
+                                    <ContentTemplate>
+                                        <ReactionUserList ReactionUsers="@(review.ReactInfos
+                                                          .Where(c => c.ReactionType == TypeReaction.Heart.ToString()))"
+                                                          EmptyText="Chưa có lượt tim nào" />
+                                    </ContentTemplate>
+                                </Popover>
+                            </AntDesign.Col>
 
+                            @* Cười haha *@
+                            <AntDesign.Col>
+                                <Popover Trigger="@(new[] { Trigger.Hover })"
+                                         Placement="Placement.Top">
+
+                                    <ChildContent>
+                                        <Button Type="ButtonType.Link"
+                                                OnClick="() => ChangeReactReviewAsync(
+                                                                    review.Id,
+                                                                    TypeReaction.Funny.ToString())">
+
+                                                        <Icon Type="smile"
+                                                              Theme="@(review.MyReaction == TypeReaction.Funny.ToString()
+                                                                                            ? IconThemeType.Fill
+                                                                                            : IconThemeType.Outline)"
+                                                  Style="@(review.MyReaction == TypeReaction.Funny.ToString()
+                                                                                ? "color: #fadb14;"
+                                                                                : "")" />
+
+                                            <span>
+                                                @review.FunnyCount
+                                            </span>
+
+                                        </Button>
+                                    </ChildContent>
+
+                                    <ContentTemplate>
+                                        <ReactionUserList ReactionUsers="@(review.ReactInfos
+                                                            .Where(c => c.ReactionType == TypeReaction.Funny.ToString()))"
+                                                          EmptyText="Chưa có lượt haha nào" />
+                                    </ContentTemplate>
+
+                                </Popover>
                             </AntDesign.Col>
 
                         </AntDesign.Row>
@@ -401,3 +442,4 @@
     </div>
 
 </Modal>
+<GameReview @ref="reviewRef"></GameReview>

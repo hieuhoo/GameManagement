@@ -249,7 +249,9 @@ namespace GameManagement.Share.Extension
 			Like = 0,
 			[Display(Name = "Thả tim")]
 			Heart = 1,
-		}
+            [Display(Name = "Hô hô")]
+            Funny = 2,
+        }
 
 		public enum ReviewFilter 
 		{

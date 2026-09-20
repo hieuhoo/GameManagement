@@ -1,0 +1,156 @@
+﻿@page "/danh-sach-binh-luan"
+@using AntDesign
+@using GameManagement.Share.Extension
+@using GameManagement.Share.Model.ViewModel;
+@using static GameManagement.Share.Extension.EnumExtension
+
+<AntDesign.Row Gutter="8">
+    <AntDesign.Col Span="24">
+        <AntDesign.Title Level="3">Danh sách bình luận đánh giá</AntDesign.Title>
+    </AntDesign.Col>
+
+    <AntDesign.Col Span="24">
+        <Table TItem="UserGameReviewViewModel"
+               DataSource="ViewModels"
+               ScrollX="1480px"
+               ScrollY="calc(100vh - 260px)"
+               ScrollBarWidth="@DefaultTableConfig.ScrollBarWidth"
+               Loading="loading"
+               OnRowClick="OnRowClick"
+               @ref="Table">
+
+            <PropertyColumn Property="context => context.Stt"
+                            Title="STT" Fixed="ColumnFixPlacement.Left"
+                            Width="50">
+            </PropertyColumn>
+
+            <PropertyColumn Property="context => context.GameName"
+                            Title="Tên game" Fixed="ColumnFixPlacement.Left" Ellipsis="true"
+                            Width="130">
+            </PropertyColumn>
+
+            <PropertyColumn Property="context => context.Comment"
+                            Title="Nội dung bình luận"
+                            Width="230">
+                <Space>
+                    <Typography Ellipsis="true">
+                        @context.Comment
+                    </Typography>
+
+                    <AntDesign.Tooltip Title="Xem thông tin">
+                        <Icon Type="eye"
+                              Theme="IconThemeType.TwoTone" />
+                    </AntDesign.Tooltip>
+                </Space>
+            </PropertyColumn>
+
+            <PropertyColumn Property="context => context.LikeCount"
+                            Title="Số lượt Like" Align="ColumnAlign.Right"
+                            Width="80">
+
+                <div class="sale-count-cell">
+                    <span>@context.LikeCount</span>
+                    <AntDesign.Tooltip Title="Xem danh sách tương tác">
+                        <span class="sale-history-icon">
+                            <Icon Type="eye"
+                                  Theme="IconThemeType.TwoTone"
+                                  OnClick="() => OpenListUsersReaction(TypeReaction.Like.ToString())" />
+                        </span>
+                    </AntDesign.Tooltip>
+                </div>
+
+            </PropertyColumn>
+
+            <PropertyColumn Property="context => context.HeartCount"
+                            Title="Số lượt tym"
+                            Width="80">
+                <div class="sale-count-cell">
+                    <span>@context.HeartCount</span>
+                    <AntDesign.Tooltip Title="Xem danh sách tương tác">
+                        <span class="sale-history-icon">
+                            <Icon Type="eye"
+                                  Theme="IconThemeType.TwoTone"
+                                  OnClick="() => OpenListUsersReaction(TypeReaction.Heart.ToString())" />
+                        </span>
+                    </AntDesign.Tooltip>
+                </div>
+            </PropertyColumn>
+
+            <PropertyColumn Property="context => context.FunnyCount"
+                            Title="Số lượt haha"
+                            Width="80">
+                <div class="sale-count-cell">
+                    <span>@context.FunnyCount</span>
+                    <AntDesign.Tooltip Title="Xem danh sách tương tác">
+                        <span class="sale-history-icon">
+                            <Icon Type="eye"
+                                  Theme="IconThemeType.TwoTone"
+                                  OnClick="() => OpenListUsersReaction(TypeReaction.Funny.ToString())" />
+                        </span>
+                    </AntDesign.Tooltip>
+                </div>
+            </PropertyColumn>
+
+            <PropertyColumn Property="context => context.TotalReaction"
+                            Title="Tổng số cảm xúc"
+                            Width="100">
+                <div class="sale-count-cell">
+                    <span>@context.TotalReaction</span>
+                </div>
+            </PropertyColumn>
+
+            <PropertyColumn Property="context => context.IsAnonymous"
+                            Title="Trạng thái ẩn danh"
+                            Width="110">
+                <Template>
+                    @if (context.IsAnonymous == true)
+                    {
+                        <span>Ẩn danh</span>
+                    }
+                    else
+                    {
+                        <span>Công khai</span>
+                    }
+                </Template>
+            </PropertyColumn>
+
+            <PropertyColumn Property="context => context.IsHidden"
+                            Title="Trạng thái ẩn/hiện"
+                            Width="110">
+                <Template>
+                    @if (context.IsHidden == true)
+                    {
+                        <span style="color:red;">Đang bị ẩn</span>
+                    }
+                    else
+                    {
+                        <span style="color:limegreen;">Đang hiển thị</span>
+                    }
+                </Template>
+            </PropertyColumn>
+
+            <ActionColumn Title="Thao tác"
+                          Width="80" Fixed="ColumnFixPlacement.Right">
+                <Space Size="SpaceSize.Small">
+                    <SpaceItem>
+                        <Tooltip Title="@(context.IsHidden ? "Hiện bình luận" : "Ẩn bình luận")">
+                            <Button Type="ButtonType.Text"
+                                    Size="ButtonSize.Default">
+                                <Icon Type="@(context.IsHidden ? "eye-invisible" : "message")" />
+                            </Button>
+                        </Tooltip>
+                    </SpaceItem>
+                </Space>
+            </ActionColumn>
+        </Table>
+    </AntDesign.Col>
+</AntDesign.Row>
+
+<Modal Title="Danh sách người tương tác"
+       @bind-Visible="showUserReaction"
+       OnCancel="CloseFormUser"
+       CancelText="@cancelText">
+
+   
+
+</Modal>

@@ -43,6 +43,7 @@ namespace GameManagement.Service
 					IsHidden = false,
 					LikeCount = 0,
 					HeartCount = 0,
+					FunnyCount = 0,
 				};
 
 				await _context.UserGameReview.AddAsync(review);

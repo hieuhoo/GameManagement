@@ -4,6 +4,7 @@ using GameManagement.CoreConfig.Extensions;
 using GameManagement.Service.IService;
 using GameManagement.Share.ClassData;
 using GameManagement.Share.Model.EditModel;
+using GameManagement.Share.Model.ViewModel;
 using GameManagement.SpecialComponent.ExtensionClass;
 using Microsoft.AspNetCore.Components;
 using static GameManagement.Share.Extension.MessageEnumExtension;
@@ -129,7 +130,7 @@ namespace GameManagement.WebInterface.User
 				isReviewVisible = true;
 				currentUser = userId;
 				currentGame = gameId;
-				titleForm = $"Đánh giá game : {name}";
+				titleForm = $"Đánh giá của bạn về : {name}";
 				var data = (await ReviewService.GetAllWithFilterAsync(new ReviewSearch
 				{
 					UserId = userId,

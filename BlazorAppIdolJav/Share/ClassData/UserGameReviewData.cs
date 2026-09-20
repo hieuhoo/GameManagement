@@ -76,5 +76,11 @@ namespace GameManagement.Share.ClassData
 			get;
 			set;
 		}
-	}
+        [DataMember(Order = 13)]
+        public virtual int FunnyCount
+        {
+            get;
+            set;
+        }
+    }
 }

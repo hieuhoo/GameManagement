@@ -12,7 +12,6 @@
     <AntDesign.Col Span="24">
         <Table TItem="UserGameReviewViewModel"
                DataSource="ViewModels"
-               ScrollX="1480px"
                ScrollY="calc(100vh - 260px)"
                ScrollBarWidth="@DefaultTableConfig.ScrollBarWidth"
                Loading="loading"
@@ -37,11 +36,16 @@
                         @context.Comment
                     </Typography>
 
-                    <AntDesign.Tooltip Title="Xem thông tin">
+                    <AntDesign.Tooltip Title="Xem lịch sử">
                         <Icon Type="eye"
                               Theme="IconThemeType.TwoTone" />
                     </AntDesign.Tooltip>
                 </Space>
+            </PropertyColumn>
+
+            <PropertyColumn Property="context => context.CreateDate.GetFormatDateWithSecond()"
+                            Title="Ngày tạo bình luận"
+                            Width="160">
             </PropertyColumn>
 
             <PropertyColumn Property="context => context.LikeCount"
@@ -54,7 +58,7 @@
                         <span class="sale-history-icon">
                             <Icon Type="eye"
                                   Theme="IconThemeType.TwoTone"
-                                  OnClick="() => OpenListUsersReaction(TypeReaction.Like.ToString())" />
+                                  OnClick="() => OpenListUsersReaction(TypeReaction.Like.ToString(), context.Id)" />
                         </span>
                     </AntDesign.Tooltip>
                 </div>
@@ -70,7 +74,7 @@
                         <span class="sale-history-icon">
                             <Icon Type="eye"
                                   Theme="IconThemeType.TwoTone"
-                                  OnClick="() => OpenListUsersReaction(TypeReaction.Heart.ToString())" />
+                                  OnClick="() => OpenListUsersReaction(TypeReaction.Heart.ToString(), context.Id)" />
                         </span>
                     </AntDesign.Tooltip>
                 </div>
@@ -85,7 +89,7 @@
                         <span class="sale-history-icon">
                             <Icon Type="eye"
                                   Theme="IconThemeType.TwoTone"
-                                  OnClick="() => OpenListUsersReaction(TypeReaction.Funny.ToString())" />
+                                  OnClick="() => OpenListUsersReaction(TypeReaction.Funny.ToString(), context.Id)" />
                         </span>
                     </AntDesign.Tooltip>
                 </div>
@@ -146,11 +150,36 @@
     </AntDesign.Col>
 </AntDesign.Row>
 
-<Modal Title="Danh sách người tương tác"
+<Modal Title="@titleText"
        @bind-Visible="showUserReaction"
        OnCancel="CloseFormUser"
        CancelText="@cancelText">
 
-   
+    <AntDesign.Col Span="24">
+        <Table TItem="ReactionPersonInfoViewModel"
+               DataSource="ReactionViewModels"
+               ScrollY="calc(100vh - 260px)"
+               ScrollBarWidth="@DefaultTableConfig.ScrollBarWidth"
+               Loading="personLoading"
+               @ref="PersonTable">
+
+               
+            <PropertyColumn Property="context => context.Stt"
+                            Title="STT"
+                            Width="50">
+            </PropertyColumn>
+
+            <PropertyColumn Property="context => context.UserName"
+                            Title="Người tương tác" 
+                            Width="200">
+            </PropertyColumn>
+
+            <PropertyColumn Property="context => context.CreateDate.GetFormatDateWithSecond()"
+                            Title="Thời gian"
+                            Width="150">
+            </PropertyColumn>
+
+        </Table>
+    </AntDesign.Col>
 
 </Modal>

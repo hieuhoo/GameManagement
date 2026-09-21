@@ -1,6 +1,7 @@
 ﻿using GameManagement.CoreConfig.Repository;
 using GameManagement.Data;
 using GameManagement.Repository.IRepository;
+using GameManagement.Service.IService;
 using GameManagement.Share.ClassData;
 using GameManagement.Share.ClassDB;
 using Microsoft.EntityFrameworkCore;
@@ -52,5 +53,18 @@ namespace GameManagement.Repository
                 return new List<ReactionPersonInfoData>();
             }
         }
-    }
+
+		public async Task<List<UserGameReviewReaction>> GetAllWithFilterAsync(IQueryable<UserGameReviewReaction> query, PersonReactionSearch search)
+		{
+            try
+            {
+                var result = await query.ToListAsync();
+				return result;
+            }
+            catch
+            {
+                return new List<UserGameReviewReaction>();
+            }
+		}
+	}
 }

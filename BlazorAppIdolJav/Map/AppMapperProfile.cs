@@ -90,6 +90,9 @@ namespace GameManagement.Map
                             ) ?? new List<string>()
                     )
                 );
+            CreateMap<UserGameReviewReactionData, ReactionPersonInfoData>();
+            CreateMap<ReactionPersonInfoViewModel, ReactionPersonInfoData>().ReverseMap();
+
         }
     }
 }

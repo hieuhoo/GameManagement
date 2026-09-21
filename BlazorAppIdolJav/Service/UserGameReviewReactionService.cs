@@ -59,39 +59,39 @@ namespace GameManagement.Service
 					await _context.UserGameReviewReaction
 						.AddAsync(reaction);
 
-                    // +1 reaction mới
-                    ChangeReactionCount(review, type, 1);
-                }
+					// +1 reaction mới
+					ChangeReactionCount(review, type, 1);
+				}
 
-                // CASE 2: Đã reaction
-                else
-                {
-                    // Bấm lại reaction hiện tại
-                    if (existReac.ReactionType == type)
-                    {
-                        // -1 reaction cũ
-                        ChangeReactionCount(review, type, -1);
+				// CASE 2: Đã reaction
+				else
+				{
+					// Bấm lại reaction hiện tại
+					if (existReac.ReactionType == type)
+					{
+						// -1 reaction cũ
+						ChangeReactionCount(review, type, -1);
 
-                        _context.UserGameReviewReaction.Remove(existReac);
-                    }
-                    else
-                    {
-                        // -1 reaction cũ
-                        ChangeReactionCount(
-                            review,
-                            existReac.ReactionType,
-                            -1);
+						_context.UserGameReviewReaction.Remove(existReac);
+					}
+					else
+					{
+						// -1 reaction cũ
+						ChangeReactionCount(
+							review,
+							existReac.ReactionType,
+							-1);
 
-                        // +1 reaction mới
-                        ChangeReactionCount(
-                            review,
-                            type,
-                            1);
+						// +1 reaction mới
+						ChangeReactionCount(
+							review,
+							type,
+							1);
 
-                        // Update loại reaction
-                        existReac.ReactionType = type;
-                    }
-                }
+						// Update loại reaction
+						existReac.ReactionType = type;
+					}
+				}
 				review.UpdatedDate = DateTime.Now;
 				await _context.SaveChangesAsync();
 
@@ -128,36 +128,52 @@ namespace GameManagement.Service
 			}
 		}
 
-        public async Task<List<ReactionPersonInfoData>> GetListUsersReactAsync(string reviewId)
-        {
+		public async Task<List<ReactionPersonInfoData>> GetListUsersReactAsync(string reviewId)
+		{
 			try
 			{
 				var result = await _repo.GetListUsersReactAsync(reviewId);
 				return result;
-            }
+			}
 			catch
 			{
 				return new List<ReactionPersonInfoData>();
 			}
-        }
+		}
 
-        void ChangeReactionCount(
+		void ChangeReactionCount(
 				UserGameReview review,
 				string reactionType,
 				int amount)
-        {
-            if (reactionType == TypeReaction.Like.ToString())
-            {
-                review.LikeCount = Math.Max(0, review.LikeCount + amount);
-            }
-            else if (reactionType == TypeReaction.Heart.ToString())
-            {
-                review.HeartCount = Math.Max(0, review.HeartCount + amount);
-            }
-            else if (reactionType == TypeReaction.Funny.ToString())
-            {
-                review.FunnyCount = Math.Max(0, review.FunnyCount + amount);
-            }
-        }
-    }
+		{
+			if (reactionType == TypeReaction.Like.ToString())
+			{
+				review.LikeCount = Math.Max(0, review.LikeCount + amount);
+			}
+			else if (reactionType == TypeReaction.Heart.ToString())
+			{
+				review.HeartCount = Math.Max(0, review.HeartCount + amount);
+			}
+			else if (reactionType == TypeReaction.Funny.ToString())
+			{
+				review.FunnyCount = Math.Max(0, review.FunnyCount + amount);
+			}
+		}
+
+		public async Task<List<ReactionPersonInfoData>> GetAllWithFilterAsync(PersonReactionSearch search)
+		{
+			try
+			{
+				var filter = search.CreateFilter(_repo.GetQueryable());
+				var result = await _repo.GetAllWithFilterAsync(filter, search);
+				var reactionMap = _mapper.Map<List<UserGameReviewReactionData>>(result);
+				var finalData = _mapper.Map<List<ReactionPersonInfoData>>(reactionMap);
+				return finalData;
+			}
+			catch
+			{
+				return new List<ReactionPersonInfoData>();
+			}
+		}
+	}
 }

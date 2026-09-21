@@ -11,10 +11,12 @@ namespace GameManagement.Service.IService
 		Task<bool> UpdateReviewAsync(UserGameReviewData data);
 		Task<List<UserGameReviewData>> GetAllWithFilterAsync(ReviewSearch search);
 		Task<StatisticReviewGameData> GetStatisticAboutGameAsync(string gameId);
+        Task<bool> ChangeCommentHideStatusAsync(UserGameReviewData data);
 
-	}
 
-	[DataContract]
+    }
+
+    [DataContract]
 	public class ReviewSearch
 	{
 		[DataMember(Order = 1)]

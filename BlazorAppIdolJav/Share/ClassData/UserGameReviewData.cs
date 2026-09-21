@@ -82,5 +82,11 @@ namespace GameManagement.Share.ClassData
             get;
             set;
         }
+        [DataMember(Order = 14)]
+        public virtual string? HideReason
+        {
+            get;
+            set;
+        }
     }
 }

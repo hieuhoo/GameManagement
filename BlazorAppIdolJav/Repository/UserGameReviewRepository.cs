@@ -17,7 +17,26 @@ namespace GameManagement.Repository
 			_context = context;
 		}
 
-		public async Task<List<UserGameReview>> GetAllWithFilterAsync(IQueryable<UserGameReview> query, ReviewSearch search)
+        public async Task<bool> ChangeCommentHideStatusAsync(UserGameReviewData data)
+        {
+			try
+			{
+                var existing = await _context.Set<UserGameReview>().FirstOrDefaultAsync(c => c.Id == data.Id);
+                if (existing == null)
+                {
+                    return false;
+                }
+                _context.Entry(existing).CurrentValues.SetValues(data);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+			catch
+			{
+				return false;
+			}
+        }
+
+        public async Task<List<UserGameReview>> GetAllWithFilterAsync(IQueryable<UserGameReview> query, ReviewSearch search)
 		{
 			try
 			{

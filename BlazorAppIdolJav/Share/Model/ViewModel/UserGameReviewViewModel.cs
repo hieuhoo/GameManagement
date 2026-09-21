@@ -29,5 +29,7 @@ namespace GameManagement.Share.Model.ViewModel
 		public int Stt {  get; set; }
 		public string GameName { get; set; }
 		public int TotalReaction {  get; set; }
+        public string HideReason { get; set; }
+
     }
 }

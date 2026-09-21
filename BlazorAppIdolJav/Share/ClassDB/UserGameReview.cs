@@ -16,6 +16,8 @@
 		public int HeartCount { get; set; }
 		public bool IsAnonymous { get; set; }
         public int FunnyCount { get; set; }
+        public string? HideReason { get; set; }
+
 
     }
 }

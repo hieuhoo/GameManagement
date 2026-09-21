@@ -68,9 +68,18 @@ namespace GameManagement.Components.Layout
         int failedLoginCount;
         int lockTimeRelogin = 60;
         int minuteExpired = 3;
+        int unreadNotificationCount = 3; //test
+
+        bool notificationVisible = false;
         string newPassword = string.Empty;
         string retypeNewPassword = string.Empty;
-        //string userId = string.Empty;
+        List<string> fakeNotifications = new()
+        {
+            "Nguyễn Văn A đã thả Like vào bình luận của bạn",
+            "Trần Văn B đã thả ❤️ vào bình luận của bạn",
+            "Lê Văn C đã thả 😂 vào bình luận của bạn"
+        };
+
         DateTime? lockoutUntil;
 
         protected override async Task OnInitializedAsync()
@@ -562,6 +571,16 @@ namespace GameManagement.Components.Layout
             {
                 throw ex;
             }
+        }
+
+        void ToggleNotification()
+        {
+            notificationVisible = !notificationVisible;
+        }
+
+        void CloseNotification()
+        {
+            notificationVisible = false;
         }
     }
 }

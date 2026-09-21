@@ -133,13 +133,23 @@
                 </Template>
             </PropertyColumn>
 
+            <PropertyColumn Property="context => context.HideReason"
+                            Title="Lí do ẩn"
+                            Width="150">
+                <Space>
+                    <Typography Ellipsis="true">
+                        @context.HideReason
+                    </Typography>
+                </Space>
+            </PropertyColumn>
+
             <ActionColumn Title="Thao tác"
                           Width="80" Fixed="ColumnFixPlacement.Right">
                 <Space Size="SpaceSize.Small">
                     <SpaceItem>
                         <Tooltip Title="@(context.IsHidden ? "Hiện bình luận" : "Ẩn bình luận")">
                             <Button Type="ButtonType.Text"
-                                    Size="ButtonSize.Default">
+                                    Size="ButtonSize.Default" OnClick="() => OpenPopupConfirmHideAsync(context.Id, context.IsHidden)">
                                 <Icon Type="@(context.IsHidden ? "eye-invisible" : "message")" />
                             </Button>
                         </Tooltip>
@@ -180,6 +190,35 @@
             </PropertyColumn>
 
         </Table>
+    </AntDesign.Col>
+
+</Modal>
+
+<Modal Title="Ẩn bình luận"
+       @bind-Visible="showHideCommentForm"
+       OnCancel="CloseHideCommentFormUser"
+       OnOk="ConfirmHideCommentAsync"
+       OkText="@hideText"
+       CancelText="@cancelText">
+
+    <AntDesign.Col Span="24">
+        <div class="mb-2">
+            <span>
+                Nhập lý do <span style="color:red;">(*)</span>
+            </span>
+
+            <AntDesign.TextArea @bind-Value="hideReason"
+                                Rows="4"
+                                MaxLength="500"
+                                ShowCount
+                                Placeholder="Nhập đi chờ cl" />
+            @if (isRequired)
+            {
+                <span style="color:red;">
+                    Chưa nhập lý do ẩn lày
+                </span>
+            }
+        </div>
     </AntDesign.Col>
 
 </Modal>

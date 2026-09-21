@@ -24,7 +24,19 @@ namespace GameManagement.Service
 			_context = context;
 		}
 
-		public async Task<bool> CreateReviewAsync(UserGameReviewData data)
+        public async Task<bool> ChangeCommentHideStatusAsync(UserGameReviewData data)
+        {
+			try
+			{
+				return await _repo.ChangeCommentHideStatusAsync(data);
+            }
+			catch
+			{
+				return false;
+			}
+        }
+
+        public async Task<bool> CreateReviewAsync(UserGameReviewData data)
 		{
 			await using var transaction = await _context.Database.BeginTransactionAsync();
 

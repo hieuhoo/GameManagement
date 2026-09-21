@@ -183,3 +183,137 @@ article.content {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+/*thông báo ở góc*/
+.notification-popup {
+    position: absolute;
+    top: calc(100% + 10px);
+    /* căn giữa popup theo chuông */
+/*    left: 50%;*/
+    transform: translateX(-50%);
+    width: 380px;
+    background: #171D25;
+    color: #fff;
+    border: 1px solid #272D37;
+    border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    z-index: 99999;
+    overflow: hidden;
+}
+
+.notification-header {
+    height: 52px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #272D37;
+    border-bottom: 1px solid #343B46;
+}
+
+.notification-header-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.notification-count {
+    font-size: 12px;
+    color: #1999FF;
+}
+
+.notification-list {
+    max-height: 360px;
+    overflow-y: auto;
+    background: #171D25;
+}
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: #171D25;
+    border-bottom: 1px solid #272D37;
+    cursor: pointer;
+}
+
+    .notification-item:hover {
+        background: #272D37;
+    }
+
+.notification-icon {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #272D37;
+    color: #1999FF;
+}
+
+.notification-content {
+    min-width: 0;
+    flex: 1;
+}
+
+.notification-text {
+    font-size: 14px;
+    line-height: 20px;
+    color: #fff;
+}
+
+.notification-time {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #8B929A;
+}
+
+.notification-footer {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #272D37;
+    border-top: 1px solid #343B46;
+    color: #1999FF;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+    .notification-footer:hover {
+        background: #343B46;
+    }
+
+.notification-button {
+    width: 38px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    border-radius: 2px;
+    background: #272D37;
+    color: #8B929A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+    .notification-button:hover {
+        background: #343B46;
+        color: #fff;
+    }
+
+.ant-badge-count {
+    background: #ff4d4f;
+    box-shadow: 0 0 0 2px #171D25;
+}
+
+.notification-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    margin-right: 10px;
+}

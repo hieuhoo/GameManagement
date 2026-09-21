@@ -9,5 +9,7 @@ namespace GameManagement.Repository.IRepository
 		IQueryable<UserGameReview> GetQueryable();
 		Task<List<UserGameReview>> GetAllWithFilterAsync(IQueryable<UserGameReview> query, ReviewSearch search);
 		Task<StatisticReviewGameData> GetStatisticAboutGameAsync(string gameId);
-	}
+		Task<bool> ChangeCommentHideStatusAsync(UserGameReviewData data);
+
+    }
 }

@@ -18,63 +18,65 @@
         <div class="top-row px-4">
             <AuthorizeView>
                 <Authorized Context="auth">
-                    <div class="notification-wrapper">
-                        <Badge Count="@unreadNotificationCount"
-                               OverflowCount="99"
-                               ShowZero="false">
-                            <Button Type="ButtonType.Text"
-                                    Class="notification-button"
-                                    OnClick="ToggleNotification">
-                                <Icon Type="bell"
-                                      Theme="IconThemeType.Outline"/>
-                            </Button>
-                        </Badge>
+                    @if (!isAdmin)
+                    {
+                        <div class="notification-wrapper">
+                            <Badge Count="@unreadNotificationCount"
+                                   OverflowCount="99"
+                                   ShowZero="false">
+                                <Button Type="ButtonType.Text"
+                                        Class="notification-button"
+                                        OnClick="ToggleNotification">
+                                    <Icon Type="bell"
+                                          Theme="IconThemeType.Outline" />
+                                </Button>
+                            </Badge>
 
-                        @if (notificationVisible)
-                        {
-                            <div class="notification-popup">
-                                <div class="notification-header">
-                                    <span class="notification-header-title">
-                                        Thông báo
-                                    </span>
-
-                                    @if (unreadNotificationCount > 0)
-                                    {
-                                        <span class="notification-count">
-                                            @unreadNotificationCount mới
+                            @if (notificationVisible)
+                            {
+                                <div class="notification-popup">
+                                    <div class="notification-header">
+                                        <span class="notification-header-title">
+                                            Thông báo
                                         </span>
-                                    }
-                                </div>
 
-                                <div class="notification-list">
-                                    @foreach (var notification in fakeNotifications)
-                                    {
-                                        <div class="notification-item">
-                                            <div class="notification-icon">
-                                                <Icon Type="bell"
-                                                      Theme="IconThemeType.Outline"/>
-                                            </div>
+                                        @if (unreadNotificationCount > 0)
+                                        {
+                                            <span class="notification-count">
+                                                @unreadNotificationCount mới
+                                            </span>
+                                        }
+                                    </div>
 
-                                            <div class="notification-content">
-                                                <div class="notification-text">
-                                                    @notification
+                                    <div class="notification-list">
+                                        @foreach (var notification in fakeNotifications)
+                                        {
+                                            <div class="notification-item">
+                                                <div class="notification-icon">
+                                                    <Icon Type="bell"
+                                                          Theme="IconThemeType.Outline" />
                                                 </div>
 
-                                                <div class="notification-time">
-                                                    Vừa xong
+                                                <div class="notification-content">
+                                                    <div class="notification-text">
+                                                        @notification
+                                                    </div>
+
+                                                    <div class="notification-time">
+                                                        Vừa xong
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    }
-                                </div>
+                                        }
+                                    </div>
 
-                                <div class="notification-footer">
-                                    Xem tất cả thông báo
+                                    <div class="notification-footer">
+                                        Xem tất cả thông báo
+                                    </div>
                                 </div>
-                            </div>
-                        }
-                    </div>
-
+                            }
+                        </div>
+                    }
                     <Avatar Style="background-color: #1890ff; color: white;margin-right: 8px;">
                         @DisplayUserNameImage(currentUser)
                     </Avatar>

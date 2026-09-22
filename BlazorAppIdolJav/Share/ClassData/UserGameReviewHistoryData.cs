@@ -70,5 +70,12 @@ namespace GameManagement.Share.ClassData
 			get;
 			set;
 		}
+
+		[DataMember(Order = 12)]
+		public virtual string? UserName
+		{
+			get;
+			set;
+		}
 	}
 }

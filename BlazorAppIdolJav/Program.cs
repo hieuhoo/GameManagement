@@ -104,6 +104,7 @@ builder.Services.AddScoped<IWalletTransactionHistoryRepository, WalletTransactio
 builder.Services.AddScoped<IUserGameWishlistRepository, UserGameWishlistRepository>();
 builder.Services.AddScoped<IUserGameLibraryRepository, UserGameLibraryRepository>();
 builder.Services.AddScoped<IUserGameReviewRepository, UserGameReviewRepository>();
+builder.Services.AddScoped<IUserGameReviewHistoryRepository, UserGameReviewHistoryRepository>();
 builder.Services.AddScoped<IUserGameReviewReactionRepository, UserGameReviewReactionRepository>();
 
 

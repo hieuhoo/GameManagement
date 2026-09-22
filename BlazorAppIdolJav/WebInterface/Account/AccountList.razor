@@ -25,65 +25,65 @@
                    OnRowClick="OnRowClick"
                    @ref="table">
 
-                <Column @bind-Field="context.Stt"
-                        Title="STT" Fixed="ColumnFixPlacement.Left"
-                        Width="60">
-                </Column>
+                <PropertyColumn Property="context => context.Stt"
+                                Title="STT" Fixed="ColumnFixPlacement.Left"
+                                Width="60">
+                </PropertyColumn>
 
-                <Column @bind-Field="context.UserName"
-                        Title="Tên đăng nhập" Fixed="ColumnFixPlacement.Left"
-                        Width="150">
-                </Column>
+                <PropertyColumn Property="context => context.UserName"
+                                Title="Tên đăng nhập" Fixed="ColumnFixPlacement.Left"
+                                Width="150">
+                </PropertyColumn>
 
-                <Column @bind-Field="context.Name"
-                        Title="Họ tên"
-                        Width="180">
-                </Column>
+                <PropertyColumn Property="context => context.Name"
+                                Title="Họ tên"
+                                Width="180">
+                </PropertyColumn>
 
-                <Column @bind-Field="context.Email"
-                        Title="Email"
-                        Width="200">
-                </Column>
+                <PropertyColumn Property="context => context.Email"
+                                Title="Email"
+                                Width="200">
+                </PropertyColumn>
 
-                <Column @bind-Field="context.Status"
-                        Title="Trạng thái"
-                        Width="130">
+                <PropertyColumn Property="context => context.Status"
+                                Title="Trạng thái"
+                                Width="130">
                     <Template>
                         @CommonTemplate.RenderAccountStatusText(context.Status)
                     </Template>
-                </Column>
+                </PropertyColumn>
 
-                <Column @bind-Field="context.Role"
-                        Title="Vai trò"
-                        Width="110">
+                <PropertyColumn Property="context => context.Role"
+                                Title="Vai trò"
+                                Width="110">
                     <Template>
                         @CommonTemplate.RenderRoleAccountText(context.Role)
                     </Template>
-                </Column>
+                </PropertyColumn>
 
-                <Column @bind-Field="context.LockReason"
-                        Title="Lý do khóa"
-                        Width="220">
+                <PropertyColumn Property="context => context.LockReason"
+                                Title="Lý do khóa"
+                                Width="220">
                     <Template>
                         @CommonTemplate.RenderReasonLockText(context.LockReason)
                     </Template>
-                </Column>
+                </PropertyColumn>
 
-                <Column @bind-Field="context.LockBy"
-                        Title="Người khóa"
-                        Width="130">
+                <PropertyColumn Property="context => context.LockBy"
+                                Title="Người khóa"
+                                Width="130">
                     <Template>
                         @CommonTemplate.RenderPersonLockText(context.LockBy)
                     </Template>
-                </Column>
+                </PropertyColumn>
 
-                <Column @bind-Field="context.CreateDate"
-                        Title="Ngày tạo"
-                        Width="170">
+                <PropertyColumn Property="context => context.CreateDate"
+                                Title="Ngày tạo"
+                                Width="170">
                     <Template>
                         @(context.CreateDate.GetFormatDateWithSecond())
                     </Template>
-                </Column>
+                </PropertyColumn>
 
                 <ActionColumn Title="Thao tác"
                               Width="130">
@@ -152,49 +152,49 @@
        Visible="historyVisible"
        Width="600"
        OnCancel="@CloseHistoryModal">
-        <Timeline>
-            @foreach (var item in LockHistoryDatas)
-            {
-                var isLock = item.Action == AccountOperation.Lock.ToString();
+    <Timeline>
+        @foreach (var item in LockHistoryDatas)
+        {
+            var isLock = item.Action == AccountOperation.Lock.ToString();
 
-                <TimelineItem Color="@(isLock ? "red" : "green")">
+            <TimelineItem Color="@(isLock ? "red" : "green")">
 
-                    <div class="history-item">
+                <div class="history-item">
 
-                        <div class="history-title">
-                            @if (isLock)
-                            {
-                                <span>Khóa tài khoản</span>
-
-                            }
-                            else
-                            {
-                                <span>Mở khóa tài khoản</span>
-                            }
-                        </div>
-
-                        <div class="history-time">
-                            Thời gian : @item.CreateDate.GetFormatDateWithSecond()
-                        </div>
-
-                        <div class="history-detail">
-                             Người thao tác : <strong>@CommonTemplate.RenderPersonLockText(item.PerformedBy)</strong>
-                        </div>
-
-                        @if (isLock && !string.IsNullOrWhiteSpace(item.Reason))
+                    <div class="history-title">
+                        @if (isLock)
                         {
-                            <div class="history-detail">
+                            <span>Khóa tài khoản</span>
+
+                        }
+                        else
+                        {
+                            <span>Mở khóa tài khoản</span>
+                        }
+                    </div>
+
+                    <div class="history-time">
+                        Thời gian : @item.CreateDate.GetFormatDateWithSecond()
+                    </div>
+
+                    <div class="history-detail">
+                        Người thao tác : <strong>@CommonTemplate.RenderPersonLockText(item.PerformedBy)</strong>
+                    </div>
+
+                    @if (isLock && !string.IsNullOrWhiteSpace(item.Reason))
+                    {
+                        <div class="history-detail">
                             Lý do :  <strong>
                             @CommonTemplate.RenderReasonLockText(item.Reason)
                         </strong>
-                            </div>
-                        }
-
                     </div>
+                }
 
-                </TimelineItem>
-            }
-        </Timeline>
-    @* } *@
+            </div>
+
+        </TimelineItem>
+    }
+</Timeline>
+@* } *@
 
 </Modal>

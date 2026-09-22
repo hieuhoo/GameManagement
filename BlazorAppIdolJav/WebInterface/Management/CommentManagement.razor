@@ -1,5 +1,6 @@
 ﻿@page "/danh-sach-binh-luan"
 @using AntDesign
+@using GameManagement.CoreConfig.Extensions
 @using GameManagement.Share.Extension
 @using GameManagement.Share.Model.ViewModel;
 @using static GameManagement.Share.Extension.EnumExtension
@@ -20,7 +21,7 @@
 
             <PropertyColumn Property="context => context.Stt"
                             Title="STT" Fixed="ColumnFixPlacement.Left"
-                            Width="50">
+                            Width="70">
             </PropertyColumn>
 
             <PropertyColumn Property="context => context.GameName"
@@ -38,7 +39,8 @@
 
                     <AntDesign.Tooltip Title="Xem lịch sử">
                         <Icon Type="eye"
-                              Theme="IconThemeType.TwoTone" />
+                              Theme="IconThemeType.TwoTone"
+                              OnClick="() => ViewHistoryComment(context.Id)" />
                     </AntDesign.Tooltip>
                 </Space>
             </PropertyColumn>
@@ -180,7 +182,7 @@
             </PropertyColumn>
 
             <PropertyColumn Property="context => context.UserName"
-                            Title="Người tương tác" 
+                            Title="Người tương tác"
                             Width="200">
             </PropertyColumn>
 
@@ -220,5 +222,61 @@
             }
         </div>
     </AntDesign.Col>
+
+</Modal>
+
+<Modal Title="@historyTitle"
+       Visible="@historyVisible"
+       Width="600"
+       OnCancel="@CloseHistoryModal">
+    <div style="max-height:60vh; overflow-y:auto;">
+        <Timeline>
+            Bình luận này của : @commentPerson
+            <br />
+            @foreach (var item in RevHistoryDatas)
+            {
+                bool isFirstTime = item.PrevComment.IsNullOrEmpty();
+                <TimelineItem Color="@(isFirstTime ? "orange" : "green")">
+                    <Space Direction="SpaceDirection.Vertical">
+
+                        <Text Strong>
+                            @(string.IsNullOrEmpty(item.PrevComment)
+                                ? "Đã tạo bình luận lần đầu"
+                                : "Thay đổi bình luận")
+                        </Text>
+
+                        @if (!string.IsNullOrEmpty(item.PrevComment))
+                        {
+                            <Text>
+                                Nội dung cũ:
+                            </Text>
+
+                            <Paragraph>
+                                @item.PrevComment
+                            </Paragraph>
+                        }
+
+                        <Text>
+                            @(string.IsNullOrEmpty(item.PrevComment)
+                                ? "Nội dung:"
+                                : "Nội dung mới:")
+                        </Text>
+
+                        <Paragraph>
+                            @item.CurrentComment
+                        </Paragraph>
+
+
+                        <Text Type="TextElementType.Secondary">
+                            @(string.IsNullOrEmpty(item.PrevComment)
+                           ?  $" Tạo mới lúc {@item.CreateDate.ToString("dd/MM/yyyy HH:mm")}"
+                           : $" Thay đổi lúc {@item.CreateDate.ToString("dd/MM/yyyy HH:mm")}")
+                        </Text>
+
+                    </Space>
+                </TimelineItem>
+            }
+        </Timeline>
+    </div>
 
 </Modal>

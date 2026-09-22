@@ -30,6 +30,7 @@ namespace GameManagement.WebInterface.Management
         List<UserGameReviewViewModel> ViewModels { get; set; } = new List<UserGameReviewViewModel>();
         List<ReactionPersonInfoViewModel> ReactionViewModels { get; set; } = new List<ReactionPersonInfoViewModel>();
         List<UserGameReviewData> ReviewDatas { get; set; } = new List<UserGameReviewData>();
+        List<UserGameReviewHistoryData> RevHistoryDatas { get; set; } = new List<UserGameReviewHistoryData>();
 
         Table<UserGameReviewViewModel> Table;
         Table<ReactionPersonInfoViewModel> PersonTable;
@@ -46,7 +47,9 @@ namespace GameManagement.WebInterface.Management
         string hideText = "Ẩn";
         string? hideReason;
         string? selectedReviewId;
-
+        string historyTitle;
+        bool historyVisible;
+        string commentPerson;
         protected override async Task OnInitializedAsync()
         {
             try
@@ -250,11 +253,39 @@ namespace GameManagement.WebInterface.Management
                 {
                     Notice.NotiError("Thay đổi trạng thái thất bại, đoán lỗi đi dcm");
                 }
+            } 
+            catch
+            {
+
+            }
+        }
+
+        async Task ViewHistoryComment (string reviewId)
+        {
+            try
+            {
+                RevHistoryDatas = await ReviewHistoryService.GetAllWithFilterAsync(new ReviewHistorySearch
+                {
+                    ReviewId = reviewId
+                }) ?? new List<UserGameReviewHistoryData>();
+                var userId = RevHistoryDatas.Select(c => c.UserId).Distinct().FirstOrDefault();
+                if (userId != null && UserDict.TryGetValue(userId, out var name)) 
+                {
+                    commentPerson = name;
+                }
+                RevHistoryDatas = RevHistoryDatas.OrderBy(c => c.CreateDate).ToList();
+                historyTitle = "Lịch sử thay đổi bình luận";
+                historyVisible = true;
             }
             catch
             {
 
             }
+        }
+
+        void CloseHistoryModal()
+        {
+            historyVisible = false;
         }
 
     }

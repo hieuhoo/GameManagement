@@ -192,7 +192,7 @@ article.content {
 /*    left: 50%;*/
     transform: translateX(-50%);
     width: 380px;
-    background: #171D25;
+    background: white !important;
     color: #fff;
     border: 1px solid #272D37;
     border-radius: 10px;

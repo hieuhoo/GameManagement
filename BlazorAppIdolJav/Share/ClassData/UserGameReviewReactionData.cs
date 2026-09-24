@@ -34,5 +34,11 @@ namespace GameManagement.Share.ClassData
 			get;
 			set;
 		}
+		[DataMember(Order = 6)]
+		public virtual string? ReplyId
+		{
+			get;
+			set;
+		}
 	}
 }

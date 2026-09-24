@@ -43,6 +43,7 @@ namespace GameManagement.WebInterface.User
 		bool isShowCommentVisible;
 		bool reviewLoading;
 		bool? displayPositiveComment;
+		string? replyingReviewId;
 		int currentPage;
 		int pageSize = 4;
 		int totalReviews;
@@ -61,6 +62,7 @@ namespace GameManagement.WebInterface.User
 		bool replyIsAnonymous = false;
 		string? editingReplyId;
 		string? editingReplyContent;
+		string replyContentLevel2;
 
 		protected override async Task OnInitializedAsync()
 		{
@@ -91,6 +93,7 @@ namespace GameManagement.WebInterface.User
 					}
 					item.ReactInfos = await ReactionService.GetListUsersReactAsync(item.Id);
 					item.RepliesData = ReviewRepDatas.Where(c => c.ReviewId == item.Id)
+													.Where(c => c.ParentId == null)
 													.Where(c => c.IsDeleted == false)
 													.OrderByDescending(c => c.CreateDate)
 													.ToList();
@@ -99,6 +102,22 @@ namespace GameManagement.WebInterface.User
 						if (rep.UserId != null && DictUser.TryGetValue(rep.UserId, out var personName))
 						{
 							rep.UserName = personName;
+						}
+						rep.Children = ReviewRepDatas.Where(c => c.ReviewId == item.Id)
+													.Where(c => c.ParentId == rep.Id)
+													.Where(c => c.IsDeleted == false)
+													.OrderByDescending(c => c.CreateDate)
+													.ToList();
+						rep.IsLikedByMe = (await ReactionService.CheckDisplayMyReactionAsync(currentUserId, rep.ReviewId, rep.Id) == TypeReaction.Like.ToString());
+						if (rep.Children.Any())
+						{
+							foreach (var child in rep.Children)
+							{
+								if (child.UserId != null && DictUser.TryGetValue(child.UserId, out var replierLevel2))
+								{
+									child.UserName = replierLevel2;
+								}
+							}
 						}
 					}
 				}
@@ -241,13 +260,17 @@ namespace GameManagement.WebInterface.User
 				{
 					Id = ObjectExtentions.GenerateGuid(),
 					ReviewId = reviewId,
+					ParentId = replyingToId,
 					CreateDate = DateTime.Now,
 					UpdatedDate = DateTime.Now,
-					ReplyContent = replyContent,
+					ReplyContent = replyingToId == null
+									? replyContent
+									: replyContentLevel2,
 					IsHidden = false,
 					IsDeleted = false,
 					IsAnonymous = replyIsAnonymous,
-					UserId = currentUserId
+					UserId = currentUserId,
+					LikeCount = 0
 				};
 				var isDone = await ReplyService.AddReplyForCommentAsync(data);
 				if (isDone)
@@ -261,7 +284,22 @@ namespace GameManagement.WebInterface.User
 						review.RepliesData ??= new List<UserGameReviewReplyData>();
 						// Add reply mới vào UI ngay lập tức
 						review.RepliesData.Add(data);
-						review.RepliesData = review.RepliesData.OrderByDescending(c => c.CreateDate).ToList();
+						review.RepliesData = review.RepliesData
+											.Where(x => x.ParentId == null)
+											.OrderByDescending(c => c.CreateDate).ToList();
+						// nếu là reply level 2
+						if (data.ParentId != null)
+						{
+							var parentReply = review.RepliesData
+								.FirstOrDefault(x => x.Id == data.ParentId);
+
+							if (parentReply != null)
+							{
+								parentReply.Children ??= new List<UserGameReviewReplyData>();
+
+								parentReply.Children.Add(data);
+							}
+						}
 						// Mở danh sách reply
 						if (!expandedReplies.Contains(review.Id))
 						{
@@ -270,7 +308,9 @@ namespace GameManagement.WebInterface.User
 					}
 					replyingToId = null;
 					replyToUserName = null;
+					replyingReviewId = null;
 					replyContent = string.Empty;
+					replyContentLevel2 = string.Empty;
 					return;
 				}
 				else
@@ -291,7 +331,7 @@ namespace GameManagement.WebInterface.User
 				: $"@{userName}";
 		}
 
-		void ToggleReplyBox(string replyId, bool isAnonymous, string userName)
+		void ToggleReplyBoxForOneReply(string replyId, bool isAnonymous, string userName)
 		{
 			// đang mở chính comment này => đóng
 			if (replyingToId == replyId)
@@ -308,9 +348,38 @@ namespace GameManagement.WebInterface.User
 			replyContent = string.Empty;
 		}
 
+		//hàm rep bình luạn gốc
+		void ToggleReplyBoxForOriginalComment(
+				string reviewId,
+				bool isAnonymous,
+				string userName)
+		{
+			// đang mở reply review này => đóng
+			if (replyingReviewId == reviewId)
+			{
+				replyingReviewId = null;
+				replyToUserName = null;
+				replyContent = string.Empty;
+				return;
+			}
+
+			// mở reply comment gốc
+			replyingReviewId = reviewId;
+
+			// reply review gốc
+			replyingToId = null;
+			replyToUserName = userName;
+			replyContent = string.Empty;
+		}
+
 		void HandleInputReply(ChangeEventArgs e)
 		{
 			replyContent = e.Value?.ToString();
+		}
+
+		void HandleInputReplyNextLevel(ChangeEventArgs e)
+		{
+			replyContentLevel2 = e.Value?.ToString();
 		}
 
 		string GetNameOfPersonReply()
@@ -454,6 +523,11 @@ namespace GameManagement.WebInterface.User
 			}
 		}
 
+		void AddEmojiNextLevelReply(string emoji)
+		{
+			replyContentLevel2 += emoji;
+		}
+
 		void ToggleLongReplyContent(string replyId)
 		{
 			if (expandedReplyContent.Contains(replyId))
@@ -504,6 +578,78 @@ namespace GameManagement.WebInterface.User
 			}
 
 			StateHasChanged();
+		}
+
+		async Task ChangeReactionReplyLevel1Async(UserGameReviewReplyData data)
+		{
+			try
+			{
+				var isDone = await ReactionService
+					.ChangeReactionForReplyAsync(
+						data.ReviewId,
+						data.Id,
+						currentUserId);
+
+				if (isDone)
+				{
+					// Check lại trạng thái like
+					var myReaction =
+						await ReactionService.CheckDisplayMyReactionAsync(
+							currentUserId,
+							data.ReviewId,
+							data.Id);
+
+					var isLiked = !myReaction.IsNullOrEmpty();
+					// Cập nhật trạng thái mình đã like hay chưa
+					data.IsLikedByMe = isLiked;
+					// Cập nhật LikeCount theo trạng thái mới
+					if (isLiked)
+					{
+						data.LikeCount++;
+					}
+					else
+					{
+						data.LikeCount = Math.Max(
+							0,
+							data.LikeCount - 1);
+					}
+					StateHasChanged();
+				}
+			}
+			catch
+			{
+
+			}
+		}
+
+		string FormatCorrectReactionCount(int count)
+		{
+			if (count < 1000)
+				return count.ToString();
+
+			if (count < 1_000_000)
+			{
+				var value = count / 1000.0;
+
+				return value % 1 == 0
+					? $"{value:0}K"
+					: $"{value:0.#}K";
+			}
+
+			if (count < 1_000_000_000)
+			{
+				var value = count / 1_000_000.0;
+
+				return value % 1 == 0
+					? $"{value:0}M"
+					: $"{value:0.#}M";
+			}
+
+			var billion = count / 1_000_000_000.0;
+
+			return billion % 1 == 0
+				? $"{billion:0}B"
+				: $"{billion:0.#}B";
 		}
 	}
 }

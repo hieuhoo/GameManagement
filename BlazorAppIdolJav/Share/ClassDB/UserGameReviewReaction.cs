@@ -7,5 +7,6 @@
 		public string ReviewId { get; set; }
 		public DateTime CreateDate { get; set; }
 		public string ReactionType { get; set; } // tym hoặc like , có thể sau này là share
+		public string? ReplyId { get; set; }
 	}
 }

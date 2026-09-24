@@ -1112,10 +1112,31 @@
 
 
 .reply-container {
-    margin-left: 45px;
+    /*    margin-left: 45px;
     border-left: 2px solid #f0f0f0;
-    padding-left: 12px;
+    padding-left: 12px;*/
+    position: relative;
+    margin-left: 40px;
+    padding-left: 20px;
 }
+
+    /* đường dọc nối từ comment gốc xuống */
+    .reply-container::after {
+        /*        content: "";
+        position: absolute;
+        left: 10px;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: #e4e6eb;*/
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: #e4e6eb;
+    }
 
 .reply-user-info {
     display: flex;
@@ -1166,6 +1187,17 @@
     max-width: 700px;
 }
 
+    /* nhánh ngang từ đường dọc vào từng reply */
+    .reply-item::after {
+        content: "";
+        position: absolute;
+        left: -20px;
+        top: 18px;
+        width: 20px;
+        height: 1px;
+        background: #e4e6eb;
+    }
+
 .reply-edit-box {
     margin-top: 8px;
     display: flex;
@@ -1191,4 +1223,110 @@
     .edited-text::before {
         content: "·";
         margin-right: 4px;
+    }
+
+.child-reply-input {
+    margin-top: 8px;
+    margin-left: 40px;
+}
+
+
+.child-reply-wrapper {
+    display: flex;
+    align-items: center;
+    background: #f0f2f5;
+    border-radius: 18px;
+    padding: 6px 12px;
+    width: 100%;
+}
+
+
+    .child-reply-wrapper .reply-target {
+        color: #1877f2;
+        font-weight: 500;
+        margin-right: 8px;
+        white-space: nowrap;
+    }
+
+
+    .child-reply-wrapper input {
+        flex: 1;
+        border: none;
+        background: transparent;
+    }
+
+
+        .child-reply-wrapper input:focus {
+            box-shadow: none;
+        }
+
+/* Container của reply level 2 */
+.child-reply-container {
+    margin-left: 40px;
+    margin-top: 8px;
+    padding-left: 12px;
+    border-left: 2px solid #fff;
+}
+
+
+/* Từng reply con */
+.child-reply-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+
+    /* Avatar reply con */
+    .child-reply-item .ant-avatar {
+        flex-shrink: 0;
+    }
+
+
+    /* Nội dung reply con */
+    .child-reply-item .reply-content {
+        margin-top: 4px;
+        line-height: 22px;
+        word-break: break-word;
+    }
+
+
+    /* User info reply con */
+    .child-reply-item .reply-user-info {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+
+    /* Thời gian */
+    .child-reply-item .reply-time {
+        font-size: 12px;
+        color: #65676b;
+    }
+
+    /* đường ngang nối từ line dọc vào reply */
+    .child-reply-item::before {
+        content: "";
+        position: absolute;
+        left: -20px;
+        top: 18px;
+        width: 20px;
+        height: 1px;
+        background: #e4e6eb;
+    }
+
+.reply-item-wrapper {
+    position: relative;
+}
+
+    .reply-item-wrapper::before {
+        content: "";
+        position: absolute;
+        left: -20px;
+        top: 18px;
+        width: 20px;
+        height: 1px;
+        background: #e4e6eb;
     }

@@ -12,5 +12,6 @@
 		public bool IsHidden { get; set; } //admin có thể ẩn or ko
 		public bool IsDeleted { get; set; } //đánh dấu xóa khi ng dùng xóa chứ ko del khỏi db
 		public string? ParentId { get; set; }
+		public int LikeCount { get; set; }
 	}
 }

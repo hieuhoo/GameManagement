@@ -71,10 +71,20 @@ namespace GameManagement.Share.ClassData
 			set;
 		}
 		[DataMember(Order = 12)]
-		public virtual string? ParentId 
+		public virtual string? ParentId
 		{
 			get;
 			set;
 		}
+		[DataMember(Order = 13)]
+		public List<UserGameReviewReplyData> Children { get; set; } = new();
+
+		[DataMember(Order = 14)]
+		public bool IsLikedByMe
+		{
+			get;
+			set;
+		}
+		//cái này sẽ chỉ có 1 loại reaction là like, ko hỗ trợ cái khác
 	}
 }

@@ -5,6 +5,7 @@
 <Modal Title="@reviewModalTitle"
        @bind-Visible="isShowCommentVisible"
        Width="900"
+       OnCancel="CloseFormReview"
        Footer="@null">
 
     <div class="review-modal-body">
@@ -85,6 +86,12 @@
 
                         <div class="review-total">
                             <b>@reviewStatisticData.Total</b> đánh giá
+                            @if (totalHiddenReviews > 0)
+                            {
+                                <span class="hidden-review-count">
+                                    , <b>@totalHiddenReviews</b> đã bị ẩn
+                                </span>
+                            }
                         </div>
 
                     </div>
@@ -179,7 +186,9 @@
                 <AntDesign.Col>
 
                     <span class="review-count">
-                        @totalReviews đánh giá
+
+                        @totalDisplayReviews đánh giá
+
                     </span>
 
                 </AntDesign.Col>
@@ -199,226 +208,470 @@
             }
             else
             {
-                @foreach (var review in PagedReviews)
-                {
-                    <Card Class="review-item-card">
+                <div class="review-list-scroll">
+                    @foreach (var review in PagedReviews)
+                    {
+                        <Card Class="review-item-card">
 
-                        <!-- USER -->
-                        <AntDesign.Row Justify="RowJustify.SpaceBetween"
-                                       Align="RowAlign.Middle">
+                            <!-- USER -->
+                            <AntDesign.Row Justify="RowJustify.SpaceBetween"
+                                           Align="RowAlign.Middle">
 
-                            <AntDesign.Col>
+                                <AntDesign.Col>
 
-                                <Space Align="SpaceAlign.Center">
-                                    @* //case ẩn danh *@
-                                    <Avatar>
-                                        @GetUserInitial(review.UserName, review.IsAnonymous)
-                                    </Avatar>
+                                    <Space Align="SpaceAlign.Center">
+                                        @* //case ẩn danh ko hiện bình luận *@
+                                        <Avatar>
+                                            @GetUserInitial(review.UserName, review.IsAnonymous)
+                                        </Avatar>
 
-                                    <div>
+                                        <div>
 
-                                        <div class="review-user-name">
-                                            <b>
-                                                @(review.IsAnonymous ? "Người dùng ẩn danh" : review.UserName)
-                                            </b>
+                                            <div class="review-user-name">
+                                                <b>
+                                                    @(review.IsAnonymous ? "Người dùng ẩn danh" : review.UserName)
+                                                </b>
+                                            </div>
+
+                                            <div class="review-date">
+                                                @review.CreateDate
+                                            </div>
+
                                         </div>
 
-                                        <div class="review-date">
-                                            @review.CreateDate
-                                        </div>
+                                    </Space>
+
+                                </AntDesign.Col>
+
+
+                                <!-- Edit own review -->
+                                @if (review.UserId == currentUserId)
+                                {
+                                    <AntDesign.Col>
+
+                                        <Button Type="ButtonType.Link" OnClick="() => EditYourReviewAsync(review.UserId, review.GameId)">
+                                            <Icon Type="edit"
+                                                  Theme="IconThemeType.Outline" />
+                                            Chỉnh sửa bình luận của bạn
+
+                                        </Button>
+
+                                    </AntDesign.Col>
+                                }
+
+                            </AntDesign.Row>
+
+                            <Divider />
+
+                            <!-- RATING -->
+                            <AntDesign.Row Align="RowAlign.Middle"
+                                           Gutter="(12, 8)">
+
+                                <AntDesign.Col>
+                                    <div class="average-star">
+
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            <span class="star
+                                                @(i <= review.StarNumber
+                                                    ? "active"
+                                                    : "")">
+                                                ★
+                                            </span>
+                                        }
 
                                     </div>
 
-                                </Space>
-
-                            </AntDesign.Col>
+                                </AntDesign.Col>
 
 
-                            <!-- Edit own review -->
-                            @if (review.UserId == currentUserId)
-                            {
                                 <AntDesign.Col>
 
-                                    <Button Type="ButtonType.Link" OnClick="() => EditYourReviewAsync(review.UserId, review.GameId)">
-                                        <Icon Type="edit"
-                                              Theme="IconThemeType.Outline" />
-                                        Chỉnh sửa bình luận của bạn
-
-                                    </Button>
+                                    <span class="review-score">
+                                        <b>
+                                            @review.StarNumber.ToString("0.#")
+                                        </b>
+                                        / 5
+                                    </span>
 
                                 </AntDesign.Col>
-                            }
 
-                        </AntDesign.Row>
 
-                        <Divider />
+                                <!-- Recommend -->
+                                <AntDesign.Col>
 
-                        <!-- RATING -->
-                        <AntDesign.Row Align="RowAlign.Middle"
-                                       Gutter="(12, 8)">
-
-                            <AntDesign.Col>
-                                <div class="average-star">
-
-                                    @for (int i = 1; i <= 5; i++)
+                                    @if (review.IsRecommend)
                                     {
-                                        <span class="star
-                                            @(i <= review.StarNumber
-                                                ? "active"
-                                                : "")">
-                                            ★
-                                        </span>
+                                        <Tag>
+
+                                            <Icon Type="like"
+                                                  Theme="IconThemeType.Outline" />
+                                            Đề xuất
+                                        </Tag>
                                     }
+                                    else
+                                    {
+                                        <Tag>
+                                            <Icon Type="dislike"
+                                                  Theme="IconThemeType.Outline" />
+                                            Không đề xuất
+                                        </Tag>
+                                    }
+                                </AntDesign.Col>
 
-                                </div>
-
-                            </AntDesign.Col>
-
-
-                            <AntDesign.Col>
-
-                                <span class="review-score">
-                                    <b>
-                                        @review.StarNumber.ToString("0.#")
-                                    </b>
-                                    / 5
-                                </span>
-
-                            </AntDesign.Col>
+                            </AntDesign.Row>
 
 
-                            <!-- Recommend -->
-                            <AntDesign.Col>
-
-                                @if (review.IsRecommend)
-                                {
-                                    <Tag>
-
-                                        <Icon Type="like"
-                                              Theme="IconThemeType.Outline" />
-                                        Đề xuất
-                                    </Tag>
-                                }
-                                else
-                                {
-                                    <Tag>
-                                        <Icon Type="dislike"
-                                              Theme="IconThemeType.Outline" />
-                                        Không đề xuất
-                                    </Tag>
-                                }
-                            </AntDesign.Col>
-
-                        </AntDesign.Row>
+                            <!-- COMMENT -->
+                            <div class="review-comment">
+                                @review.Comment
+                            </div>
 
 
-                        <!-- COMMENT -->
-                        <div class="review-comment">
-                            @review.Comment
-                        </div>
+                            <!-- LIKE / HEART -->
+                            <AntDesign.Row Gutter="(8, 8)"
+                                           Align="RowAlign.Middle"
+                                           Style="margin-top: 12px;">
 
+                                <!-- LIKE -->
+                                <AntDesign.Col>
+                                    <Popover Trigger="@(new[] { Trigger.Hover })"
+                                             Placement="Placement.Top">
 
-                        <!-- LIKE / HEART -->
-                        <AntDesign.Row Gutter="(8, 8)"
-                                       Align="RowAlign.Middle"
-                                       Style="margin-top: 12px;">
-
-                            <!-- LIKE -->
-                            <AntDesign.Col>
-                                <Popover Trigger="@(new[] { Trigger.Hover })"
-                                         Placement="Placement.Top">
-
-                                    <ChildContent>
-                                        <Button Type="ButtonType.Link"
-                                                OnClick="() => ChangeReactReviewAsync(review.Id, TypeReaction.Like.ToString())">
+                                        <ChildContent>
+                                            <Button Type="ButtonType.Link"
+                                                    OnClick="() => ChangeReactReviewAsync(review.Id, TypeReaction.Like.ToString())">
                                                 <Icon Type="like"
                                                       Theme="@(review.MyReaction == TypeReaction.Like.ToString()
-                                                                        ? IconThemeType.Fill
-                                                                        : IconThemeType.Outline)"
-                                                  Style="@(review.MyReaction == TypeReaction.Like.ToString()  ? "color: dodgerblue;" : "")" />
+                                                                                                                                                                                                                                                                                                                                                                                                                        ? IconThemeType.Fill
+                                                                                                                                                                                                                                                                                                                                                                                                                        : IconThemeType.Outline)"
+                                                      Style="@(review.MyReaction == TypeReaction.Like.ToString()  ? "color: dodgerblue;" : "")" />
 
-                                            <span>
-                                                @review.LikeCount
-                                            </span>
-                                        </Button>
-                                    </ChildContent>
-                                    <ContentTemplate>
-                                        <ReactionUserList ReactionUsers="@(review.ReactInfos
-                                                          .Where(c => c.ReactionType == TypeReaction.Like.ToString()))"
-                                                          EmptyText="Chưa có lượt thích nào" />
-                                    </ContentTemplate>
-                                </Popover>
-                            </AntDesign.Col>
+                                                <span>
+                                                    @review.LikeCount
+                                                </span>
+                                            </Button>
+                                        </ChildContent>
+                                        <ContentTemplate>
+                                            <ReactionUserList ReactionUsers="@(review.ReactInfos
+                                                                                                                                                                                                                                                                                                                                                                              .Where(c => c.ReactionType == TypeReaction.Like.ToString()))"
+                                                              EmptyText="Chưa có lượt thích nào" />
+                                        </ContentTemplate>
+                                    </Popover>
+                                </AntDesign.Col>
 
-                            <!-- HEART -->
-                            <AntDesign.Col>
-                                <Popover Trigger="@(new[] { Trigger.Hover })"
-                                         Placement="Placement.Top">
+                                <!-- HEART -->
+                                <AntDesign.Col>
+                                    <Popover Trigger="@(new[] { Trigger.Hover })"
+                                             Placement="Placement.Top">
 
-                                    <ChildContent>
-                                        <Button Type="ButtonType.Link"
-                                                OnClick="() => ChangeReactReviewAsync(  review.Id, TypeReaction.Heart.ToString())">
-                                                  <Icon Type="heart"
-                                                          Theme="@(review.MyReaction == TypeReaction.Heart.ToString()
-                                                                        ? IconThemeType.Fill
-                                                                        : IconThemeType.Outline)"
-                                                  Style="@(review.MyReaction == TypeReaction.Heart.ToString() ? "color: #ef1c1c;"  : "")" />
+                                        <ChildContent>
+                                            <Button Type="ButtonType.Link"
+                                                    OnClick="() => ChangeReactReviewAsync(  review.Id, TypeReaction.Heart.ToString())">
+                                                <Icon Type="heart"
+                                                      Theme="@(review.MyReaction == TypeReaction.Heart.ToString()
+                                                                                                                                                                                                                                                                                                                                                                                                                        ? IconThemeType.Fill
+                                                                                                                                                                                                                                                                                                                                                                                                                        : IconThemeType.Outline)"
+                                                      Style="@(review.MyReaction == TypeReaction.Heart.ToString() ? "color: #ef1c1c;"  : "")" />
 
-                                            <span>
-                                                @review.HeartCount
-                                            </span>
+                                                <span>
+                                                    @review.HeartCount
+                                                </span>
 
-                                        </Button>
-                                    </ChildContent>
-                                    <ContentTemplate>
-                                        <ReactionUserList ReactionUsers="@(review.ReactInfos
-                                                          .Where(c => c.ReactionType == TypeReaction.Heart.ToString()))"
-                                                          EmptyText="Chưa có lượt tim nào" />
-                                    </ContentTemplate>
-                                </Popover>
-                            </AntDesign.Col>
+                                            </Button>
+                                        </ChildContent>
+                                        <ContentTemplate>
+                                            <ReactionUserList ReactionUsers="@(review.ReactInfos
+                                                                                                                                                                                                                                                                                                                                                                              .Where(c => c.ReactionType == TypeReaction.Heart.ToString()))"
+                                                              EmptyText="Chưa có lượt tim nào" />
+                                        </ContentTemplate>
+                                    </Popover>
+                                </AntDesign.Col>
 
-                            @* Cười haha *@
-                            <AntDesign.Col>
-                                <Popover Trigger="@(new[] { Trigger.Hover })"
-                                         Placement="Placement.Top">
+                                @* Cười haha *@
+                                <AntDesign.Col>
+                                    <Popover Trigger="@(new[] { Trigger.Hover })"
+                                             Placement="Placement.Top">
 
-                                    <ChildContent>
-                                        <Button Type="ButtonType.Link"
-                                                OnClick="() => ChangeReactReviewAsync(
-                                                                    review.Id,
-                                                                    TypeReaction.Funny.ToString())">
+                                        <ChildContent>
+                                            <Button Type="ButtonType.Link"
+                                                    OnClick="() => ChangeReactReviewAsync(
+                                                                                                                                                                                                                                                                                                                                                                                                                    review.Id,
+                                                                                                                                                                                                                                                                                                                                                                                                                    TypeReaction.Funny.ToString())">
 
-                                                        <Icon Type="smile"
-                                                              Theme="@(review.MyReaction == TypeReaction.Funny.ToString()
+<Icon Type="smile"
+      Theme="@(review.MyReaction == TypeReaction.Funny.ToString()
                                                                                             ? IconThemeType.Fill
                                                                                             : IconThemeType.Outline)"
-                                                  Style="@(review.MyReaction == TypeReaction.Funny.ToString()
-                                                                                ? "color: #fadb14;"
-                                                                                : "")" />
+                                                      Style="@(review.MyReaction == TypeReaction.Funny.ToString()
+                                                                                                                                                                                                                                                                                                                                                                                                                                ? "color: #fadb14;"
+                                                                                                                                                                                                                                                                                                                                                                                                                                : "")" />
 
-                                            <span>
-                                                @review.FunnyCount
-                                            </span>
+                                                <span>
+                                                    @review.FunnyCount
+                                                </span>
 
-                                        </Button>
-                                    </ChildContent>
+                                            </Button>
+                                        </ChildContent>
 
-                                    <ContentTemplate>
-                                        <ReactionUserList ReactionUsers="@(review.ReactInfos
-                                                            .Where(c => c.ReactionType == TypeReaction.Funny.ToString()))"
-                                                          EmptyText="Chưa có lượt haha nào" />
-                                    </ContentTemplate>
+                                        <ContentTemplate>
+                                            <ReactionUserList ReactionUsers="@(review.ReactInfos
+                                                                                                                                                                                                                                                                                                                                                                                .Where(c => c.ReactionType == TypeReaction.Funny.ToString()))"
+                                                              EmptyText="Chưa có lượt haha nào" />
+                                        </ContentTemplate>
 
-                                </Popover>
-                            </AntDesign.Col>
+                                    </Popover>
+                                </AntDesign.Col>
+                                <!-- REPLY BUTTON -->
 
-                        </AntDesign.Row>
+                                <AntDesign.Col>
 
-                    </Card>
-                }
+                                    <Button Type="ButtonType.Link" Disabled="review.UserId == currentUserId"
+                                            OnClick="() => ToggleReplyBox(
+                                                                                                                                                                                                                                                    review.Id,
+                                                                                                                                                                                                                                                    review.IsAnonymous,
+                                                                                                                                                                                                                                                    GetDisplayUserName(review.UserName, review.IsAnonymous))">
+Trả lời
+</Button>
+                                </AntDesign.Col>
+                            </AntDesign.Row>
+                            @* nút xem d/sách phản hồi *@
+                            @if (review.RepliesData.Any())
+                            {
+                                <Button Type="ButtonType.Link"
+                                        OnClick="() => ToggleAllReplies(review.Id)">
 
+                                    @(expandedAllReplies.Contains(review.Id)
+                                        ? "Ẩn bớt phản hồi"
+                                        : $"Xem {review.RepliesData.Count} phản hồi")
 
+                                </Button>
+                            }
+
+                            <!-- REPLY LIST -->
+                            @if (expandedAllReplies.Contains(review.Id))
+                            {
+                                <div class="reply-container">
+                                    @* check hiển thị nút xem them ... bình luận *@
+                                    @foreach (var reply in review.RepliesData)
+                                    {
+                                        <div class="reply-item">
+                                            <Space Align="SpaceAlign.Start">
+                                                <Avatar Size="AvatarSize.Small">
+                                                    @GetUserInitial(reply.UserName, false)
+                                                </Avatar>
+                                                <div>
+                                                    <div class="reply-user-info">
+
+                                                        <b>
+                                                            @reply.UserName
+                                                        </b>
+
+                                                        <span class="reply-time">
+                                                            @GetRelativeTime(reply.CreateDate)
+                                                        </span>
+                                                        @if (reply.UpdatedDate > reply.CreateDate)
+                                                        {
+                                                            <span class="edited-text">
+                                                                Đã chỉnh sửa
+                                                            </span>
+                                                        }
+                                                        @if (reply.UserId == currentUserId)
+                                                        {
+                                                            <Dropdown Placement="Placement.BottomRight">
+                                                                <Overlay>
+                                                                    <Menu>
+                                                                        <MenuItem>
+                                                                            <Button Type="ButtonType.Text" OnClick="() => EditReply(reply)">
+                                                                                <Icon Type="edit" />
+                                                                                Chỉnh sửa
+                                                                            </Button>
+                                                                        </MenuItem>
+
+                                                                        <MenuItem>
+                                                                            <Button Type="ButtonType.Text" OnClick="() => DeleteReplyAsync(reply)">
+                                                                                <Icon Type="delete" />
+                                                                                Xóa
+                                                                            </Button>
+                                                                        </MenuItem>
+                                                                    </Menu>
+
+                                                                </Overlay>
+
+                                                                <ChildContent>
+
+                                                                    <Button Type="ButtonType.Text"
+                                                                            Class="reply-more-btn">
+                                                                        <Icon Type="ellipsis" />
+                                                                    </Button>
+
+                                                                </ChildContent>
+
+                                                            </Dropdown>
+                                                        }
+                                                    </div>
+                                                    <div class="reply-content @(expandedReplyContent.Contains(reply.Id) ? "expanded" : "")">
+                                                        @reply.ReplyContent
+                                                    </div>
+                                                    @if (reply.ReplyContent.Length > 120)
+                                                    {
+                                                        //nếu nội dung dài hiện thêm/ẩn
+                                                        <Button Type="ButtonType.Link"
+                                                                Size="ButtonSize.Small"
+                                                                OnClick="() => ToggleLongReplyContent(reply.Id)">
+
+                                                            @(expandedReplyContent.Contains(reply.Id)
+                                                                ? "Ẩn bớt"
+                                                                : "Xem thêm")
+
+                                                        </Button>
+                                                    }
+                                                    @if (editingReplyId == reply.Id)
+                                                    {
+                                                        <div class="reply-edit-box">
+                                                            <TextArea @bind-Value="editingReplyContent"
+                                                                      AutoSize="true"
+                                                                      MinRows="1"
+                                                                      MaxRows="7"
+                                                                      Placeholder="Chỉnh sửa phản hồi..." />
+                                                            <!-- Emoji -->
+                                                            <Popover Trigger="@(new[] { Trigger.Hover })"
+                                                                     Placement="Placement.Top">
+                                                                <ChildContent>
+                                                                    <Button Type="ButtonType.Text"
+                                                                            Class="reply-icon-btn">
+                                                                        😊
+                                                                    </Button>
+                                                                </ChildContent>
+                                                                <ContentTemplate>
+                                                                    <div class="emoji-picker">
+                                                                        @foreach (var emoji in Emojis)
+                                                                        {
+                                                                            <Button Type="ButtonType.Text"
+                                                                                    Class="emoji-btn"
+                                                                                    OnClick="() => AddEmoji(emoji, true)">
+                                                                                @emoji
+                                                                            </Button>
+                                                                        }
+                                                                    </div>
+                                                                </ContentTemplate>
+                                                            </Popover>
+
+                                                            <Button Type="ButtonType.Text"
+                                                                    OnClick="() => SaveEditReplyAsync(reply)">
+                                                                <Icon Type="check" />
+                                                            </Button>
+
+                                                            <Button Type="ButtonType.Text"
+                                                                    OnClick="CancelEditReply">
+                                                                <Icon Type="close" />
+                                                            </Button>
+                                                        </div>
+                                                    }
+
+                                                </div>
+                                            </Space>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            <!-- REPLY INPUT -->
+                            @if (replyingToId == review.Id)
+                            {
+                                <!-- CHOOSE IDENTITY -->
+                                <div class="reply-identity-container">
+                                    <span class="identity-label">
+                                        Phản hồi với tư cách:
+                                    </span>
+                                    <RadioGroup @bind-Value="replyIsAnonymous">
+                                        <Radio Value="false">
+                                            <Icon Type="user" />
+                                            Công khai
+                                        </Radio>
+                                        <Radio Value="true">
+                                            <Icon Type="question-circle" />
+                                            Ẩn danh
+                                        </Radio>
+                                    </RadioGroup>
+                                </div>
+
+                                <div class="reply-input-container">
+
+                                    <div class="reply-input-wrapper">
+                                        <!-- AVATAR + NAME -->
+                                        <div class="reply-user-preview">
+                                            @if (replyIsAnonymous)
+                                            {
+                                                <Avatar Size="AvatarSize.Small">
+                                                    ?
+                                                </Avatar>
+                                                <span class="reply-preview-name">
+                                                    Người dùng ẩn danh
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <Avatar Size="AvatarSize.Small">
+                                                    @GetUserInitial(GetNameOfPersonReply(), false)
+                                                </Avatar>
+                                                <span class="reply-preview-name">
+                                                    @GetNameOfPersonReply()
+                                                </span>
+                                            }
+                                        </div>
+
+                                        <div class="reply-text-area">
+
+                                            @if (!string.IsNullOrEmpty(replyToUserName))
+                                            {
+                                                <span class="reply-target">
+                                                    @replyToUserName
+                                                </span>
+                                            }
+                                            <Input @bind-Value="replyContent"
+                                                   OnInput="HandleInputReply"
+                                                   Placeholder="Viết phản hồi..." />
+
+                                        </div>
+
+                                        <div class="reply-actions">
+                                            <!-- Emoji -->
+                                            <Popover Trigger="@(new[] { Trigger.Hover })"
+                                                     Placement="Placement.Top">
+                                                <ChildContent>
+                                                    <Button Type="ButtonType.Text"
+                                                            Class="reply-icon-btn">
+                                                        😊
+                                                    </Button>
+                                                </ChildContent>
+
+                                                <ContentTemplate>
+                                                    <div class="emoji-picker">
+                                                        @foreach (var emoji in Emojis)
+                                                        {
+                                                            <Button Type="ButtonType.Text"
+                                                                    Class="emoji-btn"
+                                                                    OnClick="() => AddEmoji(emoji, false)">
+                                                                @emoji
+                                                            </Button>
+                                                        }
+                                                    </div>
+                                                </ContentTemplate>
+                                            </Popover>
+
+                                            <Button Type="ButtonType.Text"
+                                                    Class="reply-icon-btn"
+                                                    Disabled="@string.IsNullOrWhiteSpace(replyContent)"
+                                                    OnClick="() => SubmitReplyAsync(review.Id)">
+                                                <Icon Type="send" />
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </Card>
+                    }
+                </div>
                 <!-- =========================
                      PAGINATION
                      ========================= -->

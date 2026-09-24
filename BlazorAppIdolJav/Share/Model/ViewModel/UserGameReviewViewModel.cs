@@ -23,13 +23,15 @@ namespace GameManagement.Share.Model.ViewModel
 		public int HeartCount { get; set; } // tổng số tym comment
 		public string UserName { get; set; }
 		public string MyReaction { get; set; }
-        public int FunnyCount { get; set; } // tổng số haha comment
+		public int FunnyCount { get; set; } // tổng số haha comment
 
-        public List<ReactionPersonInfoData> ReactInfos { get; set; } = new List<ReactionPersonInfoData>();
-		public int Stt {  get; set; }
+		public List<ReactionPersonInfoData> ReactInfos { get; set; } = new List<ReactionPersonInfoData>();
+		public int Stt { get; set; }
 		public string GameName { get; set; }
-		public int TotalReaction {  get; set; }
-        public string HideReason { get; set; }
+		public int TotalReaction { get; set; }
+		public string HideReason { get; set; }
+		public List<UserGameReviewReplyData> RepliesData { get; set; } = new List<UserGameReviewReplyData>();//reply level 1
+		public List<UserGameReviewReplyData> Children { get; set; } = new(); // là reply level 2
 
-    }
+	}
 }

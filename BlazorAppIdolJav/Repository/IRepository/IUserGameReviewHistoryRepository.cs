@@ -3,11 +3,13 @@ using GameManagement.Share.ClassDB;
 
 namespace GameManagement.Repository.IRepository
 {
-	public interface IUserGameReviewHistoryRepository
+	public interface IUserGameReviewReplyRepository
 	{
-		Task<List<UserGameReviewHistory>> GetAllWithFilterAsync(IQueryable<UserGameReviewHistory> query,
-									ReviewHistorySearch search);
-		IQueryable<UserGameReviewHistory> GetQueryable();
-
+		Task<List<UserGameReviewReply>> GetAllWithFilterAsync(IQueryable<UserGameReviewReply> query,
+									ReviewReplySearch search);
+		IQueryable<UserGameReviewReply> GetQueryable();
+		Task<bool> AddReplyForCommentAsync(UserGameReviewReply reply);
+		Task<bool> UpdateReplyAsync(UserGameReviewReply reply);
 	}
+
 }

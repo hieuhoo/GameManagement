@@ -27,6 +27,7 @@ namespace GameManagement.Data
         public DbSet<UserGameReview> UserGameReview { get; set; }
         public DbSet<UserGameReviewHistory> UserGameReviewHistory { get; set; }
         public DbSet<UserGameReviewReaction> UserGameReviewReaction { get; set; }
+        public DbSet<UserGameReviewReply> UserGameReviewReply { get; set; }
 
     }
 }

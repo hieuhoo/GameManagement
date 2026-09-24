@@ -106,21 +106,30 @@ namespace GameManagement.Service
 			}
 		}
 
-		public async Task<string> CheckDisplayMyReactionAsync(string userId, string reviewId)
+		public async Task<string> CheckDisplayMyReactionAsync(string userId, string reviewId, string replyId = null)
 		{
 			try
 			{
-				var data = await _context.UserGameReviewReaction.FirstOrDefaultAsync(
-									c => c.UserId == userId
-									&& c.ReviewId == reviewId);
-				if (data == null)
+				UserGameReviewReaction dataReact;
+				if (replyId.IsNullOrEmpty())
 				{
-					return string.Empty;
+					// Reaction của review gốc
+					dataReact = await _context.UserGameReviewReaction
+						.FirstOrDefaultAsync(c =>
+							c.UserId == userId &&
+							c.ReviewId == reviewId &&
+							c.ReplyId == null);
 				}
 				else
 				{
-					return data.ReactionType;
+					// Reaction của reply
+					dataReact = await _context.UserGameReviewReaction
+						.FirstOrDefaultAsync(c =>
+							c.UserId == userId &&
+							c.ReviewId == reviewId &&
+							c.ReplyId == replyId);
 				}
+				return dataReact?.ReactionType ?? string.Empty;
 			}
 			catch
 			{
@@ -173,6 +182,77 @@ namespace GameManagement.Service
 			catch
 			{
 				return new List<ReactionPersonInfoData>();
+			}
+		}
+
+
+		public async Task<bool> ChangeReactionForReplyAsync(
+				string reviewId,
+				string replyId,
+				string userId)
+		{
+			await using var transaction =
+				await _context.Database.BeginTransactionAsync();
+
+			try
+			{
+				// 1. Check reply
+				var reply = await _context.UserGameReviewReply
+					.FirstOrDefaultAsync(x =>
+						x.Id == replyId &&
+						x.ReviewId == reviewId);
+
+				if (reply == null)
+				{
+					return false;
+				}
+
+				// 2. Check user đã like reply này chưa
+				var existReac = await _context.UserGameReviewReaction
+					.FirstOrDefaultAsync(x =>
+						x.ReviewId == reviewId &&
+						x.ReplyId == replyId &&
+						x.UserId == userId);
+
+				// CASE 1: Chưa like -> thêm like
+				if (existReac == null)
+				{
+					var reaction = new UserGameReviewReaction
+					{
+						Id = ObjectExtentions.GenerateGuid(),
+						ReviewId = reviewId,
+						ReplyId = replyId,
+						UserId = userId,
+						ReactionType = TypeReaction.Like.ToString(),
+						CreateDate = DateTime.Now
+					};
+
+					await _context.UserGameReviewReaction
+						.AddAsync(reaction);
+
+					reply.LikeCount++;
+				}
+				// CASE 2: Đã like -> bỏ like
+				else
+				{
+					_context.UserGameReviewReaction
+						.Remove(existReac);
+
+					reply.LikeCount = Math.Max(
+						0,
+						reply.LikeCount - 1);
+				}
+
+				reply.UpdatedDate = DateTime.Now;
+
+				await _context.SaveChangesAsync();
+				await transaction.CommitAsync();
+				return true;
+			}
+			catch
+			{
+				await transaction.RollbackAsync();
+				return false;
 			}
 		}
 	}

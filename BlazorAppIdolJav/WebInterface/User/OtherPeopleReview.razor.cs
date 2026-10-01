@@ -39,6 +39,7 @@ namespace GameManagement.WebInterface.User
 			"😀 😃 😄 😁 😂 🤣 😊 😍 😎 😭 😡 👍 👎 ❤️ 🔥 👏 🙏 💪 🎉 🎮 🏆 ⭐ 💯 🚀 🤩 🥳 🤔 😱 😢 😆 😜 🤪"
 			.Split(' ')
 			.ToList();
+		Dictionary<string, int> displayedChildReplyCount = new(); // khống chế hiển thị child
 
 		bool isShowCommentVisible;
 		bool reviewLoading;
@@ -94,7 +95,7 @@ namespace GameManagement.WebInterface.User
 					item.ReactInfos = await ReactionService.GetListUsersReactAsync(item.Id);
 					item.RepliesData = ReviewRepDatas.Where(c => c.ReviewId == item.Id)
 													.Where(c => c.ParentId == null)
-													.Where(c => c.IsDeleted == false)
+													//.Where(c => c.IsDeleted == false)
 													.OrderByDescending(c => c.CreateDate)
 													.ToList();
 					foreach (var rep in item.RepliesData)
@@ -287,6 +288,12 @@ namespace GameManagement.WebInterface.User
 						review.RepliesData = review.RepliesData
 											.Where(x => x.ParentId == null)
 											.OrderByDescending(c => c.CreateDate).ToList();
+						// show load lại tên người cmt luôn
+						var latestReply = review.RepliesData.FirstOrDefault() ?? new UserGameReviewReplyData();
+						if (latestReply.UserId != null && DictUser.TryGetValue(latestReply.UserId, out var name))
+						{
+							latestReply.UserName = name;
+						}
 						// nếu là reply level 2
 						if (data.ParentId != null)
 						{
@@ -298,6 +305,12 @@ namespace GameManagement.WebInterface.User
 								parentReply.Children ??= new List<UserGameReviewReplyData>();
 
 								parentReply.Children.Add(data);
+								parentReply.Children = parentReply.Children.OrderByDescending(c => c.CreateDate).ToList();
+								var latestChildRepply = parentReply.Children.FirstOrDefault() ?? new UserGameReviewReplyData();
+								if (latestChildRepply.UserId != null && DictUser.TryGetValue(latestChildRepply.UserId, out var childName))
+								{
+									latestChildRepply.UserName = childName;
+								}
 							}
 						}
 						// Mở danh sách reply
@@ -397,7 +410,7 @@ namespace GameManagement.WebInterface.User
 			{
 				ReviewRepDatas = (await ReplyService.GetAllWithFilterAsync(new ReviewReplySearch
 				{
-					IsDeleted = false
+					//IsDeleted = falses
 				})) ?? new List<UserGameReviewReplyData>();
 			}
 			catch
@@ -650,6 +663,23 @@ namespace GameManagement.WebInterface.User
 			return billion % 1 == 0
 				? $"{billion:0}B"
 				: $"{billion:0.#}B";
+		}
+
+		void ShowMoreChildReplies(string replyId, int totalCount)
+		{
+			var currentCount = displayedChildReplyCount.TryGetValue(
+				replyId,
+				out var count)
+				? count
+				: 2;
+
+			displayedChildReplyCount[replyId] =
+				Math.Min(currentCount + 2, totalCount);
+		}
+
+		void HideChildReplies(string replyId)
+		{
+			displayedChildReplyCount[replyId] = 2;
 		}
 	}
 }

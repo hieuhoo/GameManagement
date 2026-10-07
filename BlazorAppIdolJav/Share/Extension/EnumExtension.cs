@@ -249,18 +249,42 @@ namespace GameManagement.Share.Extension
 			Like = 0,
 			[Display(Name = "Thả tim")]
 			Heart = 1,
-            [Display(Name = "Hô hô")]
-            Funny = 2,
-        }
+			[Display(Name = "Hô hô")]
+			Funny = 2,
+		}
 
-		public enum ReviewFilter 
+		public enum ReviewFilter
 		{
 			[Display(Name = "Tất cả")]
 			All = 0,
 			[Display(Name = "Tích cực")]
-			Positive = 1,	
+			Positive = 1,
 			[Display(Name = "Tiêu cực")]
-			Negative = 2,	
+			Negative = 2,
+		}
+
+		public enum TypeNotication
+		{
+			[Display(Name = "Tất cả")]
+			All = 0,
+			[Display(Name = "Thả tim")] //thả like, cười, tim ,...
+			ReactHeartComment = 1,
+			[Display(Name = "Phàn hồi bình luận")] //level 2
+			ReplyComment = 2,
+			[Display(Name = "Bình luận")] // bình luận về comeent gốc , gọi là level 1
+			Comment = 3,
+			[Display(Name = "Thích")]
+			ReactLikeComment = 4,
+			[Display(Name = "Cười haha")]
+			ReactFunnyComment = 5,
+			[Display(Name = "")]
+			ReactLikeReply = 6,
+			[Display(Name = "")]
+			ReactHeartReply = 7,
+			[Display(Name = "")]
+			ReactFunnyReply = 8,
+			[Display(Name = "Phản hồi bình luận trong bài đánh giá")] // để phan biệt phàn noti A -> B -> C -> A
+			ReplyCommentInReview = 9
 		}
 
 	}

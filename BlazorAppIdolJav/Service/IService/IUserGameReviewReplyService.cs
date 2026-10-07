@@ -26,6 +26,8 @@ namespace GameManagement.Service.IService
 		public virtual bool IsDeleted { get; set; }
 		[DataMember(Order = 5)]
 		public virtual string? ParentId { get; set; }
+		[DataMember(Order = 6)]
+		public virtual bool IsShowWithoutChild { get; set; }
 		public IQueryable<UserGameReviewReply> CreateFilter(IQueryable<UserGameReviewReply> filter)
 		{
 			if (Id.IsNotNullOrEmpty())
@@ -44,18 +46,22 @@ namespace GameManagement.Service.IService
 			{
 				filter = filter.Where(x => x.ParentId == ParentId);
 			}
-			else
+			if (IsShowWithoutChild == true)
 			{
 				filter = filter.Where(x => x.ParentId == null);
 			}
+			//else
+			//{
+			//	filter = filter.Where(x => (x.ParentId == null || x.ParentId == ParentId));
+			//}
 			if (IsDeleted == false)
 			{
 				filter = filter.Where(x => x.IsDeleted == false);
 			}
-			else
-			{
-				filter = filter.Where(x => (x.IsDeleted == false || x.IsDeleted == true));
-			}
+			//else
+			//{
+			//	filter = filter.Where(x => (x.IsDeleted == false || x.IsDeleted == true));
+			//}
 			//else
 			//{
 			//	filter = filter.Where(x => x.ParentId == null);

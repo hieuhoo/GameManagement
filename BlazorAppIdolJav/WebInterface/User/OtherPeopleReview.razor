@@ -1,6 +1,7 @@
 ﻿@using AntDesign
-@using static GameManagement.Share.Extension.EnumExtension;
 @using GameManagement.CoreConfig.Extensions;
+@using GameManagement.Share.Extension
+@using static GameManagement.Share.Extension.EnumExtension;
 
 <Modal Title="@reviewModalTitle"
        @bind-Visible="isShowCommentVisible"
@@ -340,7 +341,7 @@
 
                                         <ChildContent>
                                             <Button Type="ButtonType.Link"
-                                                    OnClick="() => ChangeReactReviewAsync(review.Id, TypeReaction.Like.ToString())">
+                                                    OnClick="() => ChangeReactReviewAsync(review.Id, TypeReaction.Like.ToString(), review.UserId, review.GameId)">
                                                 <Icon Type="like"
                                                       Theme="@(review.MyReaction == TypeReaction.Like.ToString()
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ? IconThemeType.Fill
@@ -367,7 +368,7 @@
 
                                         <ChildContent>
                                             <Button Type="ButtonType.Link"
-                                                    OnClick="() => ChangeReactReviewAsync(  review.Id, TypeReaction.Heart.ToString())">
+                                                    OnClick="() => ChangeReactReviewAsync(  review.Id, TypeReaction.Heart.ToString(), review.UserId, review.GameId)">
                                                 <Icon Type="heart"
                                                       Theme="@(review.MyReaction == TypeReaction.Heart.ToString()
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ? IconThemeType.Fill
@@ -394,8 +395,8 @@
                                         <ChildContent>
                                             <Button Type="ButtonType.Link"
                                                     OnClick="() => ChangeReactReviewAsync(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    review.Id,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    TypeReaction.Funny.ToString())">
+                                                review.Id,
+                                                TypeReaction.Funny.ToString(), review.UserId, review.GameId)">
 
 <Icon Type="smile"
       Theme="@(review.MyReaction == TypeReaction.Funny.ToString()
@@ -476,7 +477,7 @@ Trả lời
                                                                 </b>
 
                                                                 <span class="reply-time">
-                                                                    @GetRelativeTime(reply.CreateDate)
+                                                                    @DateTimeExtension.GetRelativeTime(reply.CreateDate)
                                                                 </span>
                                                                 @if (reply.UserId == review.UserId)
                                                                 {
@@ -618,7 +619,7 @@ Trả lời
                                                                                 <Button Type="ButtonType.Text"
                                                                                         Class="reply-icon-btn"
                                                                                         Disabled="@string.IsNullOrWhiteSpace(replyContentLevel2)"
-                                                                                        OnClick="() => SubmitReplyAsync(reply.ReviewId)">
+                                                                                        OnClick="() => SubmitReplyAsync(reply.ReviewId, false, reply.UserId)">
 
                                                                                     <Icon Type="send" />
 
@@ -662,7 +663,7 @@ Trả lời
 
 
                                                                                     <span class="reply-time">
-                                                                                        @GetRelativeTime(child.CreateDate)
+                                                                                        @DateTimeExtension.GetRelativeTime(child.CreateDate)
                                                                                     </span>
                                                                                     @if (child.UserId == review.UserId)
                                                                                     {
@@ -870,7 +871,7 @@ Trả lời
                                             <Button Type="ButtonType.Text"
                                                     Class="reply-icon-btn"
                                                     Disabled="@string.IsNullOrWhiteSpace(replyContent)"
-                                                    OnClick="() => SubmitReplyAsync(review.Id)">
+                                                    OnClick="() => SubmitReplyAsync(review.Id, true, review.UserId)">
                                                 <Icon Type="send" />
                                             </Button>
                                         </div>

@@ -54,7 +54,7 @@ namespace GameManagement.WebInterface.Management
 		bool isRequired;
 		string titleText = string.Empty;
 		string replyTextTitle = string.Empty;
-		
+
 		string cancelText = "Đóng";
 		string hideText = "Ẩn";
 		string? hideReason;
@@ -345,8 +345,7 @@ namespace GameManagement.WebInterface.Management
 				var data = await ReplyService.GetAllWithFilterAsync(new ReviewReplySearch
 				{
 					ReviewId = model.Id,
-					ParentId = null
-
+					IsShowWithoutChild = true
 				});
 				ReplyViewModels = Mapper.Map<List<UserGameReviewReplyViewModel>>(data);
 				int stt = 1;

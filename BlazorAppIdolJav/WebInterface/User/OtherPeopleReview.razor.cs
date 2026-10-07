@@ -22,6 +22,7 @@ namespace GameManagement.WebInterface.User
 
 		[Inject] IGameService GameService { get; set; }
 		[Inject] IUserGameReviewReplyService ReplyService { get; set; }
+		[Inject] INotificationGameService NotiGameService { get; set; }
 
 		[Inject] IMapper Mapper { get; set; }
 
@@ -184,10 +185,13 @@ namespace GameManagement.WebInterface.User
 
 		async Task ChangeReactReviewAsync(
 			string reviewId,
-			string type)
+			string type, string receiveUser, string gameId)
 		{
 			try
 			{
+				// Lấy reaction hiện tại trước khi thay đổi
+				var currentReaction = await ReactionService.CheckDisplayMyReactionAsync(currentUserId, reviewId);
+				var isRemoveReaction = currentReaction != null && currentReaction == type;
 				var success = await ReactionService.ChangeReactionAsync(
 											reviewId,
 											currentUserId,
@@ -195,6 +199,24 @@ namespace GameManagement.WebInterface.User
 				if (!success)
 				{
 					Notice.NotiError("Có lỗi rồi, dm đoán đi cưng");
+					return;
+				}
+				//tạo thông báo noti , check trường hợp nếu ko react nx thì ko tạo
+				if (!isRemoveReaction)
+				{
+					var notiData = new UserNotificationData
+					{
+						Id = ObjectExtentions.GenerateGuid(),
+						CreateDate = DateTime.Now,
+						ReadAtTime = null,
+						IsRead = false,
+						TargetId = reviewId,
+						Type = GetTypeNotificationReact(type),
+						ActorUserId = currentUserId,
+						ReceiveUserId = receiveUser,
+						GameId = gameId
+					};
+					await NotiGameService.AddNotificationAsync(notiData);
 				}
 				await LoadGameReviewsAsync();
 			}
@@ -202,6 +224,24 @@ namespace GameManagement.WebInterface.User
 			{
 
 			}
+		}
+
+		string GetTypeNotificationReact(string react)
+		{
+			string finalType = string.Empty;
+			if (react == TypeReaction.Like.ToString())
+			{
+				finalType = TypeNotication.ReactLikeComment.ToString();
+			}
+			else if (react == TypeReaction.Heart.ToString())
+			{
+				finalType = TypeNotication.ReactHeartComment.ToString();
+			}
+			else
+			{
+				finalType = TypeNotication.ReactFunnyComment.ToString();
+			}
+			return finalType;
 		}
 
 
@@ -253,7 +293,7 @@ namespace GameManagement.WebInterface.User
 		}
 
 
-		async Task SubmitReplyAsync(string reviewId)
+		async Task SubmitReplyAsync(string reviewId, bool isReplyOriginalReview, string receiveUser)
 		{
 			try
 			{
@@ -319,6 +359,76 @@ namespace GameManagement.WebInterface.User
 							expandedReplies.Add(review.Id);
 						}
 					}
+					// phần gửi noti về chuông ở tài khoản, content sẽ build khi view
+					if (isReplyOriginalReview)
+					{
+						// Comment trực tiếp vào review
+						// -> gửi cho chủ review
+						if (!string.IsNullOrEmpty(receiveUser) && receiveUser != currentUserId)
+						{
+							var notiData = new UserNotificationData
+							{
+								Id = ObjectExtentions.GenerateGuid(),
+								CreateDate = DateTime.Now,
+								ReadAtTime = null,
+								IsRead = false,
+								TargetId = reviewId,
+								Type = TypeNotication.Comment.ToString(),
+								ActorUserId = currentUserId,
+								ReceiveUserId = receiveUser,
+								GameId = review?.GameId ?? ""
+							};
+
+							await NotiGameService.AddNotificationAsync(notiData);
+						}
+					}
+					else
+					{
+						// Reply level 2
+						// receiveUser = người viết comment level 1
+
+						// 1. Gửi cho người bị reply
+						if (!string.IsNullOrEmpty(receiveUser) && receiveUser != currentUserId)
+						{
+							var replyNoti = new UserNotificationData
+							{
+								Id = ObjectExtentions.GenerateGuid(),
+								CreateDate = DateTime.Now,
+								ReadAtTime = null,
+								IsRead = false,
+								TargetId = replyingToId,
+								Type = TypeNotication.ReplyComment.ToString(),
+								ActorUserId = currentUserId,
+								ReceiveUserId = receiveUser,
+								GameId = review?.GameId ?? ""
+							};
+
+							await NotiGameService.AddNotificationAsync(replyNoti);
+						}
+
+						// 2. Gửi thêm cho chủ review
+						var reviewOwnerId = review?.UserId;
+						if (!string.IsNullOrEmpty(reviewOwnerId)
+							&& reviewOwnerId != currentUserId
+							&& reviewOwnerId != receiveUser)
+						{
+							var reviewNoti = new UserNotificationData
+							{
+								Id = ObjectExtentions.GenerateGuid(),
+								CreateDate = DateTime.Now,
+								ReadAtTime = null,
+								IsRead = false,
+								TargetId = replyingToId,
+								Type = TypeNotication.ReplyCommentInReview.ToString(),
+								ActorUserId = currentUserId,
+								ReceiveUserId = reviewOwnerId,
+								GameId = review?.GameId ?? ""
+							};
+
+							await NotiGameService.AddNotificationAsync(reviewNoti);
+						}
+					}
+					// kết thúc gửi noti, success là được
 					replyingToId = null;
 					replyToUserName = null;
 					replyingReviewId = null;
@@ -429,43 +539,6 @@ namespace GameManagement.WebInterface.User
 			{
 				expandedReplies.Add(reviewId);
 			}
-		}
-
-		string GetRelativeTime(DateTime date)
-		{
-			var diff = DateTime.Now - date;
-
-			if (diff.TotalSeconds < 60)
-			{
-				return "Vừa xong";
-			}
-
-			if (diff.TotalMinutes < 60)
-			{
-				return $"{(int)diff.TotalMinutes} phút trước";
-			}
-
-			if (diff.TotalHours < 24)
-			{
-				return $"{(int)diff.TotalHours} giờ trước";
-			}
-
-			if (diff.TotalDays < 7)
-			{
-				return $"{(int)diff.TotalDays} ngày trước";
-			}
-
-			if (diff.TotalDays < 30)
-			{
-				return $"{(int)(diff.TotalDays / 7)} tuần trước";
-			}
-
-			if (diff.TotalDays < 365)
-			{
-				return $"{(int)(diff.TotalDays / 30)} tháng trước";
-			}
-
-			return $"{(int)(diff.TotalDays / 365)} năm trước";
 		}
 
 		void EditReply(UserGameReviewReplyData data)

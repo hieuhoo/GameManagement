@@ -87,6 +87,8 @@ builder.Services.AddScoped<IUserGameReviewService, UserGameReviewService>();
 builder.Services.AddScoped<IUserGameReviewHistoryService, UserGameReviewHistoryService>();
 builder.Services.AddScoped<IUserGameReviewReactionService, UserGameReviewReactionService>();
 builder.Services.AddScoped<IUserGameReviewReplyService, UserGameReviewReplyService>();
+builder.Services.AddScoped<INotificationGameService, NotificationGameService>();
+
 
 
 //cấu hình repo vào đây
@@ -107,6 +109,9 @@ builder.Services.AddScoped<IUserGameReviewRepository, UserGameReviewRepository>(
 builder.Services.AddScoped<IUserGameReviewHistoryRepository, UserGameReviewHistoryRepository>();
 builder.Services.AddScoped<IUserGameReviewReactionRepository, UserGameReviewReactionRepository>();
 builder.Services.AddScoped<IUserGameReviewReplyRepository, UserGameReviewReplyRepository>();
+builder.Services.AddScoped<INotificationGameRepository, NotificationGameRepository>();
+builder.Services.AddScoped<IEmailRepository, EmailRepository>();
+
 
 builder.Services.AddScoped<WishlistState>();
 // cấu hình extension

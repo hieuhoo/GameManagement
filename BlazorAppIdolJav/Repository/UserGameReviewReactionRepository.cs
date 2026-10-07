@@ -32,6 +32,7 @@ namespace GameManagement.Repository
                 var listUser = await _context.User.Where(c => c.Role == UserRole.Normal.ToString()).ToListAsync();
                 var userDict = listUser.ToDictionary(c => c.Id, c => c.UserName);
                 var data = await _context.UserGameReviewReaction.Where(c => c.ReviewId == reviewId)
+                                                                .Where(c => c.ReplyId == null)
                                                                 .Select(c => new ReactionPersonInfoData
                                                                 {
                                                                     UserId = c.UserId,

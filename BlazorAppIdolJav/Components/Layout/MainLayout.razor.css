@@ -189,7 +189,7 @@ article.content {
     position: absolute;
     top: calc(100% + 10px);
     /* căn giữa popup theo chuông */
-/*    left: 50%;*/
+    /*    left: 50%;*/
     transform: translateX(-50%);
     width: 380px;
     background: white !important;
@@ -223,23 +223,33 @@ article.content {
 }
 
 .notification-list {
-    max-height: 360px;
+    max-height: 340px;
     overflow-y: auto;
-    background: #171D25;
+    overflow-x: hidden;
+    background: #f5f5f5;
 }
 
 .notification-item {
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    padding: 14px 16px;
-    background: #171D25;
-    border-bottom: 1px solid #272D37;
+    padding: 12px 16px;
+    background: #f7f7f7;
+    border-bottom: 1px solid #dddddd;
     cursor: pointer;
+    transition: background 0.2s ease;
 }
 
+    .notification-item:nth-child(even) {
+        background: #eeeeee;
+    }
+
+    .notification-item:nth-child(odd) {
+        background: #f8f8f8;
+    }
+
     .notification-item:hover {
-        background: #272D37;
+        background: #e7e7e7;
     }
 
 .notification-icon {
@@ -250,8 +260,9 @@ article.content {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: #272D37;
-    color: #1999FF;
+    background: antiquewhite;
+    color: #1999ff;
+    margin-top: 2px;
 }
 
 .notification-content {
@@ -262,14 +273,34 @@ article.content {
 .notification-text {
     font-size: 14px;
     line-height: 20px;
-    color: #fff;
+    color: #2b2b2b;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .notification-time {
-    margin-top: 5px;
+    margin-top: 4px;
     font-size: 12px;
-    color: #8B929A;
+    line-height: 16px;
+    color: #168cff;
 }
+
+.notification-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.notification-list::-webkit-scrollbar-track {
+    background: #eeeeee;
+}
+
+.notification-list::-webkit-scrollbar-thumb {
+    background: #98a4b3;
+    border-radius: 6px;
+}
+
+    .notification-list::-webkit-scrollbar-thumb:hover {
+        background: #7f8b99;
+    }
 
 .notification-footer {
     height: 44px;
@@ -315,5 +346,6 @@ article.content {
     position: relative;
     display: inline-flex;
     align-items: center;
-    margin-right: 10px;
+    margin-right: 17px;
+    background-color: powderblue;
 }

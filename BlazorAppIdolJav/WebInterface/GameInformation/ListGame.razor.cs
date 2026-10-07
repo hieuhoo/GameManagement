@@ -36,6 +36,7 @@ namespace GameManagement.WebInterface.GameInformation
 		[Inject] IWalletTransactionHistoryService HistoryService { get; set; }
 		[Inject] IUserService UserService { get; set; }
 		[Inject] IUserGameReviewService ReviewService { get; set; }
+		[Inject] IConfiguration Configure { get; set; }
 
 
 		[Inject] NotificationService Notice { get; set; }
@@ -446,7 +447,7 @@ namespace GameManagement.WebInterface.GameInformation
 						  OriginalPrice = result.OriginalPrice ?? "",
 						  DiscountPercent = result.DiscountPercent ?? "",
 						  PurchasePrice = result.PurchasePrice ?? "",
-						  Email = "hieuhooepu@gmail.com" // test mail này nhé
+						  Email = Configure["EmailReceiptSettings:Email"] ?? ""
 					  }
 				);
 

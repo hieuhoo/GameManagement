@@ -32,6 +32,6 @@ namespace GameManagement.Share.Model.ViewModel
 		public string HideReason { get; set; }
 		public List<UserGameReviewReplyData> RepliesData { get; set; } = new List<UserGameReviewReplyData>();//reply level 1
 		public List<UserGameReviewReplyData> Children { get; set; } = new(); // là reply level 2
-
+		public int ReplyCount { get; set; }
 	}
 }

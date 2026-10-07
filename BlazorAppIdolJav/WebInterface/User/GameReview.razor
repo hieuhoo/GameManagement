@@ -87,7 +87,7 @@
             <Row Justify="RowJustify.Start" Gutter="(24, 0)">
 
                 <RadioGroup @bind-Value="EditModel.IsAnonymous"
-                            Disabled="EditModel.ReadOnly">
+                            Disabled="EditModel.Id != null">
 
                     <Radio Value="true">
                         Có

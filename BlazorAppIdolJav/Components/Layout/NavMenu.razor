@@ -2,7 +2,7 @@
 @using static GameManagement.Share.Extension.EnumExtension
 @inject NavigationManager Navigation
 
-<Menu Mode="MenuMode.Vertical"
+<Menu Mode="MenuMode.Inline"
       Theme="MenuTheme.Dark"
       Class="admin-nav">
 
@@ -25,14 +25,38 @@
             </MenuItem>
         }
 
-        if (IsAdmin)
+        @if (IsAdmin)
         {
-            <MenuItem Key="setup">
-                <NavLink href="/danh-sach-ma-nap">
-                    <Icon Type="gift" />
-                    <span>Quản lý mã nạp</span>
-                </NavLink>
-            </MenuItem>
+            <SubMenu Key="admin">
+                <TitleTemplate>
+                    <Icon Type="setting" />
+                    <span>Quản lý hệ thống</span>
+                </TitleTemplate>
+
+                <ChildContent>
+                    <MenuItem Key="setup">
+                        <NavLink href="/danh-sach-ma-nap">
+                            <Icon Type="gift" />
+                            <span>Quản lý mã nạp</span>
+                        </NavLink>
+                    </MenuItem>
+
+                    <MenuItem Key="comment">
+                        <NavLink href="/danh-sach-binh-luan">
+                            <Icon Type="comment" />
+                            <span>Quản lý bình luận</span>
+                        </NavLink>
+                    </MenuItem>
+
+
+                    <MenuItem Key="email">
+                        <NavLink href="/danh-sach-email">
+                            <Icon Type="mail" />
+                            <span>Quản lý email gửi</span>
+                        </NavLink>
+                    </MenuItem>
+                </ChildContent>
+            </SubMenu>
         }
 
         <MenuItem Key="game">
@@ -48,15 +72,7 @@
                 }
             </NavLink>
         </MenuItem>
-        if (IsAdmin)
-        {
-            <MenuItem Key="comment">
-                <NavLink href="/danh-sach-binh-luan">
-                    <Icon Type="comment" />
-                    <span>Quản lý bình luận</span>
-                </NavLink>
-            </MenuItem>
-        }
+     
         if (IsAdmin)
         {
             <MenuItem Key="setup">

@@ -1,10 +1,13 @@
 ﻿@inherits LayoutComponentBase
 @using AntDesign
 @using GameManagement.Components.Pages
+@using GameManagement.Share.Extension
 @using GameManagement.SpecialComponent
 @using GameManagement.SpecialComponent.ExtensionClass;
 @using Microsoft.AspNetCore.Components.Authorization
+@using static GameManagement.Share.Extension.EnumExtension
 @inject AuthenticationStateProvider AuthToken
+
 <HeadContent>
     <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
 </HeadContent>
@@ -39,39 +42,59 @@
                                         <span class="notification-header-title">
                                             Thông báo
                                         </span>
-
-                                        @if (unreadNotificationCount > 0)
-                                        {
-                                            <span class="notification-count">
-                                                @unreadNotificationCount mới
-                                            </span>
-                                        }
                                     </div>
 
                                     <div class="notification-list">
-                                        @foreach (var notification in fakeNotifications)
+                                        @if (NotiList.Any())
                                         {
-                                            <div class="notification-item">
-                                                <div class="notification-icon">
-                                                    <Icon Type="bell"
-                                                          Theme="IconThemeType.Outline" />
-                                                </div>
-
-                                                <div class="notification-content">
-                                                    <div class="notification-text">
-                                                        @notification
+                                            @foreach (var notification in NotiList.Take(visibleNotiCount))
+                                            {
+                                                var iconType = notification.Type switch
+                                                {
+                                                    var type when type == TypeNotication.Comment.ToString() => "comment",
+                                                    var type when type == TypeNotication.ReactLikeComment.ToString() => "like",
+                                                    var type when type == TypeNotication.ReactHeartComment.ToString() => "heart",
+                                                    var type when type == TypeNotication.ReactFunnyComment.ToString() => "smile",
+                                                    _ => "notification"
+                                                };
+                                                
+                                                <div class="notification-item">
+                                                    <div class="notification-icon">
+                                                        <Icon Type="@iconType"
+                                                              Theme="IconThemeType.Outline" />
                                                     </div>
 
-                                                    <div class="notification-time">
-                                                        Vừa xong
+                                                    <div class="notification-content">
+                                                        <div class="notification-text">
+                                                            @if (!notification.IsRead)
+                                                            {
+                                                                <strong>@notification.ContentView</strong>
+                                                            }
+                                                            else
+                                                            {
+                                                                @notification.ContentView
+                                                            }
+                                                        </div>
+
+                                                        <div class="notification-time">
+                                                            @DateTimeExtension.GetRelativeTime(notification.CreateDate)
+                                                        </div>
                                                     </div>
                                                 </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="notification-item" style="cursor: unset !important;">
+                                                <span style="color:black;">Không có thông báo nào</span>
                                             </div>
                                         }
                                     </div>
-
                                     <div class="notification-footer">
-                                        Xem tất cả thông báo
+                                        <Button Type="ButtonType.Link"
+                                                OnClick="ViewAllNotiAsync">
+                                            Xem thêm
+                                        </Button>
                                     </div>
                                 </div>
                             }

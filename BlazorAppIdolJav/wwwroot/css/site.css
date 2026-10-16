@@ -1330,3 +1330,9 @@
         height: 1px;
         background: #e4e6eb;
     }
+
+.reply-deleted-content {
+    color: #8c8c8c;
+    font-style: italic;
+    padding: 6px 0;
+}

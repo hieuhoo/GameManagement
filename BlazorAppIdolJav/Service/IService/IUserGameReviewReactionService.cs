@@ -27,7 +27,8 @@ namespace GameManagement.Service.IService
 		public virtual string ReactionType { get; set; }
 		[DataMember(Order = 4)]
 		public virtual string ReviewId { get; set; }
-
+				[DataMember(Order = 5)]
+		public virtual string? ReplyId { get; set; }
 		public IQueryable<UserGameReviewReaction> CreateFilter(IQueryable<UserGameReviewReaction> filter)
 		{
 			if (Id.IsNotNullOrEmpty())
@@ -45,6 +46,14 @@ namespace GameManagement.Service.IService
 			if (ReviewId.IsNotNullOrEmpty())
 			{
 				filter = filter.Where(x => x.ReviewId == ReviewId);
+			}
+			if (ReplyId.IsNotNullOrEmpty())
+			{
+				filter = filter.Where(x => x.ReplyId == ReplyId);
+			}
+			else
+			{
+				filter = filter.Where(x => x.ReplyId == null);
 			}
 			return filter;
 		}

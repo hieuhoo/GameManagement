@@ -24,5 +24,15 @@ namespace GameManagement.Share.Extension
 
 			return value;
 		}
+
+		public static string TruncateText(string? text, int maxLength = 50)
+		{
+			if (string.IsNullOrEmpty(text))
+				return string.Empty;
+
+			return text.Length > maxLength
+				? text.Substring(0, maxLength) + "..."
+				: text;
+		}
 	}
 }

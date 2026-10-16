@@ -45,10 +45,27 @@
                 </Space>
             </PropertyColumn>
 
+            <PropertyColumn Property="context => context.ReplyCount"
+                            Title="Số lượt phản hồi"
+                            Width="160">
+
+                <div class="sale-count-cell">
+                    <span>@context.ReplyCount</span>
+                    <AntDesign.Tooltip Title="Xem chi tiết phản hồi">
+                        <span class="sale-history-icon">
+                            <Icon Type="eye"
+                                  Theme="IconThemeType.TwoTone"
+                                  OnClick="() => OpenReplyForCommentAsync(context)" />
+                        </span>
+                    </AntDesign.Tooltip>
+                </div>
+            </PropertyColumn>
+
             <PropertyColumn Property="context => context.CreateDate.GetFormatDateWithSecond()"
                             Title="Ngày tạo bình luận"
                             Width="160">
             </PropertyColumn>
+
 
             <PropertyColumn Property="context => context.LikeCount"
                             Title="Số lượt Like" Align="ColumnAlign.Right"
@@ -122,7 +139,7 @@
 
             <PropertyColumn Property="context => context.IsHidden"
                             Title="Trạng thái ẩn/hiện"
-                            Width="110">
+                            Width="130">
                 <Template>
                     @if (context.IsHidden == true)
                     {
@@ -188,6 +205,51 @@
 
             <PropertyColumn Property="context => context.CreateDate.GetFormatDateWithSecond()"
                             Title="Thời gian"
+                            Width="150">
+            </PropertyColumn>
+
+        </Table>
+    </AntDesign.Col>
+
+</Modal>
+
+<Modal Title="@replyTextTitle"
+       @bind-Visible="showReplyList"
+       OnCancel="CloseFormReplyHistory" Width="1000"
+       CancelText="@cancelText">
+
+    <AntDesign.Col Span="24">
+        <Table TItem="UserGameReviewReplyViewModel"
+               DataSource="ReplyViewModels"
+               ScrollY="calc(100vh - 260px)"
+               ScrollBarWidth="@DefaultTableConfig.ScrollBarWidth"
+               Loading="replyLoading"
+               @ref="ReplyTable">
+
+               
+            <PropertyColumn Property="context => context.Stt"
+                            Title="STT"
+                            Width="60">
+            </PropertyColumn>
+
+            <PropertyColumn Property="context => context.ReplyContent"
+                            Title="Nội dung"
+                            Width="200">
+
+                            <Space>
+                                <Typography Ellipsis="true">
+                                    @context.ReplyContent
+                                </Typography>
+                            </Space>
+            </PropertyColumn>
+
+            <PropertyColumn Property="context => context.CreateDate.GetFormatDateWithSecond()"
+                            Title="Thời gian"
+                            Width="150">
+            </PropertyColumn>
+
+            <PropertyColumn Property="context => context.UserName"
+                            Title="Người phản hồi"
                             Width="150">
             </PropertyColumn>
 

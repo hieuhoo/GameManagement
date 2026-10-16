@@ -96,6 +96,13 @@ namespace GameManagement.WebInterface.GameInformation
 					{
 						item.GameName = name;
 					}
+					if (item.ExpiredDate < DateTime.Now)
+					{
+						if (item.Status != RedeemCodeStatus.Used.ToString())
+						{
+							item.Status = RedeemCodeStatus.Expired.ToString();
+						}
+					}
 				}
 			}
 			catch

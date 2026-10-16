@@ -1,0 +1,161 @@
+﻿@page "/danh-sach-email"
+@using AntDesign
+@using GameManagement.CoreConfig.Extensions
+@using GameManagement.Share.Extension
+@using GameManagement.Share.Model.ViewModel;
+
+<AntDesign.Row Gutter="8">
+    <AntDesign.Col Span="24">
+        <AntDesign.Title Level="3">Danh sách mail đã gửi</AntDesign.Title>
+    </AntDesign.Col>
+
+    <AntDesign.Col Span="24">
+        <Table TItem="EmailInformationViewModel"
+               DataSource="ViewModels"
+               ScrollY="calc(100vh - 260px)"
+               ScrollBarWidth="@DefaultTableConfig.ScrollBarWidth"
+               Loading="loading"
+               OnRowClick="OnRowClick"
+               @ref="Table">
+
+            <PropertyColumn Property="context => context.Stt"
+                            Title="STT"
+                            Width="60">
+            </PropertyColumn>
+
+            <PropertyColumn Property="context => context.Subject"
+                            Title="Tiêu đề" Ellipsis="true"
+                            Width="180">
+            </PropertyColumn>
+
+            <PropertyColumn Property="context => context.MailReceipt"
+                            Title="Mail nhận"
+                            Width="150">
+            </PropertyColumn>
+
+            <PropertyColumn Property="context => context.Status"
+                            Title="Trạng thái"
+                            Width="150">
+                <span style="color:#52C41A;">@context.Status</span>
+
+            </PropertyColumn>
+
+            <PropertyColumn Property="context => context.CreateDate.GetFormatDateWithSecond()"
+                            Title="Ngày gửi"
+                            Width="160">
+            </PropertyColumn>
+
+
+            <ActionColumn Title="Thao tác"
+                          Width="80" Fixed="ColumnFixPlacement.Right">
+                <Space Size="SpaceSize.Small">
+                    <SpaceItem>
+                        <Tooltip Title="Thao tác">
+                            <Button Type="ButtonType.Text"
+                                    Size="ButtonSize.Default" OnClick="() => ViewDetailMailAsync(context)">
+                                <Icon Type="eye" />
+                            </Button>
+                        </Tooltip>
+                    </SpaceItem>
+                </Space>
+            </ActionColumn>
+        </Table>
+    </AntDesign.Col>
+</AntDesign.Row>
+
+<Drawer Width="@width.ToString()"
+        ZIndex="1000"
+        Height="@height.ToString()"
+        Visible="mailVisible"
+        Title="@title"
+        OnClose="CloseDetailMail"
+        MaskClosable="false">
+
+    <div style="padding: 4px 8px 0 8px;">
+        <Row Style="margin-bottom:10px;">
+            <Col Span="6">
+            <span style="font-size:16px; color:#333;">Tiêu đề</span>
+        </Col>
+        <Col Span="18">
+        <span style="font-size:16px; color:#222;">
+            @MailDetail.Subject
+        </span>
+    </Col>
+</Row>
+
+<Row Style="margin-bottom:10px;">
+    <Col Span="6">
+    <span style="font-size:16px; color:#333;">Email nhận</span>
+</Col>
+
+<Col Span="18">
+<span style="font-size:16px; color:#222;">
+    @MailDetail.MailReceipt
+</span>
+</Col>
+</Row>
+
+<Row Style="margin-bottom:10px;">
+    <Col Span="6">
+    <span style="font-size:16px; color:#333;">Ngày tạo</span>
+</Col>
+<Col Span="18">
+<span style="font-size:16px; color:#222;">
+    @MailDetail.CreateDate.GetFormatDateWithSecond()
+</span>
+</Col>
+</Row>
+
+<Row Style="margin-bottom:10px;">
+    <Col Span="6">
+    <span style="font-size:16px; color:#333;">Ngày gửi</span>
+</Col>
+<Col Span="18">
+<span style="font-size:16px; color:#222;">
+    @MailDetail.CreateDate.GetFormatDateWithSecond()
+</span>
+</Col>
+</Row>
+
+<Row Style="margin-bottom:10px;">
+    <Col Span="6">
+    <span style="font-size:16px; color:#333;">Trạng thái</span>
+</Col>
+<Col Span="18">
+@if (MailDetail.Status == "Success")
+{
+    <Tag Color="TagColor.Green">Thành công</Tag>
+}
+else
+{
+    <Tag Color="TagColor.Red">Thất bại</Tag>
+}
+</Col>
+</Row>
+
+<Row Style="margin-top:6px;">
+    <Col Span="6">
+    <span style="font-size:16px; color:#333;">Nội dung</span>
+</Col>
+
+<Col Span="18">
+<div style="
+    border:1px solid #d9d9d9;
+    border-radius:4px;
+    padding:16px 12px;
+    min-height:320px;
+    max-height:520px;
+    overflow-y:auto;
+    background:#fff;
+    font-size:15px;
+    line-height:1.55;
+    color:#222;">
+
+    @((MarkupString)(MailDetail.Content ?? ""))
+
+</div>
+</Col>
+</Row>
+
+</div>
+</Drawer>

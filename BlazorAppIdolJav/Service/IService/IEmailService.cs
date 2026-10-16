@@ -2,12 +2,14 @@
 using GameManagement.Share.ClassDB;
 using System.Runtime.Serialization;
 using static GameManagement.Share.Extension.EnumExtension;
+using GameManagement.Share.ClassData;
 
 namespace GameManagement.Service.IService
 {
 	public interface IEmailService
 	{
 		public Task SendTemplateMailAsync(MailType type, Object data);
+		public Task <List<EmailInformationData>> GetAllWithFilterAsync(MailSearch search);
 	}
 
 	[DataContract]
